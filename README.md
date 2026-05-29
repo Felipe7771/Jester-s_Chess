@@ -1,4 +1,4 @@
-# MEDIEVAL CHESS ♔ ♕ ♖ ♤ ✧ ♗ ♘ ♙
+#  JESTER'S CHESS  ♔ ♕ ♖ ♤ ✧ ♗ ♘ ♙
 ###### *Created by: Felipe7771*
 ***Welcome to a variant of Xadez written entirely in the programming language `Python`, 
 featuring new pieces, rules (both new and removed), and various new types of checkmate moves.***
