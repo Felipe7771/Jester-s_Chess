@@ -190,11 +190,6 @@ function Is_InMoves(id, coo) {
   );
 }
 
-function Have_Sucessor(color) {
-  const id_sucessor = `${color}S0`
-
-  return id_sucessor in pieceIndex
-}
 
 function Have_Sucessor(color) {
   const id_sucessor = get_Id_Sucessor(color)

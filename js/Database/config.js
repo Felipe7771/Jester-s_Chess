@@ -46,6 +46,9 @@ const kings_castle = new Set(['wK', 'bK'])
 
 let castle_atives = {}
 
+// Xeque propriedades
+let InCheck = false
+
 /* =========================
    POSIÇÃO INICIAL DO TABULEIRO
    Matriz 8x8 representando peças e casas vazias
