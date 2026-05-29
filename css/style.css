@@ -1,0 +1,360 @@
+  /* =========================
+     RESET GLOBAL
+     Remove margens/padding e impede seleção de texto
+     ========================= */
+  * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+
+  /* =========================
+     FUNDO E CENTRALIZAÇÃO
+     Centraliza o app na tela com fundo escuro estilo "arena de tabuleiro"
+     ========================= */
+  body {
+    background: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: sans-serif;
+  }
+
+  /* =========================
+     CONTAINER PRINCIPAL
+     Empilha tabuleiro + coordenadas + infos
+     ========================= */
+  #app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 24px;
+  }
+
+  /* =========================
+     WRAPPER DO TABULEIRO
+     Permite overlay do canvas (setas)
+     ========================= */
+  #board-wrapper { position: relative; }
+
+  /* =========================
+     TABULEIRO 8x8 EM GRID
+     Cada casa tem 72x72px
+     ========================= */
+  #board {
+    display: grid;
+    grid-template-columns: repeat(8, 72px);
+    grid-template-rows: repeat(8, 72px);
+    border: 2px solid #5a3e1b;
+  }
+
+  /* =========================
+     CADA CASA DO TABULEIRO
+     ========================= */
+  .sq {
+    width: 72px;
+    height: 72px;
+    position: relative;
+    cursor: default;
+  }
+
+  /* Casas claras e escuras alternadas */
+  .sq.light { background: #f0d9b5; }
+  .sq.dark  { background: #b58863; }
+
+  /* Destaque vermelho (marcações temporárias) */
+  .sq.highlight-yellow {
+    position: relative;
+  }
+  
+  .sq.highlight-yellow::before {
+    content: '';
+    
+    position: absolute;
+    inset: 0;
+    
+    background: rgba(255, 227, 89, 0.569);
+    
+    /* pointer-events: none; */
+  }
+  
+  .sq.highlight-red {
+    position: relative;
+  }
+  .sq.highlight-red::before {
+  content: '';
+
+  position: absolute;
+  inset: 0;
+
+  background: rgba(255, 89, 89, 0.569);
+
+  /* pointer-events: none; */
+}
+
+  /* =========================
+     PEÇAS DE XADREZ
+     ========================= */
+  .sq .piece {
+    position: absolute;
+    inset: 2px;
+  width: calc(100% - 6px);
+  height: calc(100% - 6px);
+
+  object-fit: contain;
+
+  cursor: grab;
+    z-index: 2;
+  }
+
+  .sq .piece:active { cursor: grabbing; }
+
+  /* =========================
+     COORDENADAS (colunas a-h)
+     ========================= */
+  #coords-file {
+    display: flex;
+
+  }
+
+  .coord-file {
+    width: 72px;
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+  }
+
+  /* =========================
+     COORDENADAS (linhas 1-8)
+     Lado esquerdo do tabuleiro
+     ========================= */
+  #coords-rank {
+    position: absolute;
+    left: -18px;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .coord-rank {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #aaa;
+  }
+
+  /* =========================
+     CANVAS DE SETAS
+     Fica por cima do tabuleiro
+     ========================= */
+  #arrow-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none; /* não bloqueia clicks no tabuleiro */
+    z-index: 3;
+  }
+
+  /* Texto de ajuda inferior */
+  #info {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+  }
+
+
+
+  .sq.sq-checkmate {
+    position: relative;
+  }
+  
+  .sq.sq-checkmate::after {
+    content: '';
+    
+    position: absolute;
+    inset: 0;
+    
+    background: rgba(255, 89, 89, 0.569);
+    
+    pointer-events: none;
+
+    z-index: 5;
+  }
+
+  .sq.sq-winner {
+    position: relative;
+  }
+  
+  .sq.sq-winner::after {
+    content: '';
+    
+    position: absolute;
+    inset: 0;
+    
+    background: rgba(29, 131, 46, 0.569);
+    
+    pointer-events: none;
+
+    z-index: 5;
+  }
+
+  .sq.sq-try {
+    position: relative;
+  }
+  
+  .sq.sq-try::after {
+    content: '';
+    
+    position: absolute;
+    inset: 0;
+    
+    background: rgba(46, 46, 46, 0.569);
+    
+    pointer-events: none;
+
+    z-index: 5;
+  }
+
+.king-badge {
+  position: absolute;
+  top: -14px; left: 50%; transform: translateY(30%);
+  white-space: nowrap;
+  font-size: 11px; font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 20px;
+  z-index: 20;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.45);
+
+  opacity: 0;
+  animation: fadeIn .15s ease-in-out forwards;
+}
+
+.badge-checkmate { background: #fff; color: #c8302a; border: 2px solid #fff; font-weight: bold; font-size:small; }
+.badge-winner    { background: #fff; color: #5a9e44; border: 2px solid #fff; font-weight: bold; font-size:small; }
+.badge-try    { background: #fff; color: #585858; border: 2px solid #fff; font-weight: bold; font-size:small; }
+
+.king-icon-icon-winner {
+  position: absolute;
+  width: 22px; height: 22px;
+  width: calc(100% - 6px);
+  height: calc(100%);
+  animation:reverse;
+  transition: .2s;
+  
+  object-fit: contain;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeIn .15s ease-in-out forwards;
+}
+
+.king-icon-icon-try {
+  position: absolute;
+  width: 22px; height: 22px;
+  width: calc(100% - 6px);
+  height: calc(100%);
+  animation:reverse;
+  transition: .2s;
+  
+  object-fit: contain;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeIn .15s ease-in-out forwards;
+}
+
+.king-icon-icon-checkmate {
+  position: absolute;
+  width: 22px; height: 22px;
+  width: calc(100% - 6px);
+  height: calc(100%);
+  animation:reverse;
+  transition: .2s;
+  
+  object-fit: contain;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeInCheckMate .15s ease-in-out forwards;
+  transform: rotate(270deg);
+}
+
+/* Define o roteiro da animação */
+@keyframes fadeInCheckMate {
+  from {
+    opacity: 0;
+    
+    transform: rotate(270deg);; /* Move o elemento um pouco para baixo inicialmente */
+  }
+  to {
+    opacity: 1;
+    transform: rotate(270deg);; /* Volta para a posição original */
+  }
+}
+
+/* Define o roteiro da animação */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* =========================
+   MOVIMENTOS POSSÍVEIS
+   ========================= */
+
+.sq.move-circle::after {
+  content: '';
+
+  position: absolute;
+
+  width: 20px;
+  height: 20px;
+
+  border-radius: 50%;
+
+  background: rgba(80, 80, 80, 0.35);
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  /* pointer-events: none; */
+
+  z-index: 100;
+
+  cursor: pointer;
+}
+
+.sq.move-circle {
+  cursor: pointer;
+}
+
+.sq.move-ring {
+  cursor: pointer;
+}
+
+.sq.move-ring::after {
+  content: '';
+
+  position: absolute;
+
+  inset: 6px;
+
+  border-radius: 50%;
+
+  border: 6px solid rgba(80, 80, 80, 0.35);
+
+  /* pointer-events: none; */
+
+  z-index: 100;
+
+}
