@@ -68,27 +68,7 @@ First of all, let's review SOME rules of traditional chess before presenting the
 ### NEW DYNAMICS ♙ ✧ ♤
 -----------
 
-Medieval chess uses the logic of adding new things to chess in order to avoid complicating the players' lives. Knowing that new dynamics can lead to this, ***some aspects of the original chess game are discarded or simplified*** to balance the difficulty.
-
-|  | What |
-|--|------|
-|***REMOVED***| Castling (♖ ♔)|
-|***REMOVED***| El passant (♙ ♙)|
-|***REMOVED***| Double initial move of the pawn (♙)|
-|***REMOVED***| Promotion of the Pawn to the end of the map (♙ ♕)|
-
-It might seem illogical to remove the pawn's promotion system when it reaches the end of the board, but this happened because another piece in particular will take over this __"promotion system"__...
-
-...Speaking of the *`PAWN`*, the most complicated piece in chess, its gameplay has also been simplified:
-<br>
-
-|Part|Name|Movement|
-|:----:|----|--------|
-| ♙  |Pawn| Move 1 square vertically or attack 1 square diagonally.|
-
-
-**IN SUMMARY**, <br>
-The Pawn can now move and attack from behind, which can be very useful for forming *`trenches on the board`* maybe…
+**Note:** As of this current version, **__El Passant__** has been removed from the gameplay; it may or may not be added in the future...
 
 <br>
 
@@ -116,7 +96,7 @@ __`JESTER ✧`__*: Two moves in one turn*
 |Movements|Direction|Feature|Number of active squares|
 |---------|---------|-------|:---------------------:|
 |1st Movement|Orthogonal|You can capture parts.|Until 2 squares|
-|2nd Movement|Diagonal|__No capture.__ Can jump pieces.|Until 2 squares|
+|2nd Movement|Diagonal|__No capture.__ Can jump pieces.|ONE square|
 
 <br><br>
 _`"So... um... how does that illegal move—you know, leaving the king exposed...—work with the Jester? ...the one where it moves twice in the same turn??"`_
