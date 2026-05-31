@@ -155,7 +155,7 @@ function calculateOneStepOffense(id, from_r, from_c, piece, color, moves) {
         if (Is_anyThere(square)) {
             if (Is_AllyThere(square, color))
                 add_offense(id, r, c, color, piece, from_r, from_c)
-            else if (!Is_Jester(piece))
+            else if (!Is_JesterSecondMove(piece))
                 add_offense_mobility(id, r, c, color, piece, from_r, from_c)
 
             continue
@@ -186,6 +186,8 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
         moves.push([-2, 0])
     }
 
+    let can_do_two_steps = true
+
     for (const [dr, dc] of moves) {
         let r = from_r + dr * ajust
         let c = from_c + dc * ajust
@@ -200,10 +202,17 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
             // console.log(attackers[id])
             // movimento endiante
 
-            if (!Is_anyThere(square))
-                add_mobility(id, r, c, color, piece, from_r, from_c)
+            if (!Is_anyThere(square)) {
 
+                if (dr == -1 || (dr == -2 && can_do_two_steps))
+                add_mobility(id, r, c, color, piece, from_r, from_c)
+            }else {
+
+                if (dr == -1) can_do_two_steps = false
+            }
             continue
+
+
         } else {
             if (Is_anyThere(square) && !Is_AllyThere(square, color))
                 add_offense_mobility(id, r, c, color, piece, from_r, from_c)

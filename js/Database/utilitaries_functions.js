@@ -35,7 +35,7 @@ function Is_JesterSecondMove(piece) {
 
 // O Jester está realizando o primeiro movimento ?
 function Is_JesterFirstMove(piece) {
-  return (Is_Jester(piece) && valueLancesTurn == 0)
+  return (Is_Jester(piece) && (valueLancesTurn == 0 || valueLancesTurn == 1))
 }
 
 // O Jester está tentando capturar no segundo movimento ?
@@ -102,7 +102,7 @@ function add_mobility(id, row, column, color, piece, fromR, fromC) {
 
   add_influence(id, row, column, color, piece, fromR, fromC)
 
-  console.log('-> ', row, column)
+  // console.log('-> ', row, column)
   // console.log(row, column)
   if (attackers[id]) attackers[id].push([row, column])
   else attackers[id] = [[row, column]]
@@ -231,4 +231,8 @@ function get_Attackers(square_offense) {
 
 function get_numAttacks(square_offense) {
   return get_Attackers(square_offense).length
+}
+
+function cooSet(r, c) {
+  return r * 8 + c;
 }

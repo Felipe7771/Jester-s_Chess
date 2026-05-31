@@ -32,6 +32,17 @@ const type = {
   king: 'K'
 }
 
+const name_pieces = {
+  P: "pawn",
+  N: 'knight',
+  B: "bishop",
+  R: 'rook',
+  J: 'jester',
+  S: 'sucessor',
+  Q: 'queen',
+  K: 'king',
+}
+
 const pieces_one_step = new Set(['N', 'K', 'S', 'P'])
 const promotions = ['J', 'R', 'B', 'N'];
 

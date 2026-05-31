@@ -96,7 +96,7 @@ document.addEventListener('mouseup', (e) => {
         (Is_anyThere(board[sq.r][sq.c]) &&
             Is_AllyThere(board[sq.r][sq.c], drag.piece[0])) ||
         Is_JesterAttackingInSecondMove(board[sq.r][sq.c], drag) ||
-        !Is_InMoves(drag.id, [sq.r, sq.c])
+        !Is_InLegalMoves(drag.id, [sq.r, sq.c])
     ) {
         board[drag.fromR][drag.fromC] = {
             id: drag.id,
@@ -191,9 +191,9 @@ document.addEventListener('mouseup', (e) => {
         const pos = toChessNotation(sq.r, sq.c)
         console.log(pos)
     }
-    
+
     drag = null
-    
+
     renderBoard()
 })
 
@@ -201,21 +201,35 @@ function showMoveIndicators(id, color) {
     clearMoveHints()
 
     const formatMove = ([r, c]) => `[${8 - r}, ${c + 1}]`
-    
+
     if (!memory_moves[id]) {
         console.log(memory_moves)
 
         console.log('Calculando para memória')
-
-        total_moves = attackers[id]
-
+        
         checkCastling(id, color)
 
+        let legals, illegals
+
+        if (Is_JesterFirstMove(id[1])) {
+            ({legals, illegals} = LegalProvocative_Jester(id, color));
+        } else {
+            legals = attackers[id]
+            illegals = []
+        }
+
+        console.log(legals)
+
+        legals = !legals ? [] : legals
+        console.log(legals)
+        let total_moves = [...legals, ...illegals]
+
+
         // por enquanto, não vamos calcular ilegalidades
-        
+
         memory_moves[id] = {
-            legal: total_moves,
-            illegal: [],
+            legal: legals,
+            illegal: illegals,
             total: total_moves,
         }
     }
@@ -223,11 +237,12 @@ function showMoveIndicators(id, color) {
     console.log(
         `[ ${(memory_moves[id].total || []).map(formatMove).join(', ')} ]`,
     )
-    
+
     showMoveHints(memory_moves[id], color)
 }
 
 function clearMoveHints() {
+    console.log("executado")
     moveCircles.clear()
     moveRings.clear()
 }
@@ -238,25 +253,25 @@ document.addEventListener('mouseup', (e) => {
     const sq = getSquareFromEvent(e)
 
     if (!sq) return
-    
+
     if (
         moveCircles.has(sqKey(sq.r, sq.c)) ||
         moveRings.has(sqKey(sq.r, sq.c))
     ) {
         console.log('movimento válido')
-        
+
         // se soltou fora do tabuleiro → volta
         if (
             !sq ||
             (Is_anyThere(board[sq.r][sq.c]) &&
-            Is_AllyThere(board[sq.r][sq.c], global_drag.piece[0])) ||
+                Is_AllyThere(board[sq.r][sq.c], global_drag.piece[0])) ||
             Is_JesterAttackingInSecondMove(board[sq.r][sq.c], global_drag) ||
             !Is_InMoves(global_drag.id, [sq.r, sq.c])
         ) {
             return
         } else {
             // console.log((global_drag.fromR, global_drag.fromC) == (sq.r, sq.c))
-            
+
             if (
                 board[sq.r][sq.c].visualKey != null &&
                 board[sq.r][sq.c].visualKey[0] != global_drag.piece[0]
@@ -275,7 +290,7 @@ document.addEventListener('mouseup', (e) => {
                 color: '',
                 visualKey: null,
             }
-            
+
             if (board[sq.r][sq.c].id != '') {
                 delete_piece_to_team(
                     board[sq.r][sq.c].id,
@@ -292,41 +307,41 @@ document.addEventListener('mouseup', (e) => {
                 color: global_drag.piece[0],
                 visualKey: global_drag.piece,
             }
-            
+
             // lances fora da mesma casa são válidos como um lance jogável
             if (global_drag.fromR != sq.r || global_drag.fromC != sq.c) {
                 Castling_Move(global_drag.id, sq.r, sq.c, global_drag.piece[0])
 
                 global_global_drag = null
-                
+
                 if (!Is_JesterSecondMove(global_drag.piece[1]))
                     yellowSquares.clear()
-                
+
                 valueLancesTurn += global_drag.piece[1] == 'J' ? 0.5 : 1 // por enquanto, toda peça tem o mesmo valor de lance (Jester: 1/2)
-                
+
                 SELECTOR_ID = global_drag.piece[1] == 'J' ? SELECTOR_ID : ''
                 SELECTOR_COLOR =
                     global_drag.piece[1] == 'J' ? SELECTOR_COLOR : ''
-                    
+
                 console.log('==========================')
                 console.log(
                     `Peça movida (${global_drag.id}) | valorLance-> ${valueLancesTurn}`,
                 )
-                
+
                 const key1 = sqKey(sq.r, sq.c)
                 const key2 = sqKey(global_drag.fromR, global_drag.fromC)
-                
+
                 yellowSquares.add(key1)
                 yellowSquares.add(key2)
-                
+
                 memory_moves = {}
-                
+
                 clearMoveHints()
-                
+
                 checkPromotedSucessor(TURN)
                 checkPromotedPawn(board[sq.r][sq.c].id, TURN, sq.r, sq.c)
                 checkBreakCastlePermission(board[sq.r][sq.c].id, TURN)
-                
+
                 set_piece_moved(
                     global_drag.id,
                     global_drag.piece[1],
@@ -344,12 +359,12 @@ document.addEventListener('mouseup', (e) => {
                 )
 
                 set_combat_turn()
-                
+
                 isEndedTurn() // tente encerrar o turno
-                
+
                 console.log('FIM DE TURNO')
                 set_Check(TURN)
-                
+
                 playMoveSound = false
                 castleSound = false
 
