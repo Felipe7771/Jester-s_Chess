@@ -59,3 +59,34 @@ function LegalProvocative_Jester(id, color) {
 
 
 }
+
+function illegalMovesTratament(piece, coo_try_move) {
+    console.log("===== ILLEGAL MOVES TRATAMENT ===")
+
+    const r = coo_try_move[0]
+    const c = coo_try_move[1]
+
+    console.log("BASE: ",r, c)
+
+
+    if (Is_Jester(piece)) {
+
+        let illegal_alerts = []
+
+        const moves = unit_moviment_parts.J.move[1]
+
+        for (const [dr, dc] of moves) {
+            console.log("ADICIONAL: ",dr, dc)
+            const Ar = r + dr
+            const Ac = c + dc
+
+            if (Is_OutBoard(Ar,Ac)) continue
+
+            illegal_alerts.push([Ar,Ac])
+        }
+
+        console.log(illegal_alerts)
+
+        flashIllegal(illegal_alerts)
+    }
+}

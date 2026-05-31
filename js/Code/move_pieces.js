@@ -58,7 +58,6 @@ function startDrag(e, r, c, piece, ID) {
         visualKey: null,
     }
 
-    renderBoard()
     moveGhost(e)
 }
 
@@ -92,11 +91,7 @@ document.addEventListener('mouseup', (e) => {
 
     // se soltou fora do tabuleiro → volta
     if (
-        !sq ||
-        (Is_anyThere(board[sq.r][sq.c]) &&
-            Is_AllyThere(board[sq.r][sq.c], drag.piece[0])) ||
-        Is_JesterAttackingInSecondMove(board[sq.r][sq.c], drag) ||
-        !Is_InLegalMoves(drag.id, [sq.r, sq.c])
+        !sq || !Is_InLegalMoves(drag.id, [sq.r, sq.c])
     ) {
         board[drag.fromR][drag.fromC] = {
             id: drag.id,
@@ -104,6 +99,10 @@ document.addEventListener('mouseup', (e) => {
             color: drag.piece[0],
             visualKey: drag.piece,
         }
+
+        renderBoard();
+
+        if (sq && Is_InIllegalMoves(drag.id,[sq.r,sq.c])) illegalMovesTratament(drag.piece[1],[sq.r,sq.c])
     } else {
         // console.log((drag.fromR, drag.fromC) == (sq.r, sq.c))
 
@@ -186,15 +185,14 @@ document.addEventListener('mouseup', (e) => {
 
             playMoveSound = false
             castleSound = false
-            renderBoard()
         }
         const pos = toChessNotation(sq.r, sq.c)
         console.log(pos)
+        renderBoard()
     }
 
     drag = null
 
-    renderBoard()
 })
 
 function showMoveIndicators(id, color) {
@@ -204,8 +202,6 @@ function showMoveIndicators(id, color) {
 
     if (!memory_moves[id]) {
         console.log(memory_moves)
-
-        console.log('Calculando para memória')
         
         checkCastling(id, color)
 
@@ -258,19 +254,6 @@ document.addEventListener('mouseup', (e) => {
         moveCircles.has(sqKey(sq.r, sq.c)) ||
         moveRings.has(sqKey(sq.r, sq.c))
     ) {
-        console.log('movimento válido')
-
-        // se soltou fora do tabuleiro → volta
-        if (
-            !sq ||
-            (Is_anyThere(board[sq.r][sq.c]) &&
-                Is_AllyThere(board[sq.r][sq.c], global_drag.piece[0])) ||
-            Is_JesterAttackingInSecondMove(board[sq.r][sq.c], global_drag) ||
-            !Is_InMoves(global_drag.id, [sq.r, sq.c])
-        ) {
-            return
-        } else {
-            // console.log((global_drag.fromR, global_drag.fromC) == (sq.r, sq.c))
 
             if (
                 board[sq.r][sq.c].visualKey != null &&
@@ -367,15 +350,9 @@ document.addEventListener('mouseup', (e) => {
 
                 playMoveSound = false
                 castleSound = false
-
-                renderBoard()
             }
-            const pos = toChessNotation(sq.r, sq.c)
-            console.log(pos)
-        }
+
 
         renderBoard()
-    } else {
-        // clearMoveHints()
     }
 })

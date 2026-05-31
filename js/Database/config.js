@@ -217,6 +217,7 @@ const checkmate = new Audio('./sounds/game-end.mp3')
 const promote = new Audio('./sounds/promote.mp3')
 const check = new Audio('./sounds/move-check.mp3')
 const castle = new Audio('./sounds/castle.mp3')
+const invalid = new Audio('./sounds/illegal.mp3')
 
 let TURN = 'w'
 const turns = ['w', 'b', 'w']

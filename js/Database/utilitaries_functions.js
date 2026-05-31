@@ -2,14 +2,22 @@
 /* =========================
    FUNÇÕES UTILITÁRIAS
    ========================= */
-
-/* transforma posição (r,c) em chave única */
+   
+   /* transforma posição (r,c) em chave única */
 function sqKey(r, c) { return r * 8 + c; }
 
 /* calcula o centro geométrico da casa */
 function sqCenter(r, c) {
   return { x: c * SQ + SQ / 2, y: r * SQ + SQ / 2 };
 }
+
+function cooSet(r, c) {
+  return sqKey(r, c);
+}
+
+// ==========================
+// ! TURNOS
+// ==========================
 
 function isEndedTurn() {
   if (valueLancesTurn >= LimitValueLance) {
@@ -24,6 +32,9 @@ function chanceTurn() {
   TURN = turns[id_turn]
 }
 
+// ==========================
+// ! OPERAÇÕES COM JESTER
+// ==========================
 
 function Is_Jester(piece) {
   return piece == 'J'
@@ -43,15 +54,46 @@ function Is_JesterAttackingInSecondMove(square, drag) {
   return (Is_JesterSecondMove(drag.piece[1]) && Is_anyThere(square))
 }
 
-
 // retorna o indice de movimento para determinar: tipo de movimento e movimentos do Jester
 function getJesterMoveIndex() {
   return [0, 1].includes(valueLancesTurn) ? 0 : 1
 }
 
-function get_Moves(id) {
-  return attackers[id]
+// ==========================
+// ! VALIDAÇÃO DE MOVIMENTOS
+// ==========================
+
+function Is_OutBoard(r, c) {
+  return (r >= 8 || r < 0) || (c >= 8 || c < 0)
 }
+
+function Is_InLegalMoves(id, coo) {
+  const legal_moves = memory_moves[id].legal || []
+
+  return legal_moves.includes(coo)
+}
+
+function Is_InMoves(id, coo) {
+  const total_moves = memory_moves[id].total || [];
+
+  return total_moves.some(
+    move => move[0] === coo[0] && move[1] === coo[1]
+  );
+}
+
+function Is_InIllegalMoves(id, coo) {
+  const total_moves = memory_moves[id].illegal || [];
+
+  if (!total_moves.length) return false
+
+  return total_moves.some(
+    move => move[0] === coo[0] && move[1] === coo[1]
+  );
+}
+
+// ==========================
+// ! DETECÇÃO DE PRESENÇA
+// ==========================
 
 function Is_anyThere(square) {
   return square.id != ''
@@ -61,15 +103,89 @@ function Is_AllyThere(square, team) {
   return square.color == team
 }
 
-function Is_OutBoard(r, c) {
-  return (r >= 8 || r < 0) || (c >= 8 || c < 0)
+// ==========================
+// ! ANÁLISES OFENSIVAS
+// ==========================
+
+function set_piece_moved(id, piece, color, tr, tc, fr, fc) {
+  piece_moved = {
+    id,
+    piece,
+    to_r: tr,
+    to_c: tc,
+    from_r: fr,
+    from_c: fc,
+    color,
+  }
+  
+}
+function get_Moves(id) {
+  return attackers[id]
 }
 
-function add_offense_mobility(id, row, column, color, piece, fromR, fromC) {
-
-  add_offense(id, row, column, color, piece, fromR, fromC)
-  add_mobility(id, row, column, color, piece, fromR, fromC)
+function get_Enemy(team) {
+  return team == 'w' ? 'b' : 'w'
 }
+
+function get_Attackers(square_offense) {
+  return Array.isArray(square_offense)
+    ? square_offense.filter(attacker => attacker.id in pieceIndex)
+    : []
+}
+
+function get_numAttacks(square_offense) {
+  return get_Attackers(square_offense).length
+}
+
+// ==========================
+// ! OPERAÇÕES COM A REALEZA (King, Queen & Sucessor)
+// ==========================
+
+function Have_King(color) {
+  const id_king = get_Id_King(color)
+  
+  return id_king in pieceIndex
+}
+function Have_Queen(color) {
+  const id_queen = get_Id_Queen(color)
+  
+  return id_queen in pieceIndex
+}
+function Have_Sucessor(color) {
+  const id_sucessor = get_Id_Sucessor(color)
+
+  return id_sucessor in pieceIndex
+}
+
+function get_Id_King(color) {
+  return `${color}K${Complement_Id_Real[color]['K']}`
+}
+function get_Id_Queen(color) {
+  return `${color}Q${Complement_Id_Real[color]['Q']}`
+}
+function get_Id_Sucessor(color) {
+  return `${color}S0`
+}
+
+// ==========================
+// ! INFLUENCE
+// ==========================
+
+function add_influence(id, row, column, color, piece, fromR, fromC) {
+
+  const key = `${id}-${fromR}-${fromC}-${row}-${column}`;
+
+  influence[row][column][color].set(key, {
+    id,
+    piece,
+    r: fromR,
+    c: fromC
+  });
+}
+
+// ==========================
+// ! OFFENSE & MOBILITY
+// ==========================
 
 function add_offense(id, row, column, color, piece, fromR, fromC) {
   offense[row][column][color].push({
@@ -92,6 +208,7 @@ function add_offense(id, row, column, color, piece, fromR, fromC) {
   else offenseIndex[id] = [content]
 }
 
+
 function add_mobility(id, row, column, color, piece, fromR, fromC) {
   mobility[row][column][color].push({
     id,
@@ -108,18 +225,16 @@ function add_mobility(id, row, column, color, piece, fromR, fromC) {
   else attackers[id] = [[row, column]]
 }
 
-function add_influence(id, row, column, color, piece, fromR, fromC) {
 
-  const key = `${id}-${fromR}-${fromC}-${row}-${column}`;
+function add_offense_mobility(id, row, column, color, piece, fromR, fromC) {
 
-  influence[row][column][color].set(key, {
-    id,
-    piece,
-    r: fromR,
-    c: fromC
-  });
+  add_offense(id, row, column, color, piece, fromR, fromC)
+  add_mobility(id, row, column, color, piece, fromR, fromC)
 }
 
+// ==========================
+// ! PIECE TEAM
+// ==========================
 
 function add_piece_team(row, column, color, piece, id) {
   const PART = {
@@ -134,6 +249,7 @@ function add_piece_team(row, column, color, piece, id) {
 
 }
 
+
 function set_piece_moved_team(to_r, to_c, id, color) {
 
 
@@ -146,93 +262,47 @@ function set_piece_moved_team(to_r, to_c, id, color) {
   pieceIndex[id]['c'] = to_c
 }
 
+// ==========================
+// ! OPERAÇÕES DE UI PARA O CÓDIGO
+// ==========================
+
+function flashIllegal(sqList) {
+
+  invalid.play()
+  for (const [r, c] of sqList) {
+    // console.log(r,c)
+    const el = boardEl.querySelector(`[data-r="${r}"][data-c="${c}"]`);
+    console.log(r,c,": ",!el ? "NAO DEU": 'W')
+    if (!el) continue;
+
+    console.log("PASSEI")
+
+    el.classList.remove('flash-illegal');
+    void el.offsetWidth; // força reflow pra reiniciar animação se chamar duas vezes seguidas
+    el.classList.add('flash-illegal');
+
+    el.addEventListener('animationend', () => {
+      el.classList.remove('flash-illegal');
+    }, { once: true });
+  }
+}
+
+// ==========================
+// ! INSTANCIMENTO
+// ==========================
 
 function set_initial_team() {
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 8; c++) {
-
+      
       let content = board[r][c]
-
+      
       console.log(content)
-
+      
       if (content.id != '') {
-
+        
         add_piece_team(r, c, content.color, content.type, content.id)
       }
     }
   }
-}
-
-function set_piece_moved(id, piece, color, tr, tc, fr, fc) {
-  piece_moved = {
-    id,
-    piece,
-    to_r: tr,
-    to_c: tc,
-    from_r: fr,
-    from_c: fc,
-    color,
-  }
-
-}
-
-function Is_InLegalMoves(id, coo) {
-  const legal_moves = memory_moves[id].legal || []
-
-  return legal_moves.includes(coo)
-}
-
-function Is_InMoves(id, coo) {
-  const total_moves = memory_moves[id].total || [];
-
-  return total_moves.some(
-    move => move[0] === coo[0] && move[1] === coo[1]
-  );
-}
-
-
-function Have_Sucessor(color) {
-  const id_sucessor = get_Id_Sucessor(color)
-
-  return id_sucessor in pieceIndex
-}
-
-function Have_King(color) {
-  const id_king = get_Id_King(color)
-
-  return id_king in pieceIndex
-}
-
-function get_Id_Sucessor(color) {
-  return `${color}S0`
-}
-function get_Id_Queen(color) {
-  return `${color}Q${Complement_Id_Real[color]['Q']}`
-}
-function get_Id_King(color) {
-  return `${color}K${Complement_Id_Real[color]['K']}`
-}
-
-function Have_Queen(color) {
-  const id_queen = get_Id_Queen(color)
-
-  return id_queen in pieceIndex
-}
-
-function get_Enemy(team) {
-  return team == 'w' ? 'b' : 'w'
-}
-
-function get_Attackers(square_offense) {
-  return Array.isArray(square_offense)
-    ? square_offense.filter(attacker => attacker.id in pieceIndex)
-    : []
-}
-
-function get_numAttacks(square_offense) {
-  return get_Attackers(square_offense).length
-}
-
-function cooSet(r, c) {
-  return r * 8 + c;
 }
