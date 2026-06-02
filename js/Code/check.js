@@ -320,6 +320,13 @@ function Is_pin(id, color) {
     
     for (const [index, Enemie] of Enemies.entries()) {
 
+        if(unit_moviment_parts[Enemie.piece].move_type != 'linear') {
+            if (index == Length-1) {
+                alone = false
+            }
+            continue
+        }
+
         const Er = Enemie.r, Ec = Enemie.c
 
         const drE = Er - pr, dcE = Ec - pc
@@ -355,7 +362,9 @@ function Is_pin(id, color) {
 
         id_attacker = Enemie.id
 
-        for (let len = 1; len <= 8; len++) {
+        const max_len = freq_move[unit_moviment_parts[Enemie.piece].type_move]
+
+        for (let len = 1; len <= max_len; len++) {
 
             r = Er + UdrEK*len;
             c = Ec + UdcEK*len;
