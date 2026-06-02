@@ -6,6 +6,12 @@
    /* transforma posição (r,c) em chave única */
 function sqKey(r, c) { return r * 8 + c; }
 
+function sqFromKey(key) {
+    const r = Math.floor(key / 8);
+    const c = key % 8;
+    return [r, c];
+}
+
 /* calcula o centro geométrico da casa */
 function sqCenter(r, c) {
   return { x: c * SQ + SQ / 2, y: r * SQ + SQ / 2 };
@@ -13,6 +19,10 @@ function sqCenter(r, c) {
 
 function cooSet(r, c) {
   return sqKey(r, c);
+}
+
+function cooFromSet(key){
+  return sqFromKey(key);
 }
 
 // ==========================
@@ -83,10 +93,13 @@ function Is_InMoves(id, coo) {
 
 function Is_InIllegalMoves(id, coo) {
   const total_moves = memory_moves[id].illegal || [];
+  const total_J_moves = memory_moves[id].j_illegal || [];
 
-  if (!total_moves.length) return false
+  if (!total_moves.length && !total_J_moves) return false
 
   return total_moves.some(
+    move => move[0] === coo[0] && move[1] === coo[1]
+  ) || total_J_moves.some(
     move => move[0] === coo[0] && move[1] === coo[1]
   );
 }

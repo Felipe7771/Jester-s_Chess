@@ -13,7 +13,7 @@ function LegalProvocative_Jester(id, color) {
     const Escape = unit_moviment_parts.J.move[1]
 
     let legals = []
-    let illegals = []
+    let jesterIllegals = []
 
     for (const [Pr, Pc] of Provocative) {
 
@@ -35,16 +35,16 @@ function LegalProvocative_Jester(id, color) {
         console.log("Escapes: ",Escape_moves)
 
         if (Escape_moves) legals.push([Pr, Pc])
-        else illegals.push([Pr, Pc])
+        else jesterIllegals.push([Pr, Pc])
 
     }
 
     attackers[id] = legals
 
     console.log(legals)
-    console.log(illegals)
+    console.log(jesterIllegals)
 
-    for (const [ilr, ilc] of illegals) {
+    for (const [ilr, ilc] of jesterIllegals) {
 
         offenseIndex[id] = offenseIndex[id].filter(item => item.r !== ilr && item.c !== ilc);
 
@@ -55,12 +55,12 @@ function LegalProvocative_Jester(id, color) {
 
     console.log("Verificado!!")
 
-    return {legals, illegals}
+    return {legals, jesterIllegals}
 
 
 }
 
-function illegalMovesTratament(piece, coo_try_move) {
+function illegalMovesTratament(piece, coo_try_move, color) {
     console.log("===== ILLEGAL MOVES TRATAMENT ===")
 
     const r = coo_try_move[0]
@@ -88,5 +88,12 @@ function illegalMovesTratament(piece, coo_try_move) {
         console.log(illegal_alerts)
 
         flashIllegal(illegal_alerts)
+    } else {
+        // exibir que o rei vai ficar em xeque 
+        const King = pieceIndex[get_Id_King(color)]
+        const Kr = King.r
+        const Kc = King.c
+
+        flashIllegal([[Kr, Kc]])
     }
 }

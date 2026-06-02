@@ -44,6 +44,8 @@ function set_Check(color) {
     castle_atives = {}
 }
 
+// retorno:
+// checkmate, save_king_squares
 function estruture_Check(color, num_attacks) {
     const idKing = get_Id_King(color)
     const enemy = get_Enemy(color)
@@ -53,6 +55,24 @@ function estruture_Check(color, num_attacks) {
     // retorno:
     // checkmate: true/false
     // emerging_squares: Set()
+
+    let checkmate = false
+
+    const { save_king_squares, num_squares_save } =
+        get_SquareMovesKing_Attacked(King, enemy)
+
+    if (num_attacks > 1) {
+
+        if (!num_squares_save) {
+            checkmate = true
+            return (checkmate, new Set())
+
+        } else return (checkmate, save_king_squares)
+    }
+
+    const Attacker = get_Attacker_King(King, enemy)
+
+
 }
 
 function get_Attacker_King(King, enemy) {
@@ -61,20 +81,146 @@ function get_Attacker_King(King, enemy) {
     return !Attacker.length ? {} : Attacker[0]
 }
 
-function can_KillAttacker(King, enemy, Attacker) {
+function make_theoretical_move(fwd_id, fwd_type, team, Fr, Fc, tr, tc) {
+    // Limpa a casa de origem
+    board[Fr][Fc] = {
+        id: ``,
+        type: '',
+        color: '',
+        visualKey: null,
+    }
+
+    // Remove peça capturada se houver
+    if (board[tr][tc].id != '') {
+        delete_piece_to_team(
+            board[tr][tc].id,
+            board[tr][tc].color,
+            tr,
+            tc,
+        )
+    }
+
+    // Coloca peça na nova casa
+    board[tr][tc] = {
+        id: fwd_id,
+        type: fwd_type,
+        color: team,
+        visualKey: `${team}${fwd_type}`,
+    }
+
+    set_piece_moved(
+        fwd_id,
+        fwd_type,
+        team,
+        tr,
+        tc,
+        Fr,
+        Fc,
+    )
+    set_piece_moved_team(tr, tc, fwd_id, team)
+
+    set_combat_turn()
+}
+function get_SafeKillersAttackerMoves(King, enemy, Attacker, num_king_svSquares) {
+
+    const Kr = King.r, Kc = King.c, Ar = Attacker.r, Ac = Attacker.c, PieceAttc = Attacker.piece
+    const team = get_Enemy(enemy)
+    const dist_r = Kr - Ar // ! Acima do Rei: <0, Abaixo do Rei: >0
+    const dist_c = Ac - Kc // ! Direita: <0, Esquerda: >0
+
+    const closest = new Set([0, 1])
+
+    let permited_moves = {}
+    let num_permited_moves = 0
+
+    if (!num_king_svSquares && (closest.has(dist_c) && closest.has(dist_r)))
+        return { permited_moves, num_permited_moves }
+
+    // Principal Backup
+    const Principal_Backup = createBackup();
+    // Cálculo do Jester movimentos obressivos
+    calculateJesterSecoundMove(team);
+    // Pegar casas atacas em direção ao rei APENAS aquela que tenham pelo menos um imimigo protegendo
+    const unit_r = Math.sign(dist_r);
+    const unit_c = Math.sign(dist_c);
+
+    const num_Defenders = []
+
+    for (let len = 1; len <= 8; len++) {
+
+        const r = Ar + unit_r * len
+        const c = Ac + unit_c * len
+
+        if (Is_OutBoard(r, c) || ((r == Kr) && (c == Kc))) break
+
+        const offend = offense[r][c][team];
+
+        if (get_numAttacks(offend)) {
+            const attackers = get_Attackers(offend);
+
+            for (let i = 0; i < attackers.length; i++) {
+                num_Defenders.push(attackers[i]);
+            }
+        }
+    }
+
+    // Para cada casa
+    // Sub Backup
+    // executar movimento teórico
+    // se funcionar, salvar movimento
+    // Resturar sub Backup
+    const {permited_defends, num_permited_defends} = check_theoretical_move(num_Defenders, permited_moves, num_permited_moves);
+
+    // Restaurar Principal Backup
+    restoreBackup(Principal_Backup) // restaurando estado ao jogo
+
+    return {permited_defends, num_permited_defends}
+}
+
+
+function get_SafeKillersAttackerMoves(King, enemy, Attacker) {
     const team = get_Enemy(enemy)
 
-    const Forward = new Set(
-        get_Attackers(offense[Attacker.r][Attacker.c][team]),
-    )
+    let permited_moves = {}
+    let num_permited_moves = 0
 
-    if (!Attacker.size) return (false, new Set())
+    const Forward = get_Attackers(offense[Attacker.r][Attacker.c][team]);
+
+
+    return check_theoretical_move(Forward, permited_moves, num_permited_moves);
+
+}
+
+function check_theoretical_move(Forward, permited_moves, num_permited_moves) {
+    if (Forward == null) return { permited_moves, num_permited_moves }
 
     for (const fwd of Forward) {
-        const backup = createBackup()
 
-        // continuar mais tarde
+        const backup = createBackup() // salvando estado atual do jogo
+
+        make_theoretical_move(
+            fwd.id,
+            fwd.piece,
+            team,
+            fwd.r,
+            fwd.c,
+            Attacker.r,
+            Attacker.c,
+        ) // executando movimento teórico
+
+        const { result, Attacks } = is_Check(team)
+
+        if (!result) {
+            const Attr = Attacker.r, Attc = Attacker.c
+            num_permited_moves++
+
+            (permited_moves[fwd.id] ??= []).push([Attr, Attc])
+        }
+
+        restoreBackup(backup) // restaurando estado ao jogo
     }
+
+    return { permited_moves, num_permited_moves }
 }
 
 function createBackup() {
@@ -87,13 +233,13 @@ function createBackup() {
         pieceIndex,
         offenseIndex,
         piece_moved,
-    });
+    })
 
-    return backup;
+    return backup
 }
 
 function restoreBackup(backup) {
-    ({
+    ; ({
         board,
         offense,
         mobility,
@@ -102,10 +248,10 @@ function restoreBackup(backup) {
         pieceIndex,
         offenseIndex,
         piece_moved,
-    } = backup);
+    } = backup)
 }
 
-function is_SquareMovesKing_Attacked(King, enemy) {
+function get_SquareMovesKing_Attacked(King, enemy) {
     const moves = unit_moviment_parts['K'].move
 
     let save_squares = new Set()
@@ -140,5 +286,114 @@ function is_SquareMovesKing_Attacked(King, enemy) {
         }
     }
 
-    return save_squares
+    const num_squares = save_squares.size()
+
+    return { save_squares, num_squares }
+}
+
+function Is_pin(id, color) {
+    const Piece = pieceIndex[id];
+    const pr = Piece.r, pc = Piece.c
+    const enem = get_Enemy(color)
+
+    const King = pieceIndex[get_Id_King(color)]
+    const Kr = King.r, Kc = King.c
+
+    const square_Piece = offense[pr][pc][enem]
+    const Enemies = get_Attackers(square_Piece)
+
+
+    if (!Enemies.length) return [false, null]
+
+    const Length = Enemies.length
+
+    const drK = Kr - pr, dcK = Kc - pc
+    const typeM_King = get_type_move(drK, dcK);
+
+    if (typeM_King == 'no_line') return [false, null]
+
+    const UdrK = Math.sign(drK);
+    const UdcK = Math.sign(dcK);
+    
+    let alone = true
+    let id_attacker = null
+    
+    for (const [index, Enemie] of Enemies.entries()) {
+
+        const Er = Enemie.r, Ec = Enemie.c
+
+        const drE = Er - pr, dcE = Ec - pc
+        const typeM_Enemie = get_type_move(drE, dcE);
+
+        console.log("Enemie: ", Enemie.id, "Tipo de movimento: ", typeM_Enemie)
+        console.log("Estão na mesma linha? ", typeM_Enemie === typeM_King)
+        
+        if (typeM_Enemie !== typeM_King) {
+            if (index == Length-1) {
+                alone = false
+            }
+            continue
+        }
+        
+        const UdrE = Math.sign(drE);
+        const UdcE = Math.sign(dcE);
+
+        console.log("Unidade Enemie: ", UdrE, UdcE)
+        console.log("Unidade King: ", UdrK, UdcK)
+
+        console.log("São opostos? ", UdrE === -UdrK && UdcE === -UdcK)
+
+        if (UdrE !== -UdrK || UdcE !== -UdcK) {
+            if (index == Length-1) {
+                alone = false
+            }
+            continue
+        }
+
+        const UdrEK = Math.sign(Kr - Er);
+        const UdcEK = Math.sign(Kc - Ec);
+
+        id_attacker = Enemie.id
+
+        for (let len = 1; len <= 8; len++) {
+
+            r = Er + UdrEK*len;
+            c = Ec + UdcEK*len;
+
+            console.log("Verificando casa: ", r, c)
+            if (Is_OutBoard(r, c) || (r == Kr && c == Kc)) break
+
+            const square = board[r][c]
+
+            console.log("Está ocupada? ", Is_anyThere(square))
+            console.log("Peça ali? ", square.id)
+
+            if (Is_anyThere(square) && square.id !== Piece.id) {
+                alone = false
+                break
+            }
+
+        }
+
+        break
+    }
+
+    return [alone, id_attacker]
+
+}
+
+function get_type_move(dr, dc) {
+    const produt = Math.abs(dr*dc)
+
+    console.log("Produto: ", produt)
+    console.log("dr: ", dr, "dc: ", dc)
+    console.log("Tipo: ",!produt ? 'orthogonal' : (produt == dr*dr || produt == dc*dc ? 'diagonal' : 'no_line'))
+
+    if (!produt) {
+        return 'orthogonal';
+    } else if (produt == dr*dr || produt == dc*dc) {
+        return 'diagonal';
+    } else {
+        return 'no_line'
+    }
 }

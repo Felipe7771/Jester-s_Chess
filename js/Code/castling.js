@@ -119,15 +119,6 @@ function Castling_Move(id, r, c, color) {
             visualKey: null,
         }
 
-        if (board[tr][tc].id != '') {
-            delete_piece_to_team(
-                board[tr][tc].id,
-                board[tr][tc].color,
-                tr,
-                tc,
-            )
-        }
-
         // coloca peça na nova casa
         board[tr][tc] = {
             id: id_Rook,

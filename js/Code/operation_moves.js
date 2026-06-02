@@ -92,6 +92,81 @@ unit_moviment_parts = {
     },
 }
 
+const sqKey_secondMove_Jester = new Map([
+    [
+        '-1,0',
+        [
+            [0, 1],
+            [-2, 1],
+            [-2, -1],
+            [0, -1],
+        ],
+    ],
+    [
+        '-2,0',
+        [
+            [-1, 1],
+            [-3, 1],
+            [-3, -1],
+            [-1, -1],
+        ],
+    ],
+    [
+        '1,0',
+        [
+            [2, 1],
+            [0, 1],
+            [0, -1],
+            [2, -1],
+        ],
+    ],
+    [
+        '2,0',
+        [
+            [3, 1],
+            [1, 1],
+            [1, -1],
+            [3, -1],
+        ],
+    ],
+    [
+        '0,-1',
+        [
+            [1, 0],
+            [-1, 0],
+            [-1, -2],
+            [1, -2],
+        ],
+    ],
+    [
+        '0,-2',
+        [
+            [1, -1],
+            [-1, -1],
+            [-1, -3],
+            [1, -3],
+        ],
+    ],
+    [
+        '0,1',
+        [
+            [1, 2],
+            [-1, 2],
+            [-1, 0],
+            [1, 0],
+        ],
+    ],
+    [
+        '0,2',
+        [
+            [1, 3],
+            [-1, 3],
+            [-1, 1],
+            [1, 1],
+        ],
+    ],
+])
+
 // dicionário de funções
 const calculateOffense = {
     linear: calculateLinearOffense,
@@ -203,16 +278,12 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
             // movimento endiante
 
             if (!Is_anyThere(square)) {
-
                 if (dr == -1 || (dr == -2 && can_do_two_steps))
-                add_mobility(id, r, c, color, piece, from_r, from_c)
-            }else {
-
+                    add_mobility(id, r, c, color, piece, from_r, from_c)
+            } else {
                 if (dr == -1) can_do_two_steps = false
             }
             continue
-
-
         } else {
             if (Is_anyThere(square) && !Is_AllyThere(square, color))
                 add_offense_mobility(id, r, c, color, piece, from_r, from_c)
@@ -221,4 +292,44 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
             continue
         }
     }
+}
+
+function calculateJesterSecoundMove(color) {
+    const prefix = `${color}J`
+
+    for (const key in pieceIndex) {
+        if (!key.startsWith(prefix)) continue
+
+        const jester = pieceIndex[key]
+        const Jr = jester.r
+        const Jc = jester.c
+
+        const moves = unit_moviment_parts.J.move[0]
+
+        for (let m = 0; m < moves.length; m++) {
+            const [dr, dc] = moves[m]
+
+            for (let i = 1; i <= 2; i++) {
+                const r = Jr + dr * i
+                const c = Jc + dc * i
+
+                const square = board[r][c]
+                const isSomeone = Is_anyThere(square)
+
+                if (!isSomeone || (isSomeone && !Is_AllyThere(square, color))) {
+                    const key = `${dr},${dc}`
+                    const list = sqKey_secondMove_Jester.get(key)
+
+                    // equivalente a spread, mas sem recriar arrays
+                    for (let j = 0; j < list.length; j++) {
+                        
+                        add_mobility(key, r, c, color, 'J', Jr, Jc)
+                    }
+                } else {
+                    if (i === 1) break
+                }
+            }
+        }
+    }
+
 }
