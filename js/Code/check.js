@@ -292,6 +292,10 @@ function get_SquareMovesKing_Attacked(King, enemy) {
 }
 
 function Is_pin(id, color) {
+
+    // Se tem sucessor, não tem peça cravada
+    if (Have_Sucessor(color)) return [false, null]
+    
     const Piece = pieceIndex[id];
     const pr = Piece.r, pc = Piece.c
     const enem = get_Enemy(color)
@@ -308,6 +312,7 @@ function Is_pin(id, color) {
     const Length = Enemies.length
 
     const drK = Kr - pr, dcK = Kc - pc
+    console.log("======= ANALISANDO REI =======")
     const typeM_King = get_type_move(drK, dcK);
 
     if (typeM_King == 'no_line') return [false, null]
@@ -317,23 +322,29 @@ function Is_pin(id, color) {
     
     let alone = true
     let id_attacker = null
+
+    console.log("======= ANALISANDO INIMIGOS =======")
     
     for (const [index, Enemie] of Enemies.entries()) {
 
-        if(unit_moviment_parts[Enemie.piece].move_type != 'linear') {
+        // console.log("Inimigo: ", Enemie.id, "Tipo de peça: ", Enemie.piece)
+        // console.log("Tipo de movimento da peça: ", unit_moviment_parts[Enemie.piece].type_move)
+        if(unit_moviment_parts[Enemie.piece].type_move != 'linear') {
             if (index == Length-1) {
                 alone = false
             }
             continue
         }
 
+        // console.log(">> O inimigo é linear")
+
         const Er = Enemie.r, Ec = Enemie.c
 
         const drE = Er - pr, dcE = Ec - pc
         const typeM_Enemie = get_type_move(drE, dcE);
 
-        console.log("Enemie: ", Enemie.id, "Tipo de movimento: ", typeM_Enemie)
-        console.log("Estão na mesma linha? ", typeM_Enemie === typeM_King)
+        // console.log("Enemie: ", Enemie.id, "Tipo de movimento: ", typeM_Enemie)
+        // console.log("Estão na mesma linha? ", typeM_Enemie === typeM_King)
         
         if (typeM_Enemie !== typeM_King) {
             if (index == Length-1) {
@@ -341,14 +352,16 @@ function Is_pin(id, color) {
             }
             continue
         }
+
+        // console.log(">> O inimigo está na mesma direção do rei")
         
         const UdrE = Math.sign(drE);
         const UdcE = Math.sign(dcE);
 
-        console.log("Unidade Enemie: ", UdrE, UdcE)
-        console.log("Unidade King: ", UdrK, UdcK)
+        // console.log("Unidade Enemie: ", UdrE, UdcE)
+        // console.log("Unidade King: ", UdrK, UdcK)
 
-        console.log("São opostos? ", UdrE === -UdrK && UdcE === -UdcK)
+        // console.log("São opostos? ", UdrE === -UdrK && UdcE === -UdcK)
 
         if (UdrE !== -UdrK || UdcE !== -UdcK) {
             if (index == Length-1) {
@@ -356,6 +369,8 @@ function Is_pin(id, color) {
             }
             continue
         }
+
+        // console.log(">> O inimigo está na linha do rei")
 
         const UdrEK = Math.sign(Kr - Er);
         const UdcEK = Math.sign(Kc - Ec);
@@ -369,13 +384,13 @@ function Is_pin(id, color) {
             r = Er + UdrEK*len;
             c = Ec + UdcEK*len;
 
-            console.log("Verificando casa: ", r, c)
+            // console.log("Verificando casa: ", r, c)
             if (Is_OutBoard(r, c) || (r == Kr && c == Kc)) break
 
             const square = board[r][c]
 
-            console.log("Está ocupada? ", Is_anyThere(square))
-            console.log("Peça ali? ", square.id)
+            // console.log("Está ocupada? ", Is_anyThere(square))
+            // console.log("Peça ali? ", square.id)
 
             if (Is_anyThere(square) && square.id !== Piece.id) {
                 alone = false
@@ -394,9 +409,9 @@ function Is_pin(id, color) {
 function get_type_move(dr, dc) {
     const produt = Math.abs(dr*dc)
 
-    console.log("Produto: ", produt)
-    console.log("dr: ", dr, "dc: ", dc)
-    console.log("Tipo: ",!produt ? 'orthogonal' : (produt == dr*dr || produt == dc*dc ? 'diagonal' : 'no_line'))
+    // console.log("Produto: ", produt)
+    // console.log("dr: ", dr, "dc: ", dc)
+    // console.log("Tipo: ",!produt ? 'orthogonal' : (produt == dr*dr || produt == dc*dc ? 'diagonal' : 'no_line'))
 
     if (!produt) {
         return 'orthogonal';
