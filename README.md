@@ -1,4 +1,4 @@
-#  JESTER'S CHESS  ♔ ♕ ♖ ♤ ✧ ♗ ♘ ♙
+# <img src="img/w/wj.png" alt="Logo" width="50" height="50"> JESTER'S CHESS  <img src="img/w/ws.png" alt="Logo" width="50" height="50"><img src="img/w/wq.png" alt="Logo" width="50" height="50"><img src="img/w/wk.png" alt="Logo" width="50" height="50"><img src="img/w/wr.png" alt="Logo" width="50" height="50"><img src="img/w/wn.png" alt="Logo" width="50" height="50"><img src="img/w/wb.png" alt="Logo" width="50" height="50"><img src="img/w/wp.png" alt="Logo" width="50" height="50">
 ###### *Created by: Felipe7771*
 ***Welcome to a variant of Xadez written entirely in the programming language `HTML/CSS/JavaScript`, 
 featuring new pieces, rules (both new and removed), and various new types of checkmate moves.***
@@ -20,11 +20,11 @@ First of all, let's review SOME rules of traditional chess before presenting the
 
 | Part | Name | Movement|
 |:----:|:----:|-------|
-| ♔ |King | 1 square in any direction|
-| ♕ |Queen | Orthogonal and diagonal |
-| ♖ | Tower | Orthogonal|
-| ♗ | Bishop | Diagonal |
-| ♘ | Knight | Jump in an L shape (2 squares to one side and 1 to the other)|
+| <img src="img/w/wk.png" alt="Logo" width="50" height="50"> | King | 1 square in any direction|
+| <img src="img/w/wq.png" alt="Logo" width="50" height="50"> | Queen | Orthogonal and diagonal |
+| <img src="img/w/wr.png" alt="Logo" width="50" height="50"> | Rook | Orthogonal|
+| <img src="img/w/wb.png" alt="Logo" width="50" height="50"> | Bishop | Diagonal |
+| <img src="img/w/wn.png" alt="Logo" width="50" height="50"> | Knight | Jump in an L shape (2 squares to one side and 1 to the other)|
 
 
 | How to win? | Attack the king without any way for him to escape the attack (Checkmate).|
@@ -36,9 +36,9 @@ First of all, let's review SOME rules of traditional chess before presenting the
 | Types of Ties |
 |---------------|
 |With no enemy movement, the king's house is attacked BUT the king is not attacked (Drowning)|
-|King vs. King|
-|King vs. King and Bishop|
-|King vs. King and Knight|
+|<img src="img/w/wk.png" alt="Logo" width="40" height="40"> **VS.** <img src="img/b/bk.png" alt="Logo" width="40" height="40">|
+|<img src="img/w/wk.png" alt="Logo" width="40" height="40"> **VS.** <img src="img/b/bk.png" alt="Logo" width="40" height="40"> <img src="img/b/bb.png" alt="Logo" width="40" height="40">|
+|<img src="img/w/wk.png" alt="Logo" width="40" height="40"> **VS.** <img src="img/b/bk.png" alt="Logo" width="40" height="40"> <img src="img/b/bn.png" alt="Logo" width="40" height="40">|
 
 <br>
 
@@ -49,7 +49,7 @@ First of all, let's review SOME rules of traditional chess before presenting the
 
 <br>
 
-### New part: <br> ***`The Jester ✧`*** *(The court jester)*
+### New part: <br> <img src="img/w/wj.png" alt="Logo" width="50" height="50"> ***`The Jester`***
 ---------
 *Jester is an eccentric piece compared to the others, always wanting to innovate in something that the others don't.* 
 
@@ -110,7 +110,7 @@ In other words:
 | Everyone ends up exposed | __"Son, rethink that first move."__ |
 <br>
 
-### New part: <br> ***`The Prince ♤`*** *(The successor)*
+### New part: <br> <img src="img/w/ws.png" alt="Logo" width="50" height="50">***`The Sucessor`***
 ---------
 *The Prince is the kingdom’s last hope,*
 
