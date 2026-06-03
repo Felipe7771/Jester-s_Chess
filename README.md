@@ -3,6 +3,8 @@
 ***Welcome to a variant of Xadez written entirely in the programming language `HTML/CSS/JavaScript`, 
 featuring new pieces, rules (both new and removed), and various new types of checkmate moves.***
 
+![JESTER TABLE](img\git_images\defaulf_table.png "Default Jester Chess Table")
+
 *In this version of chess, the main difference from the original game is the addition of two new pieces on the board: 
 <br> - `the Jester ✧` (the court jester), whose unique feature is that it can make two moves in a single turn; and <br> - `the Prince ♤` (the heir), 
 who inherits the position of the king or queen on the board.*
