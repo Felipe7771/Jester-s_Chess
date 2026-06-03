@@ -25,6 +25,7 @@ First of all, let's review SOME rules of traditional chess before presenting the
 | <img src="img/w/wr.png" alt="Logo" width="50" height="50"> | Rook | Orthogonal|
 | <img src="img/w/wb.png" alt="Logo" width="50" height="50"> | Bishop | Diagonal |
 | <img src="img/w/wn.png" alt="Logo" width="50" height="50"> | Knight | Jump in an L shape (2 squares to one side and 1 to the other)|
+| <img src="img/w/wp.png" alt="Logo" width="50" height="50"> | Pawn | move to front, attack diagonally, promove to __new Piece__ in the final table |
 
 
 | How to win? | Attack the king without any way for him to escape the attack (Checkmate).|
@@ -65,15 +66,21 @@ First of all, let's review SOME rules of traditional chess before presenting the
 As mentioned, unlike the other pieces, the Jester makes two moves per turn.<br>
 Both moves allow it to move up to __`2 spaces freely.`__<br>
 
-__For the first move__, he mimics a rook: __`he attacks orthogonally`__, like a mini-rook, to impress his older brother. <br>
-__For the second__, he mixes bishop + knight: __`he moves diagonally`__, BUT `NO CAPTURE`, and he __LOVES__ `jumping over pieces` in front of him
+__For the first move__,<br> he mimics a rook: __`he attacks until 2 squares orthogonally`__, like a mini-rook, to impress his older brother. <br>
+<img src="img/git_images/FIrst_move_Jester.png" alt="Logo" width="250" height="250">
+<br>
+<br>
+__For the second__, <br>he mimics a bishop: __`he moves one square diagonally`__, BUT `NO CAPTURE`<br>
+<img src="img/git_images/Second_move_Jester.png" alt="Logo" width="250" height="250">
+<br>
+<br>
 
 <br>__In summary:__<br>
 __`JESTER ✧`__*: Two moves in one turn*
 |Movements|Direction|Feature|Number of active squares|
 |---------|---------|-------|:---------------------:|
 |1st Movement|Orthogonal|You can capture parts.|Until 2 squares|
-|2nd Movement|Diagonal|__No capture.__ Can jump pieces.|ONE square|
+|2nd Movement|Diagonal|__No capture.__ |ONE square|
 
 <br><br>
 _`"So... um... how does that illegal move—you know, leaving the king exposed...—work with the Jester? ...the one where it moves twice in the same turn??"`_
@@ -125,6 +132,9 @@ The one who falls first will be the most interesting....
 <br><br>
 
 Regarding the above, the Prince is still a novice in combat, with only __`1 attack square on the orthogonal grid`__. <br>
+<img src="img/git_images/move_Sucessor.png" alt="Logo" width="250" height="250">
+<br>
+<br>
 HOWEVER, his magic lies elsewhere: He receives a promotion when a member of the royal family dies, **being the first to die**. 
 
 - If the King is captured, `he is promoted to King`;
