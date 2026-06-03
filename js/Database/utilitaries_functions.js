@@ -26,6 +26,19 @@ function cooFromSet(key){
 }
 
 // ==========================
+// ! NOTAÇÃO DE MOVIMENTOS XADREZ
+// ==========================
+
+function toChessNotation(r, c) {
+    const files = 'abcdefgh'
+
+    const file = files[c]
+    const rank = 8 - r
+
+    return file + rank
+}
+
+// ==========================
 // ! TURNOS
 // ==========================
 
@@ -181,6 +194,26 @@ function get_Id_Sucessor(color) {
 }
 
 // ==========================
+// ! OPERAÇÕES COM INTERCEÇÃO DE LISTA DE MOVIMENTOS E MOVIMENTOS FORA DE INTERCEÇÃO
+// ==========================
+
+function subtractIntersection(listA, listB) {
+    if (!listB) return listA
+    if (!listA) return listB
+    const setA = new Set(listA.map(([r, c]) => `${r},${c}`))
+    const result = []
+
+    for (let i = 0; i < listB.length; i++) {
+        const key = `${listB[i][0]},${listB[i][1]}`
+        if (!setA.has(key)) {
+            result.push(listB[i])
+        }
+    }
+
+    return result
+}
+
+// ==========================
 // ! INFLUENCE
 // ==========================
 
@@ -273,31 +306,6 @@ function set_piece_moved_team(to_r, to_c, id, color) {
 
   pieceIndex[id]['r'] = to_r
   pieceIndex[id]['c'] = to_c
-}
-
-// ==========================
-// ! OPERAÇÕES DE UI PARA O CÓDIGO
-// ==========================
-
-function flashIllegal(sqList) {
-
-  invalid.play()
-  for (const [r, c] of sqList) {
-    // console.log(r,c)
-    const el = boardEl.querySelector(`[data-r="${r}"][data-c="${c}"]`);
-    console.log(r,c,": ",!el ? "NAO DEU": 'W')
-    if (!el) continue;
-
-    console.log("PASSEI")
-
-    el.classList.remove('flash-illegal');
-    void el.offsetWidth; // força reflow pra reiniciar animação se chamar duas vezes seguidas
-    el.classList.add('flash-illegal');
-
-    el.addEventListener('animationend', () => {
-      el.classList.remove('flash-illegal');
-    }, { once: true });
-  }
 }
 
 // ==========================

@@ -61,14 +61,7 @@ function startDrag(e, r, c, piece, ID) {
     moveGhost(e)
 }
 
-function toChessNotation(r, c) {
-    const files = 'abcdefgh'
 
-    const file = files[c]
-    const rank = 8 - r
-
-    return file + rank
-}
 
 function moveGhost(e) {
     if (!drag) return
@@ -133,112 +126,13 @@ document.addEventListener('mouseup', (e) => {
         }
 
         // lances fora da mesma casa são válidos como um lance jogável
-        if (drag.fromR != sq.r || drag.fromC != sq.c) {
-            Castling_Move(global_drag.id, sq.r, sq.c, global_drag.piece[0])
+        if (drag.fromR != sq.r || drag.fromC != sq.c) Do_Move_Execute(sq, drag)
 
-            global_drag = null
-
-            if (!Is_JesterSecondMove(drag.piece[1])) yellowSquares.clear()
-
-            valueLancesTurn += drag.piece[1] == 'J' ? 0.5 : 1 // por enquanto, toda peça tem o mesmo valor de lance (Jester: 1/2)
-
-            SELECTOR_ID = drag.piece[1] == 'J' ? SELECTOR_ID : ''
-            SELECTOR_COLOR = drag.piece[1] == 'J' ? SELECTOR_COLOR : ''
-
-            console.log('==========================')
-            console.log(
-                `Peça movida (${drag.id}) | valorLance-> ${valueLancesTurn}`,
-            )
-
-            const key1 = sqKey(sq.r, sq.c)
-            const key2 = sqKey(drag.fromR, drag.fromC)
-
-            yellowSquares.add(key1)
-            yellowSquares.add(key2)
-
-            memory_moves = {}
-
-            clearMoveHints()
-
-            checkPromotedSucessor(TURN)
-            checkPromotedPawn(board[sq.r][sq.c].id, TURN, sq.r, sq.c)
-            checkBreakCastlePermission(board[sq.r][sq.c].id, TURN)
-
-            set_piece_moved(
-                drag.id,
-                drag.piece[1],
-                drag.piece[0],
-                sq.r,
-                sq.c,
-                drag.fromR,
-                drag.fromC,
-            )
-            set_piece_moved_team(sq.r, sq.c, drag.id, drag.piece[0])
-
-            set_combat_turn()
-
-            isEndedTurn() // tente encerrar o turno
-
-            console.log('FIM DE TURNO')
-            set_Check(TURN)
-
-            playMoveSound = false
-            castleSound = false
-        }
-        const pos = toChessNotation(sq.r, sq.c)
-        console.log(pos)
         renderBoard()
     }
 
     drag = null
 })
-
-function set_PiecePin(id, color) {
-    if (Is_Jester(id[1])) return []
-
-    const [pin, id_attacker] = Is_pin(id, color)
-    const formatMove = ([r, c]) => `[${r}, ${c}]`
-
-
-    console.log('Está cravado? ', pin)
-
-    if (pin) {
-        // os únicos movimentos possíveis da peça cravada são aqueles que eliminam o atacante SE tiver nos attackers[id]
-
-        console.log('Atacantes: ', `[ ${(attackers[id] || []).map(formatMove).join(', ')} ]`,)
-        
-        const moves_pins = []
-
-        if (!attackers[id] || !attackers[id].length) return [] 
-        
-        for (const offend of attackers[id]) {
-            const square = board[offend[0]][offend[1]]
-            // console.log('Analisando ofensores: ', offend[0], offend[1], square.id, id_attacker)
-            if (square.id !== id_attacker) {
-                moves_pins.push([offend[0], offend[1]])
-            }
-        }
-        
-        // console.log('Cravados: ', `[ ${(moves_pins || []).map(formatMove).join(', ')} ]`,)
-        return moves_pins
-    } else return []
-}
-
-function subtractIntersection(listA, listB) {
-    if (!listB) return listA
-    if (!listA) return listB
-    const setA = new Set(listA.map(([r, c]) => `${r},${c}`))
-    const result = []
-
-    for (let i = 0; i < listB.length; i++) {
-        const key = `${listB[i][0]},${listB[i][1]}`
-        if (!setA.has(key)) {
-            result.push(listB[i])
-        }
-    }
-
-    return result
-}
 
 function showMoveIndicators(id, color) {
     clearMoveHints()
@@ -289,12 +183,6 @@ function showMoveIndicators(id, color) {
     showMoveHints(memory_moves[id], color)
 }
 
-function clearMoveHints() {
-    console.log('executado')
-    moveCircles.clear()
-    moveRings.clear()
-}
-
 document.addEventListener('mouseup', (e) => {
     if (!global_drag || e.button !== 0) return
 
@@ -343,64 +231,7 @@ document.addEventListener('mouseup', (e) => {
         }
 
         // lances fora da mesma casa são válidos como um lance jogável
-        if (global_drag.fromR != sq.r || global_drag.fromC != sq.c) {
-            Castling_Move(global_drag.id, sq.r, sq.c, global_drag.piece[0])
-
-            global_global_drag = null
-
-            if (!Is_JesterSecondMove(global_drag.piece[1]))
-                yellowSquares.clear()
-
-            valueLancesTurn += global_drag.piece[1] == 'J' ? 0.5 : 1 // por enquanto, toda peça tem o mesmo valor de lance (Jester: 1/2)
-
-            SELECTOR_ID = global_drag.piece[1] == 'J' ? SELECTOR_ID : ''
-            SELECTOR_COLOR = global_drag.piece[1] == 'J' ? SELECTOR_COLOR : ''
-
-            console.log('==========================')
-            console.log(
-                `Peça movida (${global_drag.id}) | valorLance-> ${valueLancesTurn}`,
-            )
-
-            const key1 = sqKey(sq.r, sq.c)
-            const key2 = sqKey(global_drag.fromR, global_drag.fromC)
-
-            yellowSquares.add(key1)
-            yellowSquares.add(key2)
-
-            memory_moves = {}
-
-            clearMoveHints()
-
-            checkPromotedSucessor(TURN)
-            checkPromotedPawn(board[sq.r][sq.c].id, TURN, sq.r, sq.c)
-            checkBreakCastlePermission(board[sq.r][sq.c].id, TURN)
-
-            set_piece_moved(
-                global_drag.id,
-                global_drag.piece[1],
-                global_drag.piece[0],
-                sq.r,
-                sq.c,
-                global_drag.fromR,
-                global_drag.fromC,
-            )
-            set_piece_moved_team(
-                sq.r,
-                sq.c,
-                global_drag.id,
-                global_drag.piece[0],
-            )
-
-            set_combat_turn()
-
-            isEndedTurn() // tente encerrar o turno
-
-            console.log('FIM DE TURNO')
-            set_Check(TURN)
-
-            playMoveSound = false
-            castleSound = false
-        }
+        if (global_drag.fromR != sq.r || global_drag.fromC != sq.c) Do_Move_Execute(sq, global_drag)
 
         renderBoard()
     }
