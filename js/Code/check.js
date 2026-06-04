@@ -1,18 +1,20 @@
 function is_Check(color) {
+    console.log("========= IS CHECK? ========")
     const idKing = get_Id_King(color)
     const enemy = get_Enemy(color)
 
-    console.log(idKing)
-    console.log(enemy)
+    console.log('id: ',idKing)
+    console.log('color inimigo ', enemy)
 
     const pieceKing = pieceIndex[idKing]
 
     const kr = pieceKing.r
     const kc = pieceKing.c
-    console.log(kr, kc)
-    console.log(offense[kr][kc][enemy])
 
-    console.log('Who:.', get_Attackers(offense[kr][kc][enemy]))
+    console.log('Onde o Rei está? ', pieceKing.r, pieceKing.c)
+
+    console.log('Who: (ids).', get_Attackers(offense[kr][kc][enemy]).map(item => item.id))
+    console.log('Who: (onde?).', get_Attackers(offense[kr][kc][enemy]).map(item => `${item.r} ${item.c}`))
 
     const Attacks = get_numAttacks(offense[kr][kc][enemy])
 
@@ -253,12 +255,14 @@ function restoreBackup(backup) {
 
 function get_SquareMovesKing_Attacked(King, enemy) {
     const moves = unit_moviment_parts['K'].move
+    const team = get_Enemy(enemy)
 
-    let save_squares = new Set()
+    let save_squares = []
 
     for (const [dr, dc] of moves) {
-        let r = from_r + dr
-        let c = from_c + dc
+        let r = King.r + dr
+        let c = King.c + dc
+
 
         if (Is_OutBoard(r, c)) continue
 
@@ -271,22 +275,25 @@ function get_SquareMovesKing_Attacked(King, enemy) {
         // livre -> fuga
 
         if (Is_anyThere(square)) {
+
             if (
-                !Is_AllyThere(square, color) &&
+                !Is_AllyThere(square, team) &&
                 get_numAttacks(offense[r][c][enemy]) == 0
             ) {
-                save_squares.add([r, c])
+                save_squares.push([r, c])
             }
-
+            
             continue
         }
 
         if (get_numAttacks(offense[r][c][enemy]) == 0) {
-            save_squares.add([r, c])
+            save_squares.push([r, c])
         }
     }
 
-    const num_squares = save_squares.size()
+    console.log("Casas de fuga: ", save_squares)
+
+    const num_squares = save_squares.length
 
     return { save_squares, num_squares }
 }

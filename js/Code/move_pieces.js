@@ -63,8 +63,6 @@ function startDrag(e, r, c, piece, ID) {
     moveGhost(e)
 }
 
-
-
 function moveGhost(e) {
     if (!drag) return
 
@@ -160,8 +158,29 @@ function showMoveIndicators(id, color) {
             //     `[ ${(jesterIllegals || []).map(formatMove).join(', ')} ]`,
             // )
         } else {
-            illegals = set_PiecePin(id, color)
-            legals = subtractIntersection(illegals, attackers[id])
+            if (id !== get_Id_King(color)) {
+                illegals = set_PiecePin(id, color)
+                legals = subtractIntersection(illegals, attackers[id])
+            } else {
+                // proibir movimentos atacados para o rei, mesmo que estejam nos attackers[id], e calcular os movimentos legais normalmente
+                const enemy = get_Enemy(color)
+
+                // Sem sucessor = xeque valido, favor evitar situações assim, mas o jogo não caga se acontecer
+                if (!Have_Sucessor(color)) {
+                    console.log('Rei sem sucessor, calculando movimentos legais normalmente')
+                    legals = get_SquareMovesKing_Attacked(
+                        pieceIndex[id],
+                        enemy,
+                    ).save_squares
+
+                    illegals = subtractIntersection(legals, attackers[id])
+
+                } else {
+                    console.log('Rei com sucessor, o movimento PODE ou NÃO fugir ')
+                    legals = attackers[id] || []
+                    illegals = []
+                }
+            }
         }
 
         legals = !legals ? [] : legals
@@ -235,7 +254,8 @@ document.addEventListener('mouseup', (e) => {
         }
 
         // lances fora da mesma casa são válidos como um lance jogável
-        if (global_drag.fromR != sq.r || global_drag.fromC != sq.c) Do_Move_Execute(sq, global_drag)
+        if (global_drag.fromR != sq.r || global_drag.fromC != sq.c)
+            Do_Move_Execute(sq, global_drag)
 
         renderBoard()
     }

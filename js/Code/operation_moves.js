@@ -206,8 +206,18 @@ function calculateLinearOffense(id, from_r, from_c, piece, color, moves) {
                 else
                     add_offense_mobility(id, r, c, color, piece, from_r, from_c)
 
-                break
+                // continuar linha de ataque SE a peça atancando FOR O REI, ja que o rei não bloqueia ataques, a não ser que o sucessor esteja vivo, ai o jogo caga
+
+                const enemy = get_Enemy(color)
+                const isKingEnemy = square.id === get_Id_King(enemy)
+
+                if (!isKingEnemy || (isKingEnemy && Have_Sucessor(enemy))) {
+                    console.log('--bloqueado')
+                    break
+                }
             }
+
+            console.log('--vazio')
 
             add_offense_mobility(id, r, c, color, piece, from_r, from_c)
         }
