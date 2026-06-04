@@ -18,6 +18,8 @@ function getSquareFromEvent(e) {
 function startDrag(e, r, c, piece, ID) {
     if (!Is_Jester(piece[1]) && valueLancesTurn == 0.5) return
 
+    showMoveIndicators(board[r][c].id, board[r][c].color)
+
     // impede seleção estranha do navegador
     e.preventDefault()
 
@@ -150,6 +152,8 @@ function showMoveIndicators(id, color) {
             ;({ legals, jesterIllegals } = LegalProvocative_Jester(id, color))
             // console.log('Legais: ', legals)
             // console.log('Ilegais por provocação: ', jesterIllegals)
+            isJesterPinned = Is_pin(id, color)[0]
+
             illegals = []
 
             // console.log(

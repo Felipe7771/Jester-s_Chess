@@ -41,7 +41,6 @@ function renderBoard() {
 
                 img.addEventListener('mousedown', (e) => {
                     if (e.button !== 0 || board[r][c].color != TURN) return
-                    showMoveIndicators(board[r][c].id, board[r][c].color)
                     startDrag(e, r, c, board[r][c].visualKey, board[r][c].id)
                 })
 
@@ -104,31 +103,3 @@ function showMoveHints(moves, color) {
 
     renderBoard();
 }
-
-// document.addEventListener('mousedown', e => {
-    
-
-//   const sq = getSquareFromEvent(e);
-
-//   if (!sq) return
-
-//   if (
-//     moveCircles.has(sqKey(sq.r,sq.c)) ||
-//     moveRings.has(sqKey(sq.r,sq.c))
-//   ) {
-
-//     console.log('movimento válido');
-
-//     const part = pieceIndex[SELECTOR_ID]
-
-//     drag = {
-//     piece: part.piece,
-//     fromR: part.r,
-//     fromC: part.c,
-//     id: SELECTOR_ID,
-//     }
-
-//      Move(sq, drag)
-//   }
-
-// });

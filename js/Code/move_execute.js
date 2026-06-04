@@ -21,7 +21,7 @@ function Do_Move_Execute(sq, local_drag) {
     
     yellowSquares.add(key1)
     yellowSquares.add(key2)
-    
+
     memory_moves = {}
 
     clearMoveHints()

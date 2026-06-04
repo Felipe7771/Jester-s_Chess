@@ -10,7 +10,7 @@ boardEl.addEventListener('contextmenu', e => {
 /* início de ação com botão direito */
 boardEl.addEventListener('mousedown', e => {
   if (e.button === 2) {
-    clearMoveHints();
+    if (valueLancesTurn != 0.5) clearMoveHints();
     renderBoard();
     const sq = getSquareFromEvent(e);
     if (sq) rightDragFrom = sq;
