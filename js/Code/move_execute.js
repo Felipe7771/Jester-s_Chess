@@ -15,15 +15,16 @@ function Do_Move_Execute(sq, local_drag) {
     console.log(
         `Peça movida (${local_drag.id}) | valorLance-> ${valueLancesTurn}`,
     )
+
     
     const key1 = sqKey(sq.r, sq.c)
     const key2 = sqKey(local_drag.fromR, local_drag.fromC)
     
     yellowSquares.add(key1)
     yellowSquares.add(key2)
-
+    
     memory_moves = {}
-
+    
     clearMoveHints()
 
     checkPromotedSucessor(TURN)
@@ -47,7 +48,7 @@ function Do_Move_Execute(sq, local_drag) {
     )
     
     set_combat_turn()
-
+    
     isEndedTurn() // tente encerrar o turno
     
     console.log('FIM DE TURNO')
@@ -56,5 +57,9 @@ function Do_Move_Execute(sq, local_drag) {
     playMoveSound = false
     castleSound = false
     
+    if (valueLancesTurn == 0 && local_drag.piece[1] == 'J') {
+        console.log('Aplicando efeito de spin para o Jester')
+        pieceEffects.set(local_drag.id, { spin: true });
+    }
     global_drag = null
 }

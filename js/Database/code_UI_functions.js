@@ -23,3 +23,13 @@ function flashIllegal(sqList) {
     }, { once: true });
   }
 }
+
+function set_KingAnimationCheck(id) {
+
+pieceEffects.set(id, { shake: true });
+}
+
+function remove_KingAnimationCheck(id) {
+
+pieceEffects.set(id, { shake: false });
+}

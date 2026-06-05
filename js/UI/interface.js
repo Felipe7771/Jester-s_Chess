@@ -1,7 +1,7 @@
 /* =========================
    RENDERIZAÇÃO DO TABULEIRO
    ========================= */
-function renderBoard() {
+function renderBoard(initialize = false) {
     boardEl.innerHTML = ''
     squares = []
 
@@ -24,11 +24,11 @@ function renderBoard() {
             }
 
             if (moveCircles.has(sqKey(r, c))) {
-                sq.classList.add('move-circle');
+                sq.classList.add('move-circle')
             }
 
             if (moveRings.has(sqKey(r, c))) {
-                sq.classList.add('move-ring');
+                sq.classList.add('move-ring')
             }
 
             // se existir peça, renderiza símbolo
@@ -39,9 +39,25 @@ function renderBoard() {
 
                 img.draggable = false
 
+                const effect = pieceEffects.get(board[r][c].id)
+
+                if (effect?.shake) {
+                    img.classList.add('shake-soft')
+                }
+
+                if (effect?.spin) {
+                    img.classList.remove('spin') // limpa estado antigo
+
+                    void img.offsetWidth // força reset
+
+                    img.classList.add('spin')
+
+                    effect.spin = false // spin é só uma animação, não estado permanente
+                }
+
                 img.addEventListener('mousedown', (e) => {
                     if (e.button !== 0 || board[r][c].color != TURN) return
-                    startDrag(e, r, c, board[r][c].visualKey, board[r][c].id)
+                    startDrag(e, r, c, board[r][c].visualKey, board[r][c].id, img)
                 })
 
                 sq.appendChild(img)
@@ -77,29 +93,27 @@ for (let r = 1; r <= 8; r++) {
 }
 
 function showMoveHints(moves, color) {
-
     if (!moves.legal) return
 
-    console.log("ShowMove: ", moves)
+    console.log('ShowMove: ', moves)
 
     const legal_moves = moves.legal
 
-    clearMoveHints();
+    clearMoveHints()
 
     for (const move of legal_moves) {
         // console.log(move)
 
-        const key = sqKey(move[0], move[1]);
+        const key = sqKey(move[0], move[1])
 
         const square = board[move[0]][move[1]]
 
         if (Is_anyThere(square) && !Is_AllyThere(square, color)) {
-            moveRings.add(key);
-
+            moveRings.add(key)
         } else if (!Is_anyThere(square)) {
-            moveCircles.add(key);
+            moveCircles.add(key)
         }
     }
 
-    renderBoard();
+    renderBoard()
 }

@@ -15,7 +15,7 @@ function getSquareFromEvent(e) {
     return { r, c }
 }
 
-function startDrag(e, r, c, piece, ID) {
+function startDrag(e, r, c, piece, ID, img) {
     if (!Is_Jester(piece[1]) && valueLancesTurn == 0.5) return
 
     showMoveIndicators(board[r][c].id, board[r][c].color)
@@ -30,7 +30,7 @@ function startDrag(e, r, c, piece, ID) {
     const ghost = document.createElement('img')
 
     ghost.src = PIECES[piece]
-    ghost.className = 'piece'
+    ghost.className = img.className
 
     // estilo do fantasma
     ghost.style.position = 'fixed'

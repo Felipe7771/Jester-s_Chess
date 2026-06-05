@@ -32,6 +32,18 @@ function set_Check(color) {
 
     const { result, Attacks } = is_Check(color)
 
+    console.log('Resultado: ', result)
+    console.log('Estava em check? ', InCheck)
+
+    const enemy = get_Enemy(color)
+
+    if (InCheck && !result) {
+        console.log('Removendo animação de check')
+        remove_KingAnimationCheck(get_Id_King(enemy))
+
+    } else if (result) set_KingAnimationCheck(get_Id_King(color))
+        
+    InCheck = result
     console.log(playMoveSound)
 
     if (result) check.play()
@@ -40,7 +52,6 @@ function set_Check(color) {
 
     if (result && !Have_Sucessor(color)) {
     } else {
-        InCheck = false
     }
 
     castle_atives = {}

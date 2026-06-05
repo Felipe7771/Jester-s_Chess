@@ -127,7 +127,7 @@ function showPromotionMenu(r, c, color, onSelect) {
     top: `${r * 72}px`
   });
 
-  const promotions = ['J', 'R', 'B', 'N'];
+  const promotions = ['Q', 'R', 'B', 'N'];
 
   for (const piece of promotions) {
 

@@ -377,3 +377,23 @@ animation: illegalFlash .8s steps(1) forwards;
   80%  { opacity: 1; }
   100% { opacity: 0; }
 } 
+
+.shake-soft {
+    animation: shakeSoft 0.1s infinite;
+}
+
+@keyframes shakeSoft {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-1px); transform: translateY(-1px); }
+    75% { transform: translateX(1px); }
+}
+
+.spin {
+    animation: spinJester 0.3s ease-in-out;
+    transform-origin: center;
+}
+
+@keyframes spinJester {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

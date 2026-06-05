@@ -133,6 +133,8 @@ let generate_id_pieces = 10 // evitar duplicação de peças
 pieceIndex = {}
 attackers = {}
 
+const pieceEffects = new Map();
+
 offenseIndex = {}
 
 piece_moved = {
