@@ -212,12 +212,12 @@ function calculateLinearOffense(id, from_r, from_c, piece, color, moves) {
                 const isKingEnemy = square.id === get_Id_King(enemy)
 
                 if (!isKingEnemy || (isKingEnemy && Have_Sucessor(enemy))) {
-                    console.log('--bloqueado')
+                    // console.log('--bloqueado')
                     break
                 }
             }
 
-            console.log('--vazio')
+            // console.log('--vazio')
 
             add_offense_mobility(id, r, c, color, piece, from_r, from_c)
         }
@@ -322,6 +322,8 @@ function calculateJesterSecoundMove(color) {
             for (let i = 1; i <= 2; i++) {
                 const r = Jr + dr * i
                 const c = Jc + dc * i
+
+                if (Is_OutBoard(r, c)) break
 
                 const square = board[r][c]
                 const isSomeone = Is_anyThere(square)

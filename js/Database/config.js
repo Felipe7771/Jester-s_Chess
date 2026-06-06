@@ -46,6 +46,10 @@ const name_pieces = {
 const pieces_one_step = new Set(['N', 'K', 'S', 'P'])
 const promotions = ['J', 'R', 'B', 'N'];
 
+let CHECKMATE = false
+let memory_checkmate = false
+let END_GAME = false
+
 // Estrutura para roque
 let CastlePermission = {
   w: true,

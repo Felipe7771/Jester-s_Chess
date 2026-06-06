@@ -397,3 +397,56 @@ animation: illegalFlash .8s steps(1) forwards;
     0%   { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+@keyframes victory-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-6px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-3px);
+  }
+}
+
+.victory {
+  animation: victory-bounce 0.6s ease-in-out infinite;
+}
+
+@keyframes king-defeat {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  /* 2 rotações rápidas */
+  30% {
+    transform: rotate(720deg) scale(1);
+  }
+
+  60% {
+    transform: rotate(720deg) scale(1);
+  }
+
+  90% {
+    transform: rotate(720deg) scale(1);
+  }
+
+  /* pulso de “vida indo embora” */
+  95% {
+    transform: rotate(740deg) scale(1.2)
+  }
+
+  /* estado final derrotado */
+  100% {
+    transform: rotate(740deg) scale(1)
+  }
+}
+
+.king-defeat {
+  animation: king-defeat 0.9s ease-in-out forwards;
+  transform-origin: center;
+}

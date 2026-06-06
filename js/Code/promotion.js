@@ -51,7 +51,7 @@ function setPromote(old_id, new_id, new_type, enemy, r, c) {
 
     const content = {
         ...pieceIndex[old_id],
-        id: old_id,
+        id: new_id,
         piece: new_type,
     }
     delete pieceIndex[old_id]
@@ -101,6 +101,8 @@ function PromotePawn(old_id, team, r, c) {
 
 
 function showPromotionMenu(r, c, color, onSelect) {
+
+    if (CHECKMATE) return
 
   // remove menu antigo se existir
   document.getElementById('promotion-menu')?.remove();

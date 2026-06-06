@@ -154,9 +154,18 @@ function get_Enemy(team) {
 }
 
 function get_Attackers(square_offense) {
-  return Array.isArray(square_offense)
-    ? square_offense.filter(attacker => attacker.id in pieceIndex)
-    : []
+  if (!Array.isArray(square_offense)) return [];
+
+  const seen = new Set();
+
+  return square_offense.filter(attacker => {
+    if (!(attacker.id in pieceIndex)) return false;
+
+    if (seen.has(attacker.id)) return false;
+
+    seen.add(attacker.id);
+    return true;
+  });
 }
 
 function get_numAttacks(square_offense) {
@@ -297,8 +306,6 @@ function add_piece_team(row, column, color, piece, id) {
 
 
 function set_piece_moved_team(to_r, to_c, id, color) {
-
-
   const indx = team[color].findIndex(piece => piece.id === id);
 
   team[color][indx]['r'] = to_r

@@ -56,11 +56,13 @@ l
    INICIALIZAÇÃO FINAL
    ========================= */
 /* elementos DOM principais */
-renderBoard(initialize = true);
+renderBoard();
 ctx.fillStyle = "red";
 ctx.fillRect(100,100,100,100);
 start.play();
 drawArrows();
+
+// showCheckmate('w')
 
 set_initial_team();
 set_initial_combat();

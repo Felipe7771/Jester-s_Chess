@@ -1,7 +1,19 @@
 /* =========================
    RENDERIZAÇÃO DO TABULEIRO
    ========================= */
-function renderBoard(initialize = false) {
+function renderBoard() {
+    if (CHECKMATE) {
+
+        setTimeout(() => {
+            if (!END_GAME) {
+                showCheckmate(get_Enemy(TURN))
+                END_GAME = true
+            }
+        }, 500)
+
+        return
+    }
+
     boardEl.innerHTML = ''
     squares = []
 
@@ -57,7 +69,14 @@ function renderBoard(initialize = false) {
 
                 img.addEventListener('mousedown', (e) => {
                     if (e.button !== 0 || board[r][c].color != TURN) return
-                    startDrag(e, r, c, board[r][c].visualKey, board[r][c].id, img)
+                    startDrag(
+                        e,
+                        r,
+                        c,
+                        board[r][c].visualKey,
+                        board[r][c].id,
+                        img,
+                    )
                 })
 
                 sq.appendChild(img)

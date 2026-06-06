@@ -129,7 +129,7 @@ function set_combat_piece(id, color, content) {
         moves = base.move
     }
 
-    console.log(`\nVez: (${color == 'w'? "white": "black"}) ${name_pieces[piece]}`, content.r, content.c, '(', type_move_piece, ')')
+    // console.log(`\nVez: (${color == 'w'? "white": "black"}) ${name_pieces[piece]}`, content.r, content.c, '(', type_move_piece, ')')
 
     calculateOffense[type_move_piece](
         id,

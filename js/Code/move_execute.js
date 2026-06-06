@@ -62,4 +62,11 @@ function Do_Move_Execute(sq, local_drag) {
         pieceEffects.set(local_drag.id, { spin: true });
     }
     global_drag = null
+    
+    if (memory_checkmate) {
+        renderBoard()
+    }
+    
+    CHECKMATE = memory_checkmate
+
 }
