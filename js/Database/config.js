@@ -46,23 +46,8 @@ const name_pieces = {
 const pieces_one_step = new Set(['N', 'K', 'S', 'P'])
 const promotions = ['J', 'R', 'B', 'N'];
 
-let CHECKMATE = false
-let memory_checkmate = false
-let END_GAME = false
-
-// Estrutura para roque
-let CastlePermission = {
-  w: true,
-  b: true
-}
-
 const pieces_castle = new Set(['wK', 'bK', 'wR0', 'wR1', 'bR0', 'bR1']);
 const kings_castle = new Set(['wK', 'bK'])
-
-let castle_atives = {}
-
-// Xeque propriedades
-let InCheck = false
 
 /* =========================
    POSIÇÃO INICIAL DO TABULEIRO
@@ -111,8 +96,6 @@ const emptyCell = () => ({
 const emptyRow = () =>
   Array.from({ length: 8 }, () => emptyCell());
 
-
-
 const INIT_BOARD = [
   backRow("b"),
   pawnRow("b"),
@@ -124,32 +107,77 @@ const INIT_BOARD = [
   backRow("w")
 ];
 
+// ! CONFIGURAÇÕES GLOBAIS
+// ?============================
+// ?============================
+
+let generate_id_pieces = 10 // evitar duplicação de peças
+
+let TURN = 'w'
+const turns = ['w', 'b', 'w']
+let id_turn = 0
+
+const LimitValueLance = 1
+let valueLancesTurn = 0
+
+let memory_moves = {}
+
+let Complement_Id_Real = {
+  'w': {
+    'K': '',
+    'Q': ''
+  },
+
+  'b': {
+    'K': '',
+    'Q': ''
+  }
+}
+
+// ?============================
+
+
+// ! CONFIGURAÇÕES DE XEQUE-MATE
+// ?============================
+
+let CHECKMATE = false
+let END_GAME = false
+
+let memory_checkmate = false
+
+let VISUAL_check = {
+  'w': false,
+  'b': false
+}
+
+let permited_block_check = {}
+
+// ?============================
+
+
+// ! CONFIGURAÇÕES DE CASTLING
+// ?============================
+
+let CastlePermission = {
+  w: true,
+  b: true
+}
+
+let castle_atives = {}
+
+// ?============================
+
+
+// ! TABULEIROS DINÂMICOS
+// ?============================
 
 let team = {
   w: [],
   b: []
 }
 
-let generate_id_pieces = 10 // evitar duplicação de peças
-
-
-
-pieceIndex = {}
-attackers = {}
-
-const pieceEffects = new Map();
-
-offenseIndex = {}
-
-piece_moved = {
-  id: '',
-  piece: '',
-  to_r: null,
-  to_c: null,
-  from_r: null,
-  from_c: null,
-  color: ''
-}
+// cópia mutável do tabuleiro atual
+let board = INIT_BOARD.map(r => [...r]);
 
 let offense = Array.from({ length: 8 }, () =>
   Array.from({ length: 8 }, () => ({
@@ -172,16 +200,43 @@ let influence = Array.from({ length: 8 }, () =>
   }))
 );
 
+// ?============================
+
+
+// ! BUSCAR DERIVADAS DO TABULEIRO
+// ?============================
+
+let pieceIndex = {}
+let attackers = {}
+let pieceEffects = new Map();
+let offenseIndex = {}
+
+let piece_moved = {
+  id: '',
+  piece: '',
+  to_r: null,
+  to_c: null,
+  from_r: null,
+  from_c: null,
+  color: ''
+}
+
+// ?============================
+
+
+// ! ARMAZENAMENTO DE VISUAIS
+// ?============================
+
+/* tamanho de cada casa */
+const SQ = 72;
+
+/* elementos DOM principais */
+const boardEl = document.getElementById('board');
+const canvas = document.getElementById('arrow-canvas');
+const ctx = canvas.getContext('2d');
+
 const moveCircles = new Set();
 const moveRings = new Set();
-
-
-/* =========================
-   ESTADO DO JOGO
-   ========================= */
-
-// cópia mutável do tabuleiro atual
-let board = INIT_BOARD.map(r => [...r]);
 
 // conjunto de casas marcadas em vermelho
 let redSquares = new Set();
@@ -192,19 +247,17 @@ let endGame = new Set();
 // cada seta: {fr, fc, tr, tc}
 let arrows = [];
 
-// guarda origem do arraste com botão direito
-let rightDragFrom = null;
-
 // referência das casas DOM (uso futuro/otimização)
 let squares = [];
 
-/* tamanho de cada casa */
-const SQ = 72;
+// ?============================
 
-/* elementos DOM principais */
-const boardEl = document.getElementById('board');
-const canvas = document.getElementById('arrow-canvas');
-const ctx = canvas.getContext('2d');
+
+// ! DRAG
+// ?============================
+
+// guarda origem do arraste com botão direito
+let rightDragFrom = null;
 
 let drag = null;
 /*
@@ -216,6 +269,14 @@ let drag = null;
 }
 */
 
+let global_drag = null;
+
+// ?============================
+
+
+// ! AUDIO
+// ?============================
+
 const take = new Audio('./sounds/capture.mp3')
 const move = new Audio('./sounds/move-self.mp3')
 const start = new Audio('./sounds/game-start.mp3')
@@ -224,29 +285,9 @@ const promote = new Audio('./sounds/promote.mp3')
 const check = new Audio('./sounds/move-check.mp3')
 const castle = new Audio('./sounds/castle.mp3')
 const invalid = new Audio('./sounds/illegal.mp3')
-
-let TURN = 'w'
-const turns = ['w', 'b', 'w']
-let id_turn = 0
-
-const LimitValueLance = 1
-let valueLancesTurn = 0
-
-let memory_moves = {}
-
-let global_drag = null;
+const hahah = new Audio('./sounds/hahah.mp3')
+const died = new Audio('./sounds/last_words.mp3')
 
 let playMoveSound = false;
 let castleSound = false;
 
-let Complement_Id_Real = {
-  'w': {
-    'K': '',
-    'Q': ''
-  },
-
-  'b': {
-    'K': '',
-    'Q': ''
-  }
-}

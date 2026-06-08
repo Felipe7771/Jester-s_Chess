@@ -3,7 +3,6 @@
    ========================= */
 function renderBoard() {
     if (CHECKMATE) {
-
         setTimeout(() => {
             if (!END_GAME) {
                 showCheckmate(get_Enemy(TURN))
@@ -20,6 +19,7 @@ function renderBoard() {
     for (let r = 0; r < 8; r++) {
         for (let c = 0; c < 8; c++) {
             const sq = document.createElement('div')
+            const isLight = (r + c) % 2 === 0
             sq.className = 'sq ' + ((r + c) % 2 === 0 ? 'light' : 'dark')
 
             // guarda posição na célula DOM
@@ -41,6 +41,28 @@ function renderBoard() {
 
             if (moveRings.has(sqKey(r, c))) {
                 sq.classList.add('move-ring')
+            }
+
+            const coordColor = isLight ? '#b58863' : '#f0d9b5'
+
+            if (r === 7) {
+                const file = document.createElement('div')
+                file.className = 'coord-inside file'
+
+                file.textContent = String.fromCharCode(97 + c) // a-h
+
+                file.style.color = coordColor
+                sq.appendChild(file)
+            }
+
+            if (c === 0) {
+                const rank = document.createElement('div')
+                rank.className = 'coord-inside rank'
+
+                rank.textContent = 8 - r
+
+                rank.style.color = coordColor
+                sq.appendChild(rank)
             }
 
             // se existir peça, renderiza símbolo
@@ -86,29 +108,6 @@ function renderBoard() {
             boardEl.appendChild(sq)
         }
     }
-}
-
-/* =========================
-   COORDENADAS VISUAIS
-   ========================= */
-
-const filesEl = document.getElementById('coords-file')
-const ranksEl = document.getElementById('coords-rank')
-
-/* letras a-h */
-'abcdefgh'.split('').forEach((f) => {
-    const d = document.createElement('div')
-    d.className = 'coord-file'
-    d.textContent = f
-    filesEl.appendChild(d)
-})
-
-/* números 1-8 (invertidos visualmente) */
-for (let r = 1; r <= 8; r++) {
-    const d = document.createElement('div')
-    d.className = 'coord-rank'
-    d.textContent = 9 - r
-    ranksEl.appendChild(d)
 }
 
 function showMoveHints(moves, color) {

@@ -60,6 +60,24 @@
   .sq.light { background: #f0d9b5; }
   .sq.dark  { background: #b58863; }
 
+  .coord-inside {
+  position: absolute;
+  font-size: 15px;
+  font-weight: bold;
+  pointer-events: none;
+  font-family: Calibri;
+}
+
+  .coord-inside.file {
+  bottom: 2px;
+  right: 4px;
+}
+
+.coord-inside.rank {
+  top: 2px;
+  left: 4px;
+}
+
   /* Destaque vermelho (marcações temporárias) */
   .sq.highlight-yellow {
     position: relative;
@@ -229,9 +247,9 @@
   animation: fadeIn .15s ease-in-out forwards;
 }
 
-.badge-checkmate { background: #fff; color: #c8302a; border: 2px solid #fff; font-weight: bold; font-size:small; }
-.badge-winner    { background: #fff; color: #5a9e44; border: 2px solid #fff; font-weight: bold; font-size:small; }
-.badge-try    { background: #fff; color: #585858; border: 2px solid #fff; font-weight: bold; font-size:small; }
+.badge-checkmate { background: #fff; color: #c8302a; border: 2px solid #fff; font-weight: bold; font-size:small; font-family: Calibri; }
+.badge-winner    { background: #fff; color: #5a9e44; border: 2px solid #fff; font-weight: bold; font-size:small; font-family: Calibri; }
+.badge-try    { background: #fff; color: #585858; border: 2px solid #fff; font-weight: bold; font-size:small; font-family: Calibri; }
 
 .king-icon-icon-winner {
   position: absolute;
@@ -304,6 +322,29 @@
   to {
     opacity: 1;
   }
+}
+
+@keyframes jester-spin-and-shake {
+  0%, 100% {
+    transform: translateY(0px) scale(1.0);
+  }
+
+  25% {
+    transform: translateY(-3px);
+  }
+
+  50% {
+    transform: translateY(3px);
+  }
+
+  75% {
+    transform: translateY(-2px) scale(1.01);
+  }
+}
+
+.jester-endgame {
+  animation: jester-spin-and-shake .15s linear infinite;
+  transform-origin: center;
 }
 
 /* =========================
@@ -449,4 +490,30 @@ animation: illegalFlash .8s steps(1) forwards;
 .king-defeat {
   animation: king-defeat 0.9s ease-in-out forwards;
   transform-origin: center;
+}
+
+@keyframes king-dead-twitch {
+  0%, 90%, 100% {
+    transform: rotate(740deg) scale(1);
+  }
+
+  92% {
+    transform: rotate(744deg) scale(1);
+  }
+
+  94% {
+    transform: rotate(736deg) scale(1);
+  }
+
+  96% {
+    transform: rotate(742deg) scale(1);
+  }
+
+  98% {
+    transform: rotate(740deg) scale(1);
+  }
+}
+
+.king-dead-twitch {
+  animation: king-dead-twitch 4s infinite;
 }

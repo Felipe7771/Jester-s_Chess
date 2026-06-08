@@ -28,7 +28,6 @@ function Do_Move_Execute(sq, local_drag) {
     clearMoveHints()
 
     checkPromotedSucessor(TURN)
-    checkPromotedPawn(board[sq.r][sq.c].id, TURN, sq.r, sq.c)
     checkBreakCastlePermission(board[sq.r][sq.c].id, TURN)
     
     set_piece_moved(
@@ -47,11 +46,15 @@ function Do_Move_Execute(sq, local_drag) {
         local_drag.piece[0],
     )
     
+    checkPromotedPawn(board[sq.r][sq.c].id, TURN, sq.r, sq.c)
     set_combat_turn()
     
     isEndedTurn() // tente encerrar o turno
     
     console.log('FIM DE TURNO')
+
+    VISUAL_check[TURN] = VISUAL_check[TURN] ? !VISUAL_check[TURN]: VISUAL_check[TURN]
+
     set_Check(TURN)
     
     playMoveSound = false

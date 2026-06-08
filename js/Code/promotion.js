@@ -63,9 +63,13 @@ function setPromote(old_id, new_id, new_type, enemy, r, c) {
     set_combat_piece(new_id, enemy, content)
     promote.play()
 
+    console.log(offense[0][4][enemy])
+
     const key = sqKey(r, c)
 
     yellowSquares.add(key)
+    const team_color = get_Enemy(enemy)
+    set_Check(team_color)
 }
 
 function delete_piece_to_team(id, color, r, c) {

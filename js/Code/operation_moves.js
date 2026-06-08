@@ -192,6 +192,8 @@ function calculateLinearOffense(id, from_r, from_c, piece, color, moves) {
             let r = from_r + dr * len
             let c = from_c + dc * len
 
+            // console.log(r, c)
+
             if (Is_OutBoard(r, c)) break
 
             let square = board[r][c]

@@ -191,6 +191,11 @@ function Have_Sucessor(color) {
 
   return id_sucessor in pieceIndex
 }
+function Have_Jester(color) {
+  const id_jester = get_Id_Jester(color)
+
+  return id_jester in pieceIndex
+}
 
 function get_Id_King(color) {
   return `${color}K${Complement_Id_Real[color]['K']}`
@@ -200,6 +205,9 @@ function get_Id_Queen(color) {
 }
 function get_Id_Sucessor(color) {
   return `${color}S0`
+}
+function get_Id_Jester(color) {
+  return `${color}J1`
 }
 
 // ==========================

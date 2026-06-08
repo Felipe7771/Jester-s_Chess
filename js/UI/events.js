@@ -27,8 +27,8 @@ function showCheckmate(winner) {
     if (lKPos) {
         const el = getSqEl(lKPos.r, lKPos.c)
         el.classList.add('sq-checkmate')
-  
-                const piece = el.querySelector('img')
+
+        const piece = el.querySelector('img')
 
         const effect = pieceEffects.get(board[lKPos.r][lKPos.c].id)
 
@@ -36,11 +36,26 @@ function showCheckmate(winner) {
             piece.classList.remove('shake-soft') // limpa estado antigo
         }
 
+        
+        
         piece.classList.add('king-defeat')
+        piece.addEventListener('animationend', () => {
+            piece.classList.add('king-dead-twitch');
+        }, { once: true });
+
+        piece.addEventListener('mouseenter', () => {
+            died.volume = 0.3;
+            died.play()
+        })
+
+        piece.addEventListener('mouseleave', () => {
+            died.pause()
+            died.currentTime = 0
+        })
 
         const badge = document.createElement('div')
         badge.className = 'king-badge badge-checkmate'
-        badge.textContent = 'Checkmate'
+        badge.textContent = 'CHECKMATE'
         el.appendChild(badge)
 
         const icon = document.createElement('div')
@@ -70,7 +85,7 @@ function showCheckmate(winner) {
 
         const badge = document.createElement('div')
         badge.className = 'king-badge badge-winner'
-        badge.textContent = 'Winner'
+        badge.textContent = 'WINNER'
         el.appendChild(badge)
 
         const icon = document.createElement('div')
@@ -83,6 +98,8 @@ function showCheckmate(winner) {
         icon.appendChild(img)
         el.appendChild(icon)
     }
+
+    Laugth_Jester()
 }
 
 /**
@@ -148,5 +165,43 @@ function showTry() {
 
         icon.appendChild(img)
         el.appendChild(icon)
+    }
+}
+
+function Laugth_Jester() {
+    function getSqEl(r, c) {
+        return squares[r * 8 + c]
+    }
+
+    for (const color of ['w', 'b']) {
+        console.log('Jester ', color, Have_Jester(color))
+        if (!Have_Jester(color)) continue
+
+        const id = get_Id_Jester(color)
+        const Jester = pieceIndex[id]
+        const r = Jester.r,
+            c = Jester.c
+
+        const el = getSqEl(r, c)
+
+        const piece = el.querySelector('img')
+
+        const effect = pieceEffects.get(board[r][c].id)
+
+        if (effect?.spin) {
+            piece.classList.remove('spin') // limpa estado antigo
+        }
+
+        piece.classList.add('jester-endgame')
+
+        piece.addEventListener('mouseenter', () => {
+            hahah.volume = 0.1;
+            hahah.play()
+        })
+
+        piece.addEventListener('mouseleave', () => {
+            hahah.pause()
+            hahah.currentTime = 0
+        })
     }
 }
