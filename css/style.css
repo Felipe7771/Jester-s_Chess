@@ -247,9 +247,9 @@
   animation: fadeIn .15s ease-in-out forwards;
 }
 
-.badge-checkmate { background: #fff; color: #c8302a; border: 2px solid #fff; font-weight: bold; font-size:small; font-family: Calibri; }
-.badge-winner    { background: #fff; color: #5a9e44; border: 2px solid #fff; font-weight: bold; font-size:small; font-family: Calibri; }
-.badge-try    { background: #fff; color: #585858; border: 2px solid #fff; font-weight: bold; font-size:small; font-family: Calibri; }
+.badge-checkmate { background: #fff; color: #c8302a; border: 2px solid #fff; font-weight: bold; font-size:small; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; }
+.badge-winner    { background: #fff; color: #5a9e44; border: 2px solid #fff; font-weight: bold; font-size:small; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; }
+.badge-try    { background: #fff; color: #585858; border: 2px solid #fff; font-weight: bold; font-size:small; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; }
 
 .king-icon-icon-winner {
   position: absolute;
@@ -517,3 +517,205 @@ animation: illegalFlash .8s steps(1) forwards;
 .king-dead-twitch {
   animation: king-dead-twitch 4s infinite;
 }
+
+/* ── chess layout wrapper ── */
+#chess-layout {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+#board-column {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ── player strips ── */
+.player-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #262626;
+  border-radius: 8px;
+  border: 0.5px solid #333;
+  height: 46px;
+  width: 576px; /* mesma largura do tabuleiro */
+  box-sizing: border-box;
+}
+
+.player-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 10%;
+  background: #3a3a3a;
+  border: 1.5px solid #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.player-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10%;
+}
+
+.player-name {
+  font-size: 13px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 500;
+  color: #e0e0e0;
+  min-width: 80px;
+}
+
+.captured-pieces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  align-items: center;
+  flex: 1;
+}
+
+.captured-pieces img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  opacity: 0.85;
+}
+
+/* fallback se não tiver imagem */
+.captured-pieces .cap-char {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.material-diff {
+  font-size: 12px;
+  color: #aaa;
+  font-weight: 500;
+  min-width: 20px;
+  text-align: right;
+}
+
+/* ── move list panel ── */
+#move-panel {
+  width: 200px;
+  background: #1e1e1e;
+  border: 0.5px solid #333;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+  /* altura = tabuleiro + 2 strips + gaps */
+  height: calc(576px + 46px + 46px + 12px + 12px);
+}
+
+.move-panel-header {
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #666;
+  text-transform: uppercase;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  letter-spacing: .07em;
+  border-bottom: 0.5px solid #2e2e2e;
+  background: #1a1a1a;
+  flex-shrink: 0;
+}
+
+#move-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+#move-list::-webkit-scrollbar { width: 4px; }
+#move-list::-webkit-scrollbar-track { background: transparent; }
+#move-list::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 2px; }
+
+.move-row {
+  display: grid;
+  grid-template-columns: 26px 1fr 1fr;
+}
+
+.move-num {
+  font-size: 11px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a1a;
+  flex-shrink: 0;
+}
+
+.move-cell {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #ccc;
+  transition: background .1s;
+}
+
+.move-cell:hover { background: #2a2a2a; color: #fff; }
+
+.move-cell.active {
+  background: #4a7c3f;
+  color: #fff;
+}
+
+.move-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.move-icon img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.move-text {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* nav buttons */
+.move-nav {
+  display: flex;
+  border-top: 0.5px solid #2e2e2e;
+  background: #1a1a1a;
+  flex-shrink: 0;
+}
+
+.nav-btn {
+  flex: 1;
+  padding: 8px 4px;
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color .1s, background .1s;
+}
+
+.nav-btn:hover { color: #ccc; background: #222; }
+.nav-btn:active { color: #fff; }

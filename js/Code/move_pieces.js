@@ -77,6 +77,12 @@ document.addEventListener('mousemove', (e) => {
 document.addEventListener('mouseup', (e) => {
     if (!drag) return
 
+    let CAPTURE = {
+        captured: false,
+        type: '',
+        material: 0
+    }
+
     const sq = getSquareFromEvent(e)
 
     // remove fantasma visual
@@ -110,6 +116,9 @@ document.addEventListener('mouseup', (e) => {
             playMoveSound = true
         }
         if (board[sq.r][sq.c].id != '') {
+            CAPTURE.captured = true
+            CAPTURE.type = board[sq.r][sq.c].type
+            CAPTURE.material = MaterialValue[CAPTURE.type]
             delete_piece_to_team(
                 board[sq.r][sq.c].id,
                 board[sq.r][sq.c].color,
@@ -126,7 +135,8 @@ document.addEventListener('mouseup', (e) => {
         }
 
         // lances fora da mesma casa são válidos como um lance jogável
-        if (drag.fromR != sq.r || drag.fromC != sq.c) Do_Move_Execute(sq, drag)
+        if (drag.fromR != sq.r || drag.fromC != sq.c)
+            Do_Move_Execute(sq, drag, CAPTURE)
 
         renderBoard()
     }
@@ -139,7 +149,7 @@ function showMoveIndicators(id, color) {
 
     const formatMove = ([r, c]) => `[${8 - r}, ${c + 1}]`
 
-    set_MemoryMoves(id, color);
+    set_MemoryMoves(id, color)
 
     console.log(
         `[ ${(memory_moves[id].total || []).map(formatMove).join(', ')} ]`,
@@ -177,16 +187,19 @@ function set_MemoryMoves(id, color) {
 
                 // Sem sucessor = xeque valido, favor evitar situações assim, mas o jogo não caga se acontecer
                 if (!Have_Sucessor(color)) {
-                    console.log('Rei sem sucessor, calculando movimentos legais normalmente')
+                    console.log(
+                        'Rei sem sucessor, calculando movimentos legais normalmente',
+                    )
                     legals = get_SquareMovesKing_Attacked(
                         pieceIndex[id],
                         enemy,
                     ).save_squares
 
                     illegals = subtractIntersection(legals, attackers[id])
-
                 } else {
-                    console.log('Rei com sucessor, o movimento PODE ou NÃO fugir ')
+                    console.log(
+                        'Rei com sucessor, o movimento PODE ou NÃO fugir ',
+                    )
                     legals = attackers[id] || []
                     illegals = []
                 }
@@ -217,6 +230,12 @@ document.addEventListener('mouseup', (e) => {
 
     if (!sq) return
 
+    let CAPTURE = {
+        captured: false,
+        type: '',
+        material: 0
+    }
+
     if (
         moveCircles.has(sqKey(sq.r, sq.c)) ||
         moveRings.has(sqKey(sq.r, sq.c))
@@ -241,6 +260,9 @@ document.addEventListener('mouseup', (e) => {
         }
 
         if (board[sq.r][sq.c].id != '') {
+            CAPTURE.captured = true
+            CAPTURE.type = board[sq.r][sq.c].type
+            CAPTURE.material = MaterialValue[CAPTURE.type]
             delete_piece_to_team(
                 board[sq.r][sq.c].id,
                 board[sq.r][sq.c].color,
@@ -259,7 +281,7 @@ document.addEventListener('mouseup', (e) => {
 
         // lances fora da mesma casa são válidos como um lance jogável
         if (global_drag.fromR != sq.r || global_drag.fromC != sq.c)
-            Do_Move_Execute(sq, global_drag)
+            Do_Move_Execute(sq, global_drag, CAPTURE)
 
         renderBoard()
     }

@@ -127,6 +127,10 @@ function Is_anyThere(square) {
   return square.id != ''
 }
 
+function There_AllyThere(square, team) {
+  return Is_anyThere(square) && Is_AllyThere(square, team)
+}
+
 function Is_AllyThere(square, team) {
   return square.color == team
 }

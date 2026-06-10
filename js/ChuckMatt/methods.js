@@ -184,6 +184,12 @@ function set_Moving(BestMove, BestPiece) {
     id: BestMove.id,
     }
 
+    let CAPTURE = {
+        captured: false,
+        type: '',
+        material: 0
+    }
+
     board[BestPiece.r][BestPiece.c] = {
         id: ``,
         type: '',
@@ -202,6 +208,9 @@ function set_Moving(BestMove, BestPiece) {
             playMoveSound = true
         }
         if (board[BestMove.to_r][BestMove.to_c].id != '') {
+            CAPTURE.captured = true
+            CAPTURE.type = board[BestMove.to_r][BestMove.to_c].type
+            CAPTURE.material = MaterialValue[CAPTURE.type]
             delete_piece_to_team(
                 board[BestMove.to_r][BestMove.to_c].id,
                 board[BestMove.to_r][BestMove.to_c].color,
@@ -224,7 +233,7 @@ function set_Moving(BestMove, BestPiece) {
 
 
         // lances fora da mesma casa são válidos como um lance jogável
-        Do_Move_Execute(sq_local, local_drag)
+        Do_Move_Execute(sq_local, local_drag, CAPTURE)
 
         renderBoard()
 }

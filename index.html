@@ -12,21 +12,52 @@
 <body>
 <div id="app">
 
-  <!-- wrapper que junta tabuleiro + canvas -->
-  <div id="board-wrapper">
+  <!-- layout principal: tabuleiro + painel lateral -->
+  <div id="chess-layout">
 
-    <!-- coordenadas laterais (1-8) -->
-    <div id="coords-rank"></div>
+    <!-- coluna central: jogador preto / tabuleiro / jogador branco -->
+    <div id="board-column">
 
-    <!-- tabuleiro principal -->
-    <div id="board"></div>
+      <!-- strip do jogador preto (topo) -->
+      <div class="player-strip" id="strip-black">
+        <div class="player-avatar" id="avatar-black">♟</div>
+        <span class="player-name" id="name-black">Pretas</span>
+        <div class="captured-pieces" id="captured-black"></div>
+        <span class="material-diff" id="diff-black"></span>
+      </div>
 
-    <!-- canvas onde as setas são desenhadas -->
-    <canvas id="arrow-canvas" width="576" height="576"></canvas>
+      <!-- wrapper tabuleiro + canvas (seu código original) -->
+      <div id="board-wrapper">
+        <div id="coords-rank"></div>
+        <div id="board"></div>
+        <canvas id="arrow-canvas" width="576" height="576"></canvas>
+      </div>
+      <div id="coords-file"></div>
+
+      <!-- strip do jogador branco (base) -->
+      <div class="player-strip" id="strip-white">
+        <div class="player-avatar" id="avatar-white">♙</div>
+        <span class="player-name" id="name-white">Brancas</span>
+        <div class="captured-pieces" id="captured-white"></div>
+        <span class="material-diff" id="diff-white"></span>
+      </div>
+
+    </div>
+
+    <!-- painel lateral de lances -->
+    <div id="move-panel">
+      <div class="move-panel-header">Lances</div>
+      <div id="move-list"></div>
+      <div class="move-nav">
+        <button class="nav-btn" id="nav-start"  title="Início">⟪</button>
+        <button class="nav-btn" id="nav-prev"   title="Anterior">‹</button>
+        <button class="nav-btn" id="nav-next"   title="Próximo">›</button>
+        <button class="nav-btn" id="nav-end"    title="Fim">⟫</button>
+      </div>
+    </div>
+
   </div>
 
-  <!-- coordenadas inferiores (a-h) -->
-  <div id="coords-file"></div>
 </div>
 
 <script src="js/Database/config.js"></script>
@@ -34,7 +65,6 @@
 <script src="js/Database/code_UI_functions.js"></script>
 
 <script src="js/Code/operation_moves.js"></script>
-l
 <script src="js/Code/set_combat.js"></script>
 <script src="js/Code/check.js"></script>
 <script src="js/Code/pin.js"></script>
@@ -55,6 +85,7 @@ l
 <script src="js/UI/draw.js"></script>
 <script src="js/UI/interface.js"></script>
 <script src="js/UI/interactions.js"></script>
+<script src="js/UI/move_log.js"></script>
 
 <script>
 
@@ -62,6 +93,10 @@ l
    INICIALIZAÇÃO FINAL
    ========================= */
 /* elementos DOM principais */
+
+setPlayerInfo('white', 'JOGADOR', 'img/avatar_white.png');
+setPlayerInfo('black', 'ChuckMatt (AI)', 'img/avatar_black.png');
+
 renderBoard();
 ctx.fillStyle = "red";
 ctx.fillRect(100,100,100,100);

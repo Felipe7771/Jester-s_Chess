@@ -21,6 +21,17 @@ const PIECES = {
   bP: 'img/b/bp.png',
 };
 
+const MaterialValue = {
+  P: 1,
+  N: 3,
+  B: 3,
+  R: 5,
+  J: 4,
+  Q: 9,
+  S: 11,
+  K: 20
+}
+
 const type = {
   pawn: 'P',
   knight: 'N',

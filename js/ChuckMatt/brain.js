@@ -1,5 +1,5 @@
 function SET_ChuckMatt_Move() {
-    console.clear()
+    // console.clear()
 
     if (CHECKMATE) return
     if (!RUN_CHUCKMATT) set_initialChuckMatt(PLAY_TURN.chuck)

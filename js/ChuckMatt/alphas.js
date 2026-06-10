@@ -15,15 +15,25 @@ const DEFAULT_ERROR = 2
 // ================================================
 // ================================================
 // ? Coeficientes Beta 
-// * Variáveis de incentivo exclusivo de cada score
+// * Variáveis de incentivo multiplicativo exclusivo de cada score
 
 const bettaEPS = 1
 const bettaAPT = 10
+
+const bettaOT = 4
+const bettaFT = 3
 
 const bettaAST = -10
 const bettaCT = 5
 
 const bettaPST = 1
+
+// ================================================
+// ================================================
+// ? Coeficientes Gamma 
+// * Variáveis de incentivo aditivo exclusivo de cada score
+
+const gammaFT = 20
 
 // ================================================
 // ================================================

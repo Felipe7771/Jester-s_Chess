@@ -373,11 +373,11 @@ function check_theoretical_move(
     permited_moves,
     num_permited_moves,
 ) {
-    // console.log(
-    //     'Defensores: ',
-    //     Forward.map((item) => item.id),
-    // )
-    // console.log('Defensores é nulo? ', Forward == null)
+    console.log(
+        'Defensores: ',
+        Forward.map((item) => item.id),
+    )
+    console.log('Defensores é nulo? ', Forward == null)
     if (Forward == null || !Forward.length) return { permited_moves, num_permited_moves }
 
     for (const fwd of Forward) {
