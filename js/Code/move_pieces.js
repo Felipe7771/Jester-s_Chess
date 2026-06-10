@@ -139,8 +139,18 @@ function showMoveIndicators(id, color) {
 
     const formatMove = ([r, c]) => `[${8 - r}, ${c + 1}]`
 
+    set_MemoryMoves(id, color);
+
+    console.log(
+        `[ ${(memory_moves[id].total || []).map(formatMove).join(', ')} ]`,
+    )
+
+    showMoveHints(memory_moves[id], color)
+}
+
+function set_MemoryMoves(id, color) {
     if (!memory_moves[id]) {
-        console.log(memory_moves)
+        // console.log(memory_moves)
 
         checkCastling(id, color)
 
@@ -198,12 +208,6 @@ function showMoveIndicators(id, color) {
             total: total_moves,
         }
     }
-
-    console.log(
-        `[ ${(memory_moves[id].total || []).map(formatMove).join(', ')} ]`,
-    )
-
-    showMoveHints(memory_moves[id], color)
 }
 
 document.addEventListener('mouseup', (e) => {

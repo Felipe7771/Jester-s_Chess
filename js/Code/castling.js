@@ -1,8 +1,8 @@
 function checkCastling(id, team) {
-    console.log(`Castling: ${CastlePermission[team]}`)
+    // console.log(`Castling: ${CastlePermission[team]}`)
     if (!(CastlePermission[team] && kings_castle.has(id))) return
     
-    console.log(`Adicionando Castling`)
+    // console.log(`Adicionando Castling`)
     check_Kingside_Castle(id, team)
     check_Queenside_Castle(id, team)
 }
@@ -27,7 +27,7 @@ function check_Kingside_Castle(id_King, team) {
     let any_problem = false
 
     for (let dc = cooK.c; dc <= cooR.c; dc++) {
-        console.log(board[check_r][dc].id)
+        // console.log(board[check_r][dc].id)
         const is_There = Is_anyThere(board[check_r][dc])
         const num_Atcks = get_numAttacks(offense[check_r][dc][enemy])
 
@@ -41,7 +41,7 @@ function check_Kingside_Castle(id_King, team) {
     }
 
     if (!any_problem) {
-        console.log(`Adicionando VERDADEIRO Kingside`)
+        // console.log(`Adicionando VERDADEIRO Kingside`)
 
         attackers[id_King].push([check_r, 6])
         const id_coo = `${check_r}6${team}`
@@ -79,10 +79,10 @@ function check_Queenside_Castle(id_King, team) {
     }
 
     if (!any_problem) {
-        console.log(`Adicionando VERDADEIRO`)
+        // console.log(`Adicionando VERDADEIRO`)
         
         attackers[id_King].push([check_r, 2])
-        console.log(attackers[id_King])
+        // console.log(attackers[id_King])
         
         const id_coo = `${check_r}2${team}`
 

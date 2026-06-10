@@ -1,0 +1,103 @@
+function SET_ChuckMatt_Move() {
+    console.clear()
+
+    if (CHECKMATE) return
+    if (!RUN_CHUCKMATT) set_initialChuckMatt(PLAY_TURN.chuck)
+    // 1. pegue a cor do time
+    const color = CMcolor
+    const enemy = get_Enemy(color)
+
+    let armyMoves = get_Army(color)
+
+    set_alphaARMY(color, armyMoves)
+
+    Scores = {
+        /**
+         * 'id|score': {
+         * id: id,
+         * score,
+         * to_r: r,
+         * to_c: c
+         * }
+         */
+    }
+
+    // 5. calcule EEKS
+    // ? Exposed Enemy King Scale
+    calcule_EEKS()
+
+    // 6. se o sucessor está morto, aumente o valor do rei
+    if (!Have_Sucessor(color)) growUp_King_ally()
+    if (!Have_Sucessor(enemy)) growUp_King_enemy()
+
+    // 7. Gerar plaza dos atacantes
+    Attackers_plaza = generate_Attackersplaza(EEKS)
+
+    // 8. calcular pontuação
+    for (const id of Object.keys(armyMoves)) {
+        const PART = pieceIndex[id]
+        const enemy = get_Enemy(color)
+
+        // ? Default Piece Score
+        let DPS = calcule_EPS_APT(PART, enemy)
+
+        for (const [r, c] of armyMoves[id]) {
+            if (!Is_Jester(id[1])) {
+                let score = calcule_Score(id, PART, color, enemy, r, c)
+                score += DPS
+
+                if (id == id_AlreadyPlay) {
+                    const taxAlreadyPlay = (6 + 4 * is_to_attacked) / 10
+                    score *= taxAlreadyPlay
+                }
+
+                const content = {
+                    id,
+                    score,
+                    to_r: r,
+                    to_c: c,
+                }
+
+                const id_score = `${id}|${score}`
+
+                Scores[id_score] = content
+            }
+        }
+    }
+
+    // 9. Exiba resultados
+    log_Scores(Scores)
+
+    let BestMove = {}
+
+    // 10. Pegar maior pontuação
+    if (plays <= 3) {
+        console.log('====================')
+        console.log('SELECIONADO DO TOP3')
+        console.log('====================')
+        const top3 = Object.values(Scores)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 3)
+
+        const weights = [0.6, 0.3, 0.1]
+        const rnd = Math.random()
+
+        let acc = 0
+        for (let i = 0; i < top3.length; i++) {
+            acc += weights[i]
+            if (rnd < acc) {
+                BestMove = top3[i]
+                break
+            }
+        }
+    } else {
+
+        BestMove = Object.values(Scores).reduce((max, obj) =>
+            obj.score > max.score ? obj : max,
+        )
+    }
+
+    const BestPiece = pieceIndex[BestMove.id]
+    // 11. Executar
+    set_Moving(BestMove, BestPiece)
+}

@@ -1,7 +1,7 @@
 
 function checkPromotedSucessor(team_color) {
     const enemy = get_Enemy(team_color)
-    console.log('Analisando')
+    // console.log('Analisando')
 
     if (Have_Sucessor(enemy) && !Have_King(enemy)) {
         console.log('Rei morreu')
@@ -77,7 +77,7 @@ function delete_piece_to_team(id, color, r, c) {
 }
 
 function checkPromotedPawn(id, team, r, c) {
-    console.log("Pawn ?",id)
+    // console.log("Pawn ?",id)
     if (id[1] != 'P') return
     console.log("Passou!!!!!")
 

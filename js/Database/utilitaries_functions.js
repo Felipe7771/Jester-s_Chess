@@ -53,6 +53,8 @@ function isEndedTurn() {
 function chanceTurn() {
   id_turn = (id_turn + 1) % 2
   TURN = turns[id_turn]
+  encrement_plays++
+  plays = Math.floor((encrement_plays + 1)/2) 
 }
 
 // ==========================
@@ -321,6 +323,18 @@ function set_piece_moved_team(to_r, to_c, id, color) {
 
   pieceIndex[id]['r'] = to_r
   pieceIndex[id]['c'] = to_c
+}
+
+function getTeam(color) {
+    const result = {};
+
+    for (const id in pieceIndex) {
+        if (id[0] === color) {
+            result[id] = pieceIndex[id];
+        }
+    }
+
+    return result;
 }
 
 // ==========================

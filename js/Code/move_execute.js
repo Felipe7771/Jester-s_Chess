@@ -11,10 +11,10 @@ function Do_Move_Execute(sq, local_drag) {
     SELECTOR_ID = local_drag.piece[1] == 'J' ? SELECTOR_ID : ''
     SELECTOR_COLOR = local_drag.piece[1] == 'J' ? SELECTOR_COLOR : ''
     
-    console.log('==========================')
-    console.log(
-        `Peça movida (${local_drag.id}) | valorLance-> ${valueLancesTurn}`,
-    )
+    // console.log('==========================')
+    // console.log(
+    //     `Peça movida (${local_drag.id}) | valorLance-> ${valueLancesTurn}`,
+    // )
 
     
     const key1 = sqKey(sq.r, sq.c)
@@ -51,7 +51,7 @@ function Do_Move_Execute(sq, local_drag) {
     
     isEndedTurn() // tente encerrar o turno
     
-    console.log('FIM DE TURNO')
+    // console.log('FIM DE TURNO')
 
     VISUAL_check[TURN] = VISUAL_check[TURN] ? !VISUAL_check[TURN]: VISUAL_check[TURN]
 
@@ -61,7 +61,7 @@ function Do_Move_Execute(sq, local_drag) {
     castleSound = false
     
     if (valueLancesTurn == 0 && local_drag.piece[1] == 'J') {
-        console.log('Aplicando efeito de spin para o Jester')
+        // console.log('Aplicando efeito de spin para o Jester')
         pieceEffects.set(local_drag.id, { spin: true });
     }
     global_drag = null
@@ -71,5 +71,13 @@ function Do_Move_Execute(sq, local_drag) {
     }
     
     CHECKMATE = memory_checkmate
+
+        if (PLAY_TURN.chuck == TURN) {
+        setTimeout(() => {
+            SET_ChuckMatt_Move();
+        }, 1000)
+
+        return
+    }
 
 }

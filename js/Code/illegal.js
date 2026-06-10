@@ -1,6 +1,6 @@
 function LegalProvocative_Jester(id, color) {
 
-    console.log("Verificando")
+    // console.log("Verificando")
     const Jester = pieceIndex[id]
 
     attackers[id] = []
@@ -32,7 +32,7 @@ function LegalProvocative_Jester(id, color) {
 
         }
 
-        console.log("Escapes: ",Escape_moves)
+        // console.log("Escapes: ",Escape_moves)
 
         if (Escape_moves) legals.push([Pr, Pc])
         else jesterIllegals.push([Pr, Pc])
@@ -41,8 +41,8 @@ function LegalProvocative_Jester(id, color) {
 
     attackers[id] = legals
 
-    console.log(legals)
-    console.log(jesterIllegals)
+    // console.log(legals)
+    // console.log(jesterIllegals)
 
     for (const [ilr, ilc] of jesterIllegals) {
 
@@ -53,7 +53,7 @@ function LegalProvocative_Jester(id, color) {
 
     }
 
-    console.log("Verificado!!")
+    // console.log("Verificado!!")
 
     return {legals, jesterIllegals}
 

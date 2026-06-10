@@ -111,11 +111,19 @@ const INIT_BOARD = [
 // ?============================
 // ?============================
 
+let plays = 1
+let encrement_plays = 1
+
 let generate_id_pieces = 10 // evitar duplicação de peças
 
 let TURN = 'w'
 const turns = ['w', 'b', 'w']
 let id_turn = 0
+
+let RUN_GAME = true
+let PLAY_TURN = {player: 'w', chuck: 'b'}
+
+let RUN_CHUCKMATT = false
 
 const LimitValueLance = 1
 let valueLancesTurn = 0

@@ -13,45 +13,45 @@ function is_Check(color) {
 
     // console.log('Onde o Rei está? ', pieceKing.r, pieceKing.c)
 
-    console.log(
-        'Who: (ids).',
-        get_Attackers(offense[kr][kc][enemy]).map((item) => item.id),
-    )
-    console.log(
-        'Who: (onde?).',
-        get_Attackers(offense[kr][kc][enemy]).map(
-            (item) => `${item.r} ${item.c}`,
-        ),
-    )
+    // console.log(
+    //     'Who: (ids).',
+    //     get_Attackers(offense[kr][kc][enemy]).map((item) => item.id),
+    // )
+    // console.log(
+    //     'Who: (onde?).',
+    //     get_Attackers(offense[kr][kc][enemy]).map(
+    //         (item) => `${item.r} ${item.c}`,
+    //     ),
+    // )
 
     const Attacks = get_numAttacks(offense[kr][kc][enemy])
 
-    console.log('Quant:.', Attacks)
+    // console.log('Quant:.', Attacks)
 
     const result = Attacks >= 1
 
-    console.log(result)
+    // console.log(result)
 
     return { result, Attacks }
 }
 
 function set_Check(color) {
-    console.log('Analisando check: ')
+    // console.log('Analisando check: ')
 
     const { result, Attacks } = is_Check(color)
 
-    console.log('Resultado: ', result)
-    console.log('Estava em check? ', VISUAL_check.color)
+    // console.log('Resultado: ', result)
+    // console.log('Estava em check? ', VISUAL_check.color)
 
     const enemy = get_Enemy(color)
 
     if (VISUAL_check.color && !result) {
-        console.log('Removendo animação de check')
+        // console.log('Removendo animação de check')
         remove_KingAnimationCheck(get_Id_King(enemy))
     } else if (result) set_KingAnimationCheck(get_Id_King(color))
 
     VISUAL_check.color = result
-    console.log(playMoveSound)
+    // console.log(playMoveSound)
 
     if (result) check.play()
     else if (castleSound) castle.play()
@@ -373,11 +373,11 @@ function check_theoretical_move(
     permited_moves,
     num_permited_moves,
 ) {
-    console.log(
-        'Defensores: ',
-        Forward.map((item) => item.id),
-    )
-    console.log('Defensores é nulo? ', Forward == null)
+    // console.log(
+    //     'Defensores: ',
+    //     Forward.map((item) => item.id),
+    // )
+    // console.log('Defensores é nulo? ', Forward == null)
     if (Forward == null || !Forward.length) return { permited_moves, num_permited_moves }
 
     for (const fwd of Forward) {

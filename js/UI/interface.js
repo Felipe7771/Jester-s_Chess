@@ -90,7 +90,7 @@ function renderBoard() {
                 }
 
                 img.addEventListener('mousedown', (e) => {
-                    if (e.button !== 0 || board[r][c].color != TURN) return
+                    if (e.button !== 0 || board[r][c].color != TURN || !RUN_GAME || TURN != PLAY_TURN?.player) return
                     startDrag(
                         e,
                         r,

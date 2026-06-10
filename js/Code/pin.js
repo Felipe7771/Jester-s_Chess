@@ -19,7 +19,7 @@ function Is_pin(id, color) {
     const Length = Enemies.length
 
     const drK = Kr - pr, dcK = Kc - pc
-    console.log("======= ANALISANDO REI =======")
+    // console.log("======= ANALISANDO REI =======")
     const typeM_King = get_type_move(drK, dcK);
 
     if (typeM_King == 'no_line') return [false, null]
@@ -30,12 +30,12 @@ function Is_pin(id, color) {
     let alone = true
     let id_attacker = null
 
-    console.log("======= ANALISANDO INIMIGOS =======")
+    // console.log("======= ANALISANDO INIMIGOS =======")
     
     for (const [index, Enemie] of Enemies.entries()) {
 
-         console.log("Inimigo: ", Enemie.id, "Tipo de peça: ", Enemie.piece)
-         console.log("Tipo de movimento da peça: ", unit_moviment_parts[Enemie.piece].type_move)
+        //  console.log("Inimigo: ", Enemie.id, "Tipo de peça: ", Enemie.piece)
+        //  console.log("Tipo de movimento da peça: ", unit_moviment_parts[Enemie.piece].type_move)
         if(unit_moviment_parts[Enemie.piece].type_move != 'linear') {
             if (index == Length-1) {
                 alone = false
@@ -43,15 +43,15 @@ function Is_pin(id, color) {
             continue
         }
 
-         console.log(">> O inimigo é linear")
+        //  console.log(">> O inimigo é linear")
 
         const Er = Enemie.r, Ec = Enemie.c
 
         const drE = Er - pr, dcE = Ec - pc
         const typeM_Enemie = get_type_move(drE, dcE);
 
-         console.log("Enemie: ", Enemie.id, "Tipo de movimento: ", typeM_Enemie)
-         console.log("Estão na mesma linha? ", typeM_Enemie === typeM_King)
+        //  console.log("Enemie: ", Enemie.id, "Tipo de movimento: ", typeM_Enemie)
+        //  console.log("Estão na mesma linha? ", typeM_Enemie === typeM_King)
         
         if (typeM_Enemie !== typeM_King) {
             if (index == Length-1) {
@@ -60,15 +60,15 @@ function Is_pin(id, color) {
             continue
         }
 
-         console.log(">> O inimigo está na mesma direção do rei")
+        //  console.log(">> O inimigo está na mesma direção do rei")
         
         const UdrE = Math.sign(drE);
         const UdcE = Math.sign(dcE);
 
-         console.log("Unidade Enemie: ", UdrE, UdcE)
-         console.log("Unidade King: ", UdrK, UdcK)
+        //  console.log("Unidade Enemie: ", UdrE, UdcE)
+        //  console.log("Unidade King: ", UdrK, UdcK)
 
-         console.log("São opostos? ", UdrE === -UdrK && UdcE === -UdcK)
+        //  console.log("São opostos? ", UdrE === -UdrK && UdcE === -UdcK)
 
         if (UdrE !== -UdrK || UdcE !== -UdcK) {
             if (index == Length-1) {
@@ -77,7 +77,7 @@ function Is_pin(id, color) {
             continue
         }
 
-         console.log(">> O inimigo está na linha do rei")
+        //  console.log(">> O inimigo está na linha do rei")
 
         const UdrEK = Math.sign(Kr - Er);
         const UdcEK = Math.sign(Kc - Ec);
@@ -86,31 +86,31 @@ function Is_pin(id, color) {
 
         const max_len = freq_move[unit_moviment_parts[Enemie.piece].type_move]
 
-        console.log("Verificando casas entre o inimigo e o rei, max len: ", max_len)
+        // console.log("Verificando casas entre o inimigo e o rei, max len: ", max_len)
 
         for (let len = 1; len <= max_len; len++) {
 
             r = Er + UdrEK*len;
             c = Ec + UdcEK*len;
 
-             console.log("Verificando casa: ", r, c)
+            //  console.log("Verificando casa: ", r, c)
             if (Is_OutBoard(r, c) || (r == Kr && c == Kc)) break
 
             const square = board[r][c]
 
-             console.log("Está ocupada? ", Is_anyThere(square))
-             console.log("Peça ali? ", square.id)
-             console.log("Peça em análise? ", id)
-             console.log("São iguais? ", square.id === id)
-             console.log("Continuar? ", Is_anyThere(square) && square.id !== id)
+            //  console.log("Está ocupada? ", Is_anyThere(square))
+            //  console.log("Peça ali? ", square.id)
+            //  console.log("Peça em análise? ", id)
+            //  console.log("São iguais? ", square.id === id)
+            //  console.log("Continuar? ", Is_anyThere(square) && square.id !== id)
 
             if (Is_anyThere(square) && square.id !== Piece.id) {
-                console.log(">> Encontrada peça entre o inimigo e o rei")
+                // console.log(">> Encontrada peça entre o inimigo e o rei")
                 alone = false
                 break
             }
 
-            console.log(">> Casa livre entre o inimigo e o rei")
+            // console.log(">> Casa livre entre o inimigo e o rei")
 
         }
 
@@ -124,9 +124,9 @@ function Is_pin(id, color) {
 function get_type_move(dr, dc) {
     const produt = Math.abs(dr*dc)
 
-     console.log("Produto: ", produt)
-     console.log("dr: ", dr, "dc: ", dc)
-     console.log("Tipo: ",!produt ? 'orthogonal' : (produt == dr*dr || produt == dc*dc ? 'diagonal' : 'no_line'))
+    //  console.log("Produto: ", produt)
+    //  console.log("dr: ", dr, "dc: ", dc)
+    //  console.log("Tipo: ",!produt ? 'orthogonal' : (produt == dr*dr || produt == dc*dc ? 'diagonal' : 'no_line'))
 
     if (!produt) {
         return 'orthogonal';
@@ -144,12 +144,12 @@ function set_PiecePin(id, color) {
     const formatMove = ([r, c]) => `[${r}, ${c}]`
 
 
-    console.log('Está cravado? ', pin)
+    // console.log('Está cravado? ', pin)
 
     if (pin) {
         // os únicos movimentos possíveis da peça cravada são aqueles que eliminam o atacante SE tiver nos attackers[id]
 
-        console.log('Atacantes: ', `[ ${(attackers[id] || []).map(formatMove).join(', ')} ]`,)
+        // console.log('Atacantes: ', `[ ${(attackers[id] || []).map(formatMove).join(', ')} ]`,)
         
         const moves_pins = []
 
@@ -157,13 +157,13 @@ function set_PiecePin(id, color) {
         
         for (const offend of attackers[id]) {
             const square = board[offend[0]][offend[1]]
-            // console.log('Analisando ofensores: ', offend[0], offend[1], square.id, id_attacker)
+            console.log('Analisando ofensores: ', offend[0], offend[1], square.id, id_attacker)
             if (square.id !== id_attacker) {
                 moves_pins.push([offend[0], offend[1]])
             }
         }
         
-        // console.log('Cravados: ', `[ ${(moves_pins || []).map(formatMove).join(', ')} ]`,)
+        console.log('Cravados: ', `[ ${(moves_pins || []).map(formatMove).join(', ')} ]`,)
         return moves_pins
     } else return []
 }
