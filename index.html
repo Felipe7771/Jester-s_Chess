@@ -93,9 +93,10 @@
    INICIALIZAÇÃO FINAL
    ========================= */
 /* elementos DOM principais */
+const [PLAYER, CHUCK] = set_RandomTeamsAI();
 
-setPlayerInfo('white', 'JOGADOR', 'img/avatar_white.png');
-setPlayerInfo('black', 'ChuckMatt (AI)', 'img/avatar_black.png');
+setPlayerInfo(PLAYER, 'JOGADOR', 'img/avatar_white.png');
+setPlayerInfo(CHUCK, 'ChuckMatt (AI)', 'img/ChuckMattIcon_beta.png');
 
 renderBoard();
 ctx.fillStyle = "red";
@@ -107,6 +108,11 @@ set_initial_team();
 set_initial_combat();
 console.clear()
 
+if (PLAY_TURN.chuck == TURN) {
+    setTimeout(() => {
+        SET_ChuckMatt_Move()
+    }, 1000)
+}
 // showCheckmate('w')
 
 </script>

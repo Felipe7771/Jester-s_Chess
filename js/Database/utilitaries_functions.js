@@ -25,6 +25,18 @@ function cooFromSet(key){
   return sqFromKey(key);
 }
 
+function set_RandomTeamsAI() {
+  const team_ai = Math.floor(Math.random() * 2) ;
+
+  PLAY_TURN.player = team_ai == 1 ? 'b': 'w'
+  const PLAYER = team_ai == 1 ? 'black': 'white'
+
+  PLAY_TURN.chuck = team_ai == 1 ? 'w': 'b'
+  const CHUCK = team_ai == 1 ? 'white': 'black'
+
+  return [PLAYER, CHUCK]
+}
+
 // ==========================
 // ! NOTAÇÃO DE MOVIMENTOS XADREZ
 // ==========================

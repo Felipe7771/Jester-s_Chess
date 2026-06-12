@@ -4,26 +4,6 @@
 
 (function() {
 
-  /* ── mapeamento peça → caminho da imagem ──
-     Ajuste os caminhos para os seus assets reais.
-     Chave: código interno da peça (o mesmo que você já usa)  */
-  const PIECE_IMG = {
-    /* brancas */
-    wK: 'img/w/wk.png',
-    wQ: 'img/w/wq.png',
-    wR: 'img/w/wr.png',
-    wB: 'img/w/wb.png',
-    wN: 'img/w/wn.png',
-    wP: 'img/w/wp.png',
-    /* pretas */
-    bK: 'img/b/bk.png',
-    bQ: 'img/b/bq.png',
-    bR: 'img/b/br.png',
-    bB: 'img/b/bb.png',
-    bN: 'img/b/bn.png',
-    bP: 'img/b/bp.png',
-  };
-
   /* estado do log */
   let moveHistory = [];   /* [{san, pieceKey, isWhite}, ...] */
   let activeIndex  = -1;
@@ -56,12 +36,14 @@
     const containerId = capturedByWhite ? 'captured-white' : 'captured-black';
     const diffId      = capturedByWhite ? 'diff-white'     : 'diff-black';
 
+    const mat = capturedByWhite ? 'w': 'b'
+
     const container = document.getElementById(containerId);
     const diffEl    = document.getElementById(diffId);
     if (!container) return;
 
     const img = new Image();
-    img.src = PIECE_IMG[pieceCode] || '';
+    img.src = PIECES_CAPTURED[pieceCode] || '';
     img.title = pieceCode;
 
     /* fallback: se não tiver imagem, usa símbolo unicode */
@@ -75,7 +57,8 @@
     container.appendChild(img);
 
     if (diffEl && materialDiff) {
-      diffEl.textContent = materialDiff > 0 ? '+' + materialDiff : '';
+      diffEl.textContent = materialDiff > 0 ? '+' + Number(MATERIAL_COLETED[mat] + materialDiff) : '';
+      MATERIAL_COLETED[mat] += materialDiff
     }
   };
 
@@ -156,7 +139,7 @@
     const iconEl = document.createElement('div');
     iconEl.className = 'move-icon';
 
-    const imgSrc = PIECE_IMG[move.pieceCode];
+    const imgSrc = PIECES_CAPTURED[move.pieceCode];
     console.log('move.pieceCode: ',move.pieceCode)
     console.log('imgSrc: ',imgSrc)
     if (imgSrc) {
@@ -191,12 +174,6 @@
     const list = document.getElementById('move-list');
     if (list) list.scrollTop = list.scrollHeight;
   }
-
-  /* símbolos unicode como fallback quando não há imagem */
-  const PIECE_FALLBACK = {
-    wK:'♔', wQ:'♕', wR:'♖', wB:'♗', wN:'♘', wP:'♙',
-    bK:'♚', bQ:'♛', bR:'♜', bB:'♝', bN:'♞', bP:'♟',
-  };
 
   /* botões de navegação (sem replay por enquanto — basta adicionar) */
   document.addEventListener('DOMContentLoaded', () => {

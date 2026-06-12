@@ -23,7 +23,7 @@ function Do_Move_Execute(sq, local_drag, capturedPiece) {
 
     clearMoveHints()
 
-    checkPromotedSucessor(TURN)
+    const PROMOTESUCESSOR = checkPromotedSucessor(TURN)
     checkBreakCastlePermission(board[sq.r][sq.c].id, TURN)
 
     set_piece_moved(
@@ -50,25 +50,12 @@ function Do_Move_Execute(sq, local_drag, capturedPiece) {
 
     set_Check(TURN)
 
-    const pieceCode = local_drag.piece
+    let Nota_piece = local_drag.piece[1] == 'P' ? '': local_drag.piece[1]
 
-    let sanNotation = toChessNotation(sq.r, sq.c)
+    let sanNotation = Nota_piece + toChessNotation(sq.r, sq.c)
 
-    if (memory_checkmate) {
-        sanNotation+='#'
+    view_Notation(local_drag, sanNotation, capturedPiece, PROMOTESUCESSOR, TURN)
 
-    } else if (is_Check(TURN).result) {
-        sanNotation+='+'
-    }
-
-    logMove(sanNotation, pieceCode, TURN == 'w')
-
-    // se houve captura:
-    if (capturedPiece.captured) {
-        const capturedCode = TURN + capturedPiece.type
-        console.log('OSWALDO: ',capturedCode)
-        logCapture(capturedCode, TURN != 'w', capturedPiece.material)
-    }
     playMoveSound = false
     castleSound = false
 
@@ -91,5 +78,34 @@ function Do_Move_Execute(sq, local_drag, capturedPiece) {
 
         return
     }
+}
 
+function view_Notation(local_drag, sanNotation, capturedPiece, PROMOTESUCESSOR, TURN) {
+
+    LIST_NOTATION.push(sanNotation)
+
+    if (valueLancesTurn == 0.5) return
+
+    if (Is_Jester(local_drag.piece[1])) {
+        sanNotation = LIST_NOTATION.at(-2) + '->' + sanNotation.substring(1);
+    }
+
+    const pieceCode = local_drag.piece
+    if (memory_checkmate) {
+        sanNotation += '#'
+    } else if (is_Check(TURN).result) {
+        sanNotation += '+'
+    }
+    
+    if (PROMOTESUCESSOR) {
+        sanNotation += '&'
+    }
+    logMove(sanNotation, pieceCode, TURN == 'w')
+
+    // se houve captura:
+    if (capturedPiece.captured) {
+        const capturedCode = TURN + capturedPiece.type
+        console.log('OSWALDO: ', capturedCode)
+        logCapture(capturedCode, TURN != 'w', capturedPiece.material)
+    }
 }

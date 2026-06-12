@@ -46,6 +46,16 @@ function SET_ChuckMatt_Move() {
                 let score = calcule_Score(id, PART, color, enemy, r, c)
                 score += DPS
 
+                if (id == moved_chuck.id) {
+                    // ? Same Piece Move Penalided
+                    score*= alphaSPMP
+                }
+
+                if (JSON.stringify([r,c]) === JSON.stringify(moved_chuck.step)) {
+                    // ? Same Step Move Penalided
+                    score*=alphaSSMP
+                }
+
                 if (id == id_AlreadyPlay) {
                     const taxAlreadyPlay = (6 + 4 * is_to_attacked) / 10
                     score *= taxAlreadyPlay
@@ -95,6 +105,11 @@ function SET_ChuckMatt_Move() {
         BestMove = Object.values(Scores).reduce((max, obj) =>
             obj.score > max.score ? obj : max,
         )
+    }
+
+    moved_chuck = {
+        id: BestMove.id,
+        step: [BestMove.to_r, BestMove.to_c]
     }
 
     const BestPiece = pieceIndex[BestMove.id]

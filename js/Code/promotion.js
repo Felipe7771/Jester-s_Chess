@@ -1,6 +1,8 @@
 
 function checkPromotedSucessor(team_color) {
     const enemy = get_Enemy(team_color)
+
+    let have_sucessor = false
     // console.log('Analisando')
 
     if (Have_Sucessor(enemy) && !Have_King(enemy)) {
@@ -16,6 +18,7 @@ function checkPromotedSucessor(team_color) {
         Complement_Id_Real[enemy]['K'] = '1'
 
         setPromote(id_Sucessor, get_Id_King(enemy), 'K', enemy, r, c)
+        have_sucessor = true
 
 
     } else if (Have_Sucessor(enemy) && !Have_Queen(enemy)) {
@@ -29,7 +32,10 @@ function checkPromotedSucessor(team_color) {
         Complement_Id_Real[enemy]['Q'] = '1'
 
         setPromote(id_Sucessor, get_Id_Queen(enemy), 'Q', enemy, r, c)
+        have_sucessor = true
     }
+
+    return have_sucessor
 }
 
 function setPromote(old_id, new_id, new_type, enemy, r, c) {

@@ -39,7 +39,7 @@ function growUp_King_enemy() {
 
 function matrixOp(A, B, op) {
     return A.map((row, r) => row.map((value, c) => op(value, B[r][c])))
-} 
+}
 
 function generate_Attackersplaza(EEKS) {
     return matrixOp(
@@ -113,12 +113,47 @@ function calcule_Score(id, PART, color, enemy, r, c) {
         }
     }
 
+    ATT = 0
+
+    // ATT = score_Releases(id, PART, color, r, c)
+
     // OPT
     // KST
     // DST
     // AAT
 
-    return PLZS + AST + CT + PST
+    return PLZS + AST + CT + PST + ATT
+}
+
+function score_Releases(id, PART, color, r, c) {
+    // ? Assistence Ally Tax
+    let AAT = 0
+    const enemy = get_Enemy(color)
+
+    if (!get_numAttacks(offense[r][c][enemy])) {
+        const backup = createBackup()
+
+        make_theoretical_move(id, PART.piece, color, PART.r, PART.c, r, c)
+
+        set_MemoryMoves(id, color)
+
+        if (memory_moves[id]) {
+            for (const [mr, mc] of memory_moves[id]) {
+                const square = board[mr][mc]
+
+                if (
+                    There_AllyThere(square) &&
+                    get_numAttacks(offense[mr][mc][enemy])
+                ) {
+                    ATT += VPS_ally[square.type] * bettaAAT * bettaAPT
+                }
+            }
+        }
+
+        restoreBackup(backup)
+    }
+
+    return AAT
 }
 
 function log_Scores(Scores) {
@@ -127,18 +162,18 @@ function log_Scores(Scores) {
     let bestMove = null
 
     console.log('===== CHUCKMATT SCORES =====')
-    
+
     for (const key of Object.keys(Scores)) {
         const [id, score] = key.split('|')
 
         const move = Scores[key]
         const pts = Number(score)
-        
+
         if (pts > bestScore) {
             bestScore = pts
             bestMove = move
         }
-        
+
         const piece = pieceIndex[move.id]
 
         if (Array.isArray(move.to_r)) {
@@ -152,12 +187,12 @@ function log_Scores(Scores) {
             )
         }
     }
-    
+
     console.log('-------------')
 
     if (bestMove) {
         const piece = pieceIndex[bestMove.id]
-        
+
         if (Array.isArray(bestMove.to_r)) {
             console.log(
                 `RESULTADO: ${bestMove.id} [${piece.r},${piece.c} -> ${bestMove.to_r[0]},${bestMove.to_c[0]} -> ${bestMove.to_r[1]},${bestMove.to_c[1]}]: (${bestScore}) pts`,
@@ -168,26 +203,28 @@ function log_Scores(Scores) {
             )
         }
     }
-    
+
     console.log('===========================')
     console.log(`alpha ARMY: ${alphaARMY}`)
-    console.log(`Strategy: ${alphaARMY >= UPPER_offense ? 'Offense': alphaARMY <= LOWER_defense ? 'Defense': 'Neutral'}`)
+    console.log(
+        `Strategy: ${alphaARMY >= UPPER_offense ? 'Offense' : alphaARMY <= LOWER_defense ? 'Defense' : 'Neutral'}`,
+    )
     console.log('-------------')
-    console.log(`EEKS: ${(EEKS).toFixed(2)}`)
+    console.log(`EEKS: ${EEKS.toFixed(2)}`)
 }
 
 function set_Moving(BestMove, BestPiece) {
     const local_drag = {
-    piece: `${CMcolor}${BestPiece.piece}`,
-    fromR: BestPiece.r,
-    fromC: BestPiece.c,
-    id: BestMove.id,
+        piece: `${CMcolor}${BestPiece.piece}`,
+        fromR: BestPiece.r,
+        fromC: BestPiece.c,
+        id: BestMove.id,
     }
 
     let CAPTURE = {
         captured: false,
         type: '',
-        material: 0
+        material: 0,
     }
 
     board[BestPiece.r][BestPiece.c] = {
@@ -197,43 +234,42 @@ function set_Moving(BestMove, BestPiece) {
         visualKey: null,
     }
     if (
-            board[BestMove.to_r][BestMove.to_c].visualKey != null &&
-            board[BestMove.to_r][BestMove.to_c].visualKey[0] != local_drag.piece[0]
-        ) {
-            take.play()
-        } else if (
-            board[BestMove.to_r][BestMove.to_c].visualKey == null &&
-            (local_drag.fromR != BestMove.to_c || local_drag.fromC != BestMove.to_r)
-        ) {
-            playMoveSound = true
-        }
-        if (board[BestMove.to_r][BestMove.to_c].id != '') {
-            CAPTURE.captured = true
-            CAPTURE.type = board[BestMove.to_r][BestMove.to_c].type
-            CAPTURE.material = MaterialValue[CAPTURE.type]
-            delete_piece_to_team(
-                board[BestMove.to_r][BestMove.to_c].id,
-                board[BestMove.to_r][BestMove.to_c].color,
-                BestMove.to_c,
-                BestMove.to_r,
-            )
-        }
-        // coloca peça na nova casa
-        board[BestMove.to_r][BestMove.to_c] = {
-            id: local_drag.id,
-            type: local_drag.piece[1],
-            color: local_drag.piece[0],
-            visualKey: local_drag.piece,
-        }
+        board[BestMove.to_r][BestMove.to_c].visualKey != null &&
+        board[BestMove.to_r][BestMove.to_c].visualKey[0] != local_drag.piece[0]
+    ) {
+        take.play()
+    } else if (
+        board[BestMove.to_r][BestMove.to_c].visualKey == null &&
+        (local_drag.fromR != BestMove.to_c || local_drag.fromC != BestMove.to_r)
+    ) {
+        playMoveSound = true
+    }
+    if (board[BestMove.to_r][BestMove.to_c].id != '') {
+        CAPTURE.captured = true
+        CAPTURE.type = board[BestMove.to_r][BestMove.to_c].type
+        CAPTURE.material = MaterialValue[CAPTURE.type]
+        delete_piece_to_team(
+            board[BestMove.to_r][BestMove.to_c].id,
+            board[BestMove.to_r][BestMove.to_c].color,
+            BestMove.to_c,
+            BestMove.to_r,
+        )
+    }
+    // coloca peça na nova casa
+    board[BestMove.to_r][BestMove.to_c] = {
+        id: local_drag.id,
+        type: local_drag.piece[1],
+        color: local_drag.piece[0],
+        visualKey: local_drag.piece,
+    }
 
-        const sq_local = {
-            r: BestMove.to_r,
-            c: BestMove.to_c
-        }
+    const sq_local = {
+        r: BestMove.to_r,
+        c: BestMove.to_c,
+    }
 
+    // lances fora da mesma casa são válidos como um lance jogável
+    Do_Move_Execute(sq_local, local_drag, CAPTURE)
 
-        // lances fora da mesma casa são válidos como um lance jogável
-        Do_Move_Execute(sq_local, local_drag, CAPTURE)
-
-        renderBoard()
+    renderBoard()
 }

@@ -3,6 +3,24 @@
    Cada código representa uma peça no tabuleiro
    ========================= */
 const PIECES = {
+  wK: 'img/icy_sea/w/wk.png',
+  wQ: 'img/icy_sea/w/wq.png',
+  wS: 'img/icy_sea/w/ws.png',
+  wJ: 'img/icy_sea/w/wj.png',
+  wR: 'img/icy_sea/w/wr.png',
+  wB: 'img/icy_sea/w/wb.png',
+  wN: 'img/icy_sea/w/wn.png',
+  wP: 'img/icy_sea/w/wp.png',
+  bK: 'img/icy_sea/b/bk.png',
+  bQ: 'img/icy_sea/b/bq.png',
+  bS: 'img/icy_sea/b/bs.png',
+  bJ: 'img/icy_sea/b/bj.png',
+  bR: 'img/icy_sea/b/br.png',
+  bB: 'img/icy_sea/b/bb.png',
+  bN: 'img/icy_sea/b/bn.png',
+  bP: 'img/icy_sea/b/bp.png',
+};
+const PIECES_CAPTURED = {
   wK: 'img/w/wk.png',
   wQ: 'img/w/wq.png',
   wS: 'img/w/ws.png',
@@ -20,6 +38,14 @@ const PIECES = {
   bN: 'img/b/bn.png',
   bP: 'img/b/bp.png',
 };
+
+/* símbolos unicode como fallback quando não há imagem */
+const PIECE_FALLBACK = {
+  wK:'♔', wQ:'♕', wR:'♖', wB:'♗', wN:'♘', wP:'♙',
+  bK:'♚', bQ:'♛', bR:'♜', bB:'♝', bN:'♞', bP:'♟',
+};
+
+let LIST_NOTATION = [];
 
 const MaterialValue = {
   P: 1,
@@ -55,6 +81,7 @@ const name_pieces = {
 }
 
 const pieces_one_step = new Set(['N', 'K', 'S', 'P'])
+const sucession = new Set(['K', 'S'])
 const promotions = ['J', 'R', 'B', 'N'];
 
 const pieces_castle = new Set(['wK', 'bK', 'wR0', 'wR1', 'bR0', 'bR1']);
@@ -88,12 +115,12 @@ const knightRow = (color) => [
 
 const backRow = (color) => [
   { id: `${color}R0`, type: "R", color, visualKey: `${color}R` },
-  { id: `${color}B0`, type: "B", color, visualKey: `${color}B` },
   { id: `${color}S0`, type: "S", color, visualKey: `${color}S` },
+  { id: `${color}B0`, type: "B", color, visualKey: `${color}B` },
   { id: `${color}Q`, type: "Q", color, visualKey: `${color}Q` },
   { id: `${color}K`, type: "K", color, visualKey: `${color}K` },
-  { id: `${color}J1`, type: "J", color, visualKey: `${color}J` },
   { id: `${color}B1`, type: "B", color, visualKey: `${color}B` },
+  { id: `${color}J1`, type: "J", color, visualKey: `${color}J` },
   { id: `${color}R1`, type: "R", color, visualKey: `${color}R` }
 ];
 
@@ -132,7 +159,7 @@ const turns = ['w', 'b', 'w']
 let id_turn = 0
 
 let RUN_GAME = true
-let PLAY_TURN = {player: 'w', chuck: 'b'}
+let PLAY_TURN = {player: '', chuck: ''}
 
 let RUN_CHUCKMATT = false
 
@@ -151,6 +178,11 @@ let Complement_Id_Real = {
     'K': '',
     'Q': ''
   }
+}
+
+let MATERIAL_COLETED = {
+  w: 0,
+  b: 0,
 }
 
 // ?============================

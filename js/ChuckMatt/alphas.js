@@ -4,7 +4,13 @@
 // * Variáveis de incentivo condicional do contexto do jogo
 
 let alphaARMY = 1
+let alphaSPMP = 0.8
+let alphaSSMP = 0.5
 
+let moved_chuck = {
+  id: '',
+  step: [],
+}
 // ================================================
 // ================================================
 
@@ -19,6 +25,7 @@ const DEFAULT_ERROR = 2
 
 const bettaEPS = 1
 const bettaAPT = 10
+const bettaAAT = 1.5
 
 const bettaOT = 4
 const bettaFT = 3
