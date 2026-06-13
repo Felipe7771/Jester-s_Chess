@@ -1,120 +1,179 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>Jester's Chess</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="shortcut icon" href="img/w/jester_icon.png" type="image/x-icon">
-</head>
+        <title>Jester's Chess</title>
+        <link rel="stylesheet" href="css/style.css" />
+        <!-- ✅ NOVO: estilos do modal + chat -->
+        <link rel="stylesheet" href="css/welcome-chat.css" />
+        <link
+            rel="shortcut icon"
+            href="img/w/jester_icon.png"
+            type="image/x-icon"
+        />
+    </head>
 
-<body>
-<div id="app">
+    <body>
+        <div id="app">
+            <!-- layout principal: tabuleiro + painel lateral -->
+            <div id="chess-layout">
+                <!-- coluna central: jogador preto / tabuleiro / jogador branco -->
+                <div id="board-column">
+                    <!-- strip do jogador preto (topo) -->
+                    <div class="player-strip" id="strip-black">
+                        <div class="player-avatar" id="avatar-black">♟</div>
+                        <span class="player-name" id="name-black">Pretas</span>
+                        <div class="captured-pieces" id="captured-black"></div>
+                        <span class="material-diff" id="diff-black"></span>
+                    </div>
 
-  <!-- layout principal: tabuleiro + painel lateral -->
-  <div id="chess-layout">
+                    <!-- wrapper tabuleiro + canvas (seu código original) -->
+                    <div id="board-wrapper">
+                        <div id="coords-rank"></div>
+                        <div id="board"></div>
+                        <canvas
+                            id="arrow-canvas"
+                            width="576"
+                            height="576"
+                        ></canvas>
+                    </div>
+                    <div id="coords-file"></div>
 
-    <!-- coluna central: jogador preto / tabuleiro / jogador branco -->
-    <div id="board-column">
+                    <!-- strip do jogador branco (base) -->
+                    <div class="player-strip" id="strip-white">
+                        <div class="player-avatar" id="avatar-white">♙</div>
+                        <span class="player-name" id="name-white">Brancas</span>
+                        <div class="captured-pieces" id="captured-white"></div>
+                        <span class="material-diff" id="diff-white"></span>
+                    </div>
+                </div>
 
-      <!-- strip do jogador preto (topo) -->
-      <div class="player-strip" id="strip-black">
-        <div class="player-avatar" id="avatar-black">♟</div>
-        <span class="player-name" id="name-black">Pretas</span>
-        <div class="captured-pieces" id="captured-black"></div>
-        <span class="material-diff" id="diff-black"></span>
-      </div>
+                <!-- painel lateral de lances -->
+                <div id="move-panel">
+                    <div class="move-panel-header">Lances</div>
+                    <div id="move-list"></div>
+                    <div class="move-nav">
+                        <button class="nav-btn" id="nav-start" title="Início">
+                            ⟪
+                        </button>
+                        <button class="nav-btn" id="nav-prev" title="Anterior">
+                            ‹
+                        </button>
+                        <button class="nav-btn" id="nav-next" title="Próximo">
+                            ›
+                        </button>
+                        <button class="nav-btn" id="nav-end" title="Fim">
+                            ⟫
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-      <!-- wrapper tabuleiro + canvas (seu código original) -->
-      <div id="board-wrapper">
-        <div id="coords-rank"></div>
-        <div id="board"></div>
-        <canvas id="arrow-canvas" width="576" height="576"></canvas>
-      </div>
-      <div id="coords-file"></div>
+        <script src="js/Database/config.js"></script>
+        <script src="js/Database/utilitaries_functions.js"></script>
+        <script src="js/Database/code_UI_functions.js"></script>
 
-      <!-- strip do jogador branco (base) -->
-      <div class="player-strip" id="strip-white">
-        <div class="player-avatar" id="avatar-white">♙</div>
-        <span class="player-name" id="name-white">Brancas</span>
-        <div class="captured-pieces" id="captured-white"></div>
-        <span class="material-diff" id="diff-white"></span>
-      </div>
+        <script src="js/Code/operation_moves.js"></script>
+        <script src="js/Code/set_combat.js"></script>
+        <script src="js/Code/check.js"></script>
+        <script src="js/Code/pin.js"></script>
+        <script src="js/Code/promotion.js"></script>
+        <script src="js/Code/castling.js"></script>
+        <script src="js/Code/illegal.js"></script>
 
-    </div>
+        <script src="js/Code/move_execute.js"></script>
+        <script src="js/Code/move_pieces.js"></script>
 
-    <!-- painel lateral de lances -->
-    <div id="move-panel">
-      <div class="move-panel-header">Lances</div>
-      <div id="move-list"></div>
-      <div class="move-nav">
-        <button class="nav-btn" id="nav-start"  title="Início">⟪</button>
-        <button class="nav-btn" id="nav-prev"   title="Anterior">‹</button>
-        <button class="nav-btn" id="nav-next"   title="Próximo">›</button>
-        <button class="nav-btn" id="nav-end"    title="Fim">⟫</button>
-      </div>
-    </div>
+        <script src="js/ChuckMatt/plazas_default.js"></script>
+        <script src="js/ChuckMatt/data.js"></script>
+        <script src="js/ChuckMatt/alphas.js"></script>
+        <script src="js/ChuckMatt/methods.js"></script>
+        <script src="js/ChuckMatt/brain.js"></script>
 
-  </div>
+        <script src="js/UI/events.js"></script>
+        <script src="js/UI/draw.js"></script>
+        <script src="js/UI/interface.js"></script>
+        <script src="js/UI/interactions.js"></script>
+        <script src="js/UI/move_log.js"></script>
 
-</div>
+        <!-- ✅ NOVO: modal de boas-vindas + chat -->
+        <script src="js/UI/welcome_chat.js"></script>
 
-<script src="js/Database/config.js"></script>
-<script src="js/Database/utilitaries_functions.js"></script>
-<script src="js/Database/code_UI_functions.js"></script>
+        <script>
+            // =========================
+            //INICIALIZAÇÃO FINAL
+            //=========================
+            renderBoard()
 
-<script src="js/Code/operation_moves.js"></script>
-<script src="js/Code/set_combat.js"></script>
-<script src="js/Code/check.js"></script>
-<script src="js/Code/pin.js"></script>
-<script src="js/Code/promotion.js"></script>
-<script src="js/Code/castling.js"></script>
-<script src="js/Code/illegal.js"></script>
+            // 1. Exibe o modal de boas-vindas ANTES de qualquer coisa.
+            showWelcomeModal().then(({ playerName, opponentName, mode }) => {
+                // 2. Inicializa as abas do painel (Lances | Chat)
+                initPanelTabs(playerName, 'img/avatar_white.png')
 
-<script src="js/Code/move_execute.js"></script>
-<script src="js/Code/move_pieces.js"></script>
+                // 3. Configura times (mantém sua lógica original)
+                const [PLAYER, CHUCK] = set_RandomTeamsAI()
 
-<script src="js/ChuckMatt/plazas_default.js"></script>
-<script src="js/ChuckMatt/data.js"></script>
-<script src="js/ChuckMatt/alphas.js"></script>
-<script src="js/ChuckMatt/methods.js"></script>
-<script src="js/ChuckMatt/brain.js"></script>
+                if (mode === 'ai') {
+                    PLAYING_WITH_CHUCKMATT = true
+                    setPlayerInfo(PLAYER, playerName, 'img/avatar_white.png')
+                    setPlayerInfo(
+                        CHUCK,
+                        'ChuckMatt (AI)',
+                        'img/ChuckMattIcon_beta.png',
+                    )
+                } else {
+                    // modo local: usa os dois nomes nos strips */
+                    const chatTab = document.querySelector(
+                        '.panel-tab[data-tab="chat"]',
+                    )
+                    if (chatTab) {
+                        chatTab.style.opacity = '0.3'
+                        chatTab.style.pointerEvents = 'none'
+                        chatTab.title = 'Chat indisponível no modo local'
+                    }
+                    document
+                        .querySelector('.panel-tab[data-tab="moves"]')
+                        ?.click()
+                    setPlayerInfo(PLAYER, playerName, 'img/avatar_white.png')
+                    setPlayerInfo(CHUCK, opponentName, 'img/avatar_black.png')
+                }
 
-<script src="js/UI/events.js"></script>
-<script src="js/UI/draw.js"></script>
-<script src="js/UI/interface.js"></script>
-<script src="js/UI/interactions.js"></script>
-<script src="js/UI/move_log.js"></script>
+                // 4. Renderiza o tabuleiro
+                renderBoard()
+                ctx.fillStyle = 'red'
+                ctx.fillRect(100, 100, 100, 100)
+                start.play()
+                drawArrows()
 
-<script>
+                set_initial_team()
+                set_initial_combat()
+                console.clear()
 
-/* =========================
-   INICIALIZAÇÃO FINAL
-   ========================= */
-/* elementos DOM principais */
-const [PLAYER, CHUCK] = set_RandomTeamsAI();
+                // 5. Mensagens de boas-vindas no chat */
+                if (mode === 'ai') {
+                    setTimeout(() => {
+                        sendBotMessage(
+                            `Olá, ${playerName}! Sou o ChuckMatt. Boa sorte… vai precisar. ♟`,
+                        )
+                    }, 600)
+                }
 
-setPlayerInfo(PLAYER, 'JOGADOR', 'img/avatar_white.png');
-setPlayerInfo(CHUCK, 'ChuckMatt (AI)', 'img/ChuckMattIcon_beta.png');
+                // 6. Jogada da IA (apenas no modo AI) */
+                if (mode === 'ai' && PLAY_TURN.chuck == TURN) {
+                    setTimeout(() => {
+                        SET_ChuckMatt_Move()
+                    }, 1000)
+                }
+            })
 
-renderBoard();
-ctx.fillStyle = "red";
-ctx.fillRect(100,100,100,100);
-start.play();
-drawArrows();
+            // Bot envia mensagem:
+            //sendBotMessage('Xeque! ♞');
 
-set_initial_team();
-set_initial_combat();
-console.clear()
-
-if (PLAY_TURN.chuck == TURN) {
-    setTimeout(() => {
-        SET_ChuckMatt_Move()
-    }, 1000)
-}
-// showCheckmate('w')
-
-</script>
-</body>
+            // Sistema envia como jogador:
+            //sendPlayerMessage('Jogada registrada.');
+        </script>
+    </body>
 </html>

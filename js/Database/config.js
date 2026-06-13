@@ -162,6 +162,7 @@ let RUN_GAME = true
 let PLAY_TURN = {player: '', chuck: ''}
 
 let RUN_CHUCKMATT = false
+let PLAYING_WITH_CHUCKMATT = false
 
 const LimitValueLance = 1
 let valueLancesTurn = 0

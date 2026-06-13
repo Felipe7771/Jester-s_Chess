@@ -115,7 +115,7 @@ function calcule_Score(id, PART, color, enemy, r, c) {
 
     ATT = 0
 
-    // ATT = score_Releases(id, PART, color, r, c)
+    ATT = score_Releases(id, PART, color, r, c)
 
     // OPT
     // KST
@@ -137,8 +137,8 @@ function score_Releases(id, PART, color, r, c) {
 
         set_MemoryMoves(id, color)
 
-        if (memory_moves[id]) {
-            for (const [mr, mc] of memory_moves[id]) {
+        if (memory_moves[id].legal) {
+            for (const [mr, mc] of memory_moves[id].legal) {
                 const square = board[mr][mc]
 
                 if (
