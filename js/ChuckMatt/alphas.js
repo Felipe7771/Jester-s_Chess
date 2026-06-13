@@ -51,14 +51,9 @@ function set_alphaARMY(color, armyAlly) {
     alphaARMY = 1;
 
     const num_Ally = countUniqueRC(armyAlly);
-
-    console.log('AA ',armyAlly)
-    console.log('AA ',num_Ally)
     
     let armyEnemy = get_Army(enemy)
     const num_Enemy = countUniqueRC(armyEnemy)
-    console.log('AE ',armyEnemy)
-    console.log('AE ',num_Enemy)
 
     alphaARMY = num_Enemy == 0? DEFAULT_ERROR: (num_Ally/num_Enemy)
 

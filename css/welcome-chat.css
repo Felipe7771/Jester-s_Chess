@@ -25,7 +25,7 @@
   background: #1a1a2e;
   border: 1px solid rgba(255, 255, 255, 0.12);
   /* border-radius: 18px; */
-  padding: 2.4rem 2.8rem 2rem;
+  padding: 2.4rem 2.8rem 1rem;
   width: min(420px, 92vw);
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
   display: flex;
@@ -44,6 +44,20 @@
   font-size: 2.6rem;
   line-height: 1;
   margin-bottom: -0.4rem;
+}
+
+#welcome-modal a {
+  font-family: 'Georgia', serif;
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 0.82rem;
+  transition: .18s
+}
+
+#welcome-modal a:hover {
+  font-family: 'Georgia', serif;
+  color: #e8d5a3;
+  transform: scale(1.05);
+  text-decoration: none;
 }
 
 #welcome-modal h1 {
@@ -150,6 +164,17 @@
 
 .wm-btn.btn-vs .btn-icon   { background: rgba(100, 180, 255, 0.15); }
 .wm-btn.btn-ai .btn-icon   { background: rgba(180, 100, 255, 0.15); }
+.wm-btn.btn-online .btn-icon   { background: rgba(180, 100, 255, 0.15)}
+
+.wm-btn.btn-online {
+ opacity: 0.3; 
+ cursor: default;
+ 
+}
+
+.wm-btn.btn-online:hover {
+  opacity: 0.3;
+}
 
 .wm-btn .btn-label {
   display: flex;

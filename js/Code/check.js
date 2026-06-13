@@ -146,10 +146,14 @@ function get_SquareMovesKing_Attacked(King, enemy) {
     const team = get_Enemy(enemy)
 
     let save_squares = []
+    console.log('King: ',King.r,King.c)
 
     for (const [dr, dc] of moves) {
         let r = King.r + dr
         let c = King.c + dc
+
+        console.log('Olhando: ',r,c)
+
 
         if (Is_OutBoard(r, c)) continue
 

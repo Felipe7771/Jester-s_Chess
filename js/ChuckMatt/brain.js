@@ -1,8 +1,9 @@
 function SET_ChuckMatt_Move() {
-    // console.clear()
-
+    
     if (CHECKMATE || !PLAYING_WITH_CHUCKMATT) return
     if (!RUN_CHUCKMATT) set_initialChuckMatt(PLAY_TURN.chuck)
+        
+    // console.clear()
     // 1. pegue a cor do time
     const color = CMcolor
     const enemy = get_Enemy(color)

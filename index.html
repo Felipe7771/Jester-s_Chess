@@ -114,9 +114,9 @@
                 initPanelTabs(playerName, 'img/avatar_white.png')
 
                 // 3. Configura times (mantém sua lógica original)
-                const [PLAYER, CHUCK] = set_RandomTeamsAI()
-
+                
                 if (mode === 'ai') {
+                    const [PLAYER, CHUCK] = set_RandomTeamsAI()
                     PLAYING_WITH_CHUCKMATT = true
                     setPlayerInfo(PLAYER, playerName, 'img/avatar_white.png')
                     setPlayerInfo(
@@ -137,8 +137,8 @@
                     document
                         .querySelector('.panel-tab[data-tab="moves"]')
                         ?.click()
-                    setPlayerInfo(PLAYER, playerName, 'img/avatar_white.png')
-                    setPlayerInfo(CHUCK, opponentName, 'img/avatar_black.png')
+                    setPlayerInfo('white', playerName, 'img/avatar_white.png')
+                    setPlayerInfo('black', opponentName, 'img/avatar_black.png')
                 }
 
                 // 4. Renderiza o tabuleiro

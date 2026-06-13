@@ -1,12 +1,3 @@
-/* ===================================================
-   JESTER'S CHESS — Modal de Boas-vindas + Chat
-   Arquivo: js/UI/welcome_chat.js
-   Carregar ANTES do bloco <script> de inicialização
-   =================================================== */
-
-/* ──────────────────────────────────────────────────
-   1. MODAL DE BOAS-VINDAS
-   ────────────────────────────────────────────────── */
 
 /**
  * Injeta o modal no <body> e retorna uma Promise que resolve com:
@@ -18,14 +9,10 @@
 function showWelcomeModal() {
   return new Promise((resolve) => {
 
-    /* ── Overlay ── */
     const overlay = document.createElement('div');
     overlay.id = 'welcome-overlay';
     document.body.appendChild(overlay);
 
-    /* ────────────────────────────────────────────
-       PASSO 1 — nome do jogador + escolha de modo
-    ──────────────────────────────────────────────*/
     function renderStep1() {
       overlay.innerHTML = `
         <div id="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="wm-title">
@@ -49,6 +36,22 @@ function showWelcomeModal() {
 
           <div class="wm-buttons">
 
+          <button class="wm-btn btn-ai" id="btn-ai">
+            <div class="btn-icon" aria-hidden="true"><img src='img/w/wj.png' width=30 height=30></div>
+            <div class="btn-label">
+              <span>Jogar contra ChuckMatt</span>
+              <span>Enfrente a inteligência artificial</span>
+            </div>
+          </button>
+
+            <button class="wm-btn btn-online" id="btn-online" disabled>
+              <div class="btn-icon" aria-hidden="true">♟♟</div>
+              <div class="btn-label">
+                <span>Jogo Online</span>
+                <span>Disputa com alguém de fora</span>
+              </div>
+            </button>
+
             <button class="wm-btn btn-vs" id="btn-local">
               <div class="btn-icon" aria-hidden="true">♟</div>
               <div class="btn-label">
@@ -57,15 +60,9 @@ function showWelcomeModal() {
               </div>
             </button>
 
-            <button class="wm-btn btn-ai" id="btn-ai">
-              <div class="btn-icon" aria-hidden="true"><img src='img/w/wj.png' width=30 height=30></div>
-              <div class="btn-label">
-                <span>Jogar contra ChuckMatt</span>
-                <span>Enfrente a inteligência artificial</span>
-              </div>
-            </button>
 
           </div>
+          <a href='https://github.com/Felipe7771/Jester-s_Chess' target="_blank" rel="noopener noreferrer">Como jogar ?</a>
         </div>
       `;
 

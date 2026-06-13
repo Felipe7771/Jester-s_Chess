@@ -106,7 +106,6 @@
     }
 
     rows.forEach((row, rowIdx) => {
-      console.log('row: ',row)
       const rowEl = document.createElement('div');
       rowEl.className = 'move-row';
 
@@ -140,8 +139,6 @@
     iconEl.className = 'move-icon';
 
     const imgSrc = PIECES_CAPTURED[move.pieceCode];
-    console.log('move.pieceCode: ',move.pieceCode)
-    console.log('imgSrc: ',imgSrc)
     if (imgSrc) {
       const img = new Image();
       img.src = imgSrc;

@@ -42,8 +42,9 @@ function Do_Move_Execute(sq, local_drag, capturedPiece) {
 
     isEndedTurn() // tente encerrar o turno
 
-    // console.log('FIM DE TURNO')
-
+    console.log('\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+    console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+    console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n')
     VISUAL_check[TURN] = VISUAL_check[TURN]
         ? !VISUAL_check[TURN]
         : VISUAL_check[TURN]
