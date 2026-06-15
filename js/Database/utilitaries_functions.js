@@ -110,6 +110,12 @@ function Is_InLegalMoves(id, coo) {
   return legal_moves.includes(coo)
 }
 
+function Is_InjesterLegalMoves(id, coo) {
+  const j_illegal_moves = memory_moves[id].j_illegal || []
+
+  return j_illegal_moves.includes(coo)
+}
+
 function Is_InMoves(id, coo) {
   const total_moves = memory_moves[id].total || [];
 
@@ -248,6 +254,16 @@ function subtractIntersection(listA, listB) {
     return result
 }
 
+function getCommonSquares(listA, listB) {
+  const setA = new Set(listA.map(([r, c]) => `${r},${c}`));
+
+  const resultado = listB.filter(([r, c]) =>
+    setA.has(`${r},${c}`)
+  );
+
+  return resultado
+}
+
 // ==========================
 // ! INFLUENCE
 // ==========================
@@ -277,6 +293,7 @@ function add_offense(id, row, column, color, piece, fromR, fromC) {
   });
 
   add_influence(id, row, column, color, piece, fromR, fromC)
+  const len = offense[row][column][color].length
 
   const content = {
     id,
@@ -285,8 +302,17 @@ function add_offense(id, row, column, color, piece, fromR, fromC) {
     color,
   }
 
+  const item = {
+    r: row,
+    c: column,
+    index: len+1
+  }
+
   if (offenseIndex[id]) offenseIndex[id].push(content)
   else offenseIndex[id] = [content]
+
+  if (offenseIndexRemove[id]) offenseIndexRemove[id].push(item)
+  else offenseIndexRemove[id] = [item]
 }
 
 
@@ -313,6 +339,42 @@ function add_offense_mobility(id, row, column, color, piece, fromR, fromC) {
   add_mobility(id, row, column, color, piece, fromR, fromC)
 }
 
+function deleteOffenseMobility(id, color) {
+  for (const [idxO, place_offense] of offenseIndex[id].entries()) {
+
+    const ro = place_offense.r
+    const co = place_offense.c
+
+    // console.log("|",id)
+    // console.log("||",ro,co)
+
+    const arr = offense[ro][co][color]
+    const mob = mobility[ro][co][color]
+
+    // console.log("Antes:", arr.length)
+
+    const indexOF = arr.findIndex(
+      (part_offense) => part_offense.id === id,
+    )
+
+    const indexMO = mob.findIndex(
+      (part_offense) => part_offense.id === id,
+    )
+
+    if (indexOF !== -1) {
+      arr.splice(indexOF, 1)
+      // console.log("Depois:", arr.length)
+    }
+    if (indexMO !== -1) {
+      mob.splice(indexMO, 1)
+      // console.log("Depois:", arr.length)
+    }
+    // console.log('------')
+  }
+
+  delete offenseIndex[id]
+        
+}
 // ==========================
 // ! PIECE TEAM
 // ==========================

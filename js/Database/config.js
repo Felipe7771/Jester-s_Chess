@@ -202,7 +202,15 @@ let VISUAL_check = {
   'b': false
 }
 
+let CHECKpin = {
+  'w': false,
+  'b': false
+}
+
 let permited_block_check = {}
+let Check_escape_moves = {}
+
+let JesterFirstMoveBySecondMove = {}
 
 // ?============================
 
@@ -262,6 +270,7 @@ let pieceIndex = {}
 let attackers = {}
 let pieceEffects = new Map();
 let offenseIndex = {}
+let offenseIndexRemove = {}
 
 let piece_moved = {
   id: '',

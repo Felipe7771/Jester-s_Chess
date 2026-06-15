@@ -79,6 +79,7 @@ function setPromote(old_id, new_id, new_type, enemy, r, c) {
 }
 
 function delete_piece_to_team(id, color, r, c) {
+    deleteOffenseMobility(id,color)
     delete pieceIndex[id]
 }
 

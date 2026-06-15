@@ -43,36 +43,37 @@ function SET_ChuckMatt_Move() {
         let DPS = calcule_EPS_APT(PART, enemy)
 
         for (const [r, c] of armyMoves[id]) {
+
             if (!Is_Jester(id[1])) {
-                let score = calcule_Score(id, PART, color, enemy, r, c)
-                score += DPS
+                    let score = calcule_Score(id, PART, color, enemy, r, c)
+                    score += DPS
 
-                if (id == moved_chuck.id) {
-                    // ? Same Piece Move Penalided
-                    score*= alphaSPMP
+                    if (id == moved_chuck.id) {
+                        // ? Same Piece Move Penalided
+                        score*= alphaSPMP
+                    }
+
+                    if (JSON.stringify([r,c]) === JSON.stringify(moved_chuck.step)) {
+                        // ? Same Step Move Penalided
+                        score*=alphaSSMP
+                    }
+
+                    if (id == id_AlreadyPlay) {
+                        const taxAlreadyPlay = (6 + 4 * is_to_attacked) / 10
+                        score *= taxAlreadyPlay
+                    }
+
+                    const content = {
+                        id,
+                        score,
+                        to_r: r,
+                        to_c: c,
+                    }
+
+                        const id_score = `${id}|${score}`
+
+                    Scores[id_score] = content
                 }
-
-                if (JSON.stringify([r,c]) === JSON.stringify(moved_chuck.step)) {
-                    // ? Same Step Move Penalided
-                    score*=alphaSSMP
-                }
-
-                if (id == id_AlreadyPlay) {
-                    const taxAlreadyPlay = (6 + 4 * is_to_attacked) / 10
-                    score *= taxAlreadyPlay
-                }
-
-                const content = {
-                    id,
-                    score,
-                    to_r: r,
-                    to_c: c,
-                }
-
-                const id_score = `${id}|${score}`
-
-                Scores[id_score] = content
-            }
         }
     }
 

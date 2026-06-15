@@ -90,22 +90,14 @@ function set_combat_turn() {
     // console.log('Finalizando peãos')
 
     // FALTANDO LIMPAR ANTIGA ANALISE DE OFFENSE PARA ADICIONAR A NOVA
+    console.log(calculate_pieces)
     for (const id of calculate_pieces) {
         const content = pieceIndex[id]
         const color = id[0]
 
         if (content) {
-            for (const place_offense of offenseIndex[id]) {
-                
-                const ro = place_offense.r
-                const co = place_offense.c
-
-                const index = offense[ro][co][color].findIndex(
-                    (part_offense) => part_offense.id === id,
-                )
-
-                if (index !== -1) offense[ro][co][color].splice(index, 1)
-            }
+            
+            deleteOffenseMobility(id, color)
 
             set_combat_piece(id, color, content)
             if (Is_JesterFirstMove(content.piece)) LegalProvocative_Jester(id, color);

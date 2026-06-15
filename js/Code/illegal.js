@@ -60,7 +60,7 @@ function LegalProvocative_Jester(id, color) {
 
 }
 
-function illegalMovesTratament(piece, coo_try_move, color) {
+function illegalMovesTratament(id, piece, coo_try_move, color) {
     console.log("===== ILLEGAL MOVES TRATAMENT ===")
 
     const r = coo_try_move[0]
@@ -69,7 +69,7 @@ function illegalMovesTratament(piece, coo_try_move, color) {
     console.log("BASE: ",r, c)
 
 
-    if (Is_Jester(piece)) {
+    if (Is_Jester(piece) && Is_InjesterLegalMoves(id,coo_try_move)) {
 
         let illegal_alerts = []
 
@@ -88,12 +88,15 @@ function illegalMovesTratament(piece, coo_try_move, color) {
         console.log(illegal_alerts)
 
         flashIllegal(illegal_alerts)
-    } else {
+        
+    } else Checkflash(color)
+}
+
+function Checkflash (color) {
         // exibir que o rei vai ficar em xeque 
         const King = pieceIndex[get_Id_King(color)]
         const Kr = King.r
         const Kc = King.c
 
         flashIllegal([[Kr, Kc]])
-    }
 }

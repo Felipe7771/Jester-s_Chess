@@ -40,16 +40,23 @@ function Do_Move_Execute(sq, local_drag, capturedPiece) {
     checkPromotedPawn(board[sq.r][sq.c].id, TURN, sq.r, sq.c)
     set_combat_turn()
 
+    VISUAL_check[TURN] = false
+    
+    if (valueLancesTurn == 1) {
+        Check_escape_moves = {}
+        CHECKpin[TURN] = false
+    }
+    permited_block_check = {}
+    remove_KingAnimationCheck(get_Id_King(TURN))
+
     isEndedTurn() // tente encerrar o turno
 
     console.log('\n&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
     console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
     console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n')
-    VISUAL_check[TURN] = VISUAL_check[TURN]
-        ? !VISUAL_check[TURN]
-        : VISUAL_check[TURN]
 
-    set_Check(TURN)
+    if (valueLancesTurn !== 0.5) set_Check(TURN)
+    else move.play()
 
     let Nota_piece = local_drag.piece[1] == 'P' ? '': local_drag.piece[1]
 

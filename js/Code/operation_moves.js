@@ -167,6 +167,17 @@ const sqKey_secondMove_Jester = new Map([
     ],
 ])
 
+// const secondMoveToFirstMove = new Map()
+
+// for (const [firstMove, secondMoves] of sqKey_secondMove_Jester) {
+//     for (const secondMove of secondMoves) {
+//         secondMoveToFirstMove.set(
+//             secondMove.join(','),
+//             firstMove
+//         )
+//     }
+// }
+
 // dicionário de funções
 const calculateOffense = {
     linear: calculateLinearOffense,
@@ -186,13 +197,14 @@ function calculateLinearOffense(id, from_r, from_c, piece, color, moves) {
     const base = unit_moviment_parts[piece]
     const type_move = Is_Jester(piece) ? base.type_move[0] : base.type_move
     const max = freq_move[type_move]
+    console.log('-- ',id)
 
     for (const [dr, dc] of moves) {
         for (let len = 1; len <= max; len++) {
             let r = from_r + dr * len
             let c = from_c + dc * len
 
-            // console.log(r, c)
+            console.log(r, c)
 
             if (Is_OutBoard(r, c)) break
 
@@ -214,12 +226,12 @@ function calculateLinearOffense(id, from_r, from_c, piece, color, moves) {
                 const isKingEnemy = square.id === get_Id_King(enemy)
 
                 if (!isKingEnemy || (isKingEnemy && Have_Sucessor(enemy))) {
-                    // console.log('--bloqueado')
+                    console.log('--bloqueado')
                     break
                 }
             }
 
-            // console.log('--vazio')
+            console.log('--vazio')
 
             add_offense_mobility(id, r, c, color, piece, from_r, from_c)
         }
@@ -279,8 +291,8 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
         let r = from_r + dr * ajust
         let c = from_c + dc * ajust
 
-        // console.log("Peao",dr, dc)
-
+        console.log("Peao",dr, dc)
+        
         if (Is_OutBoard(r, c)) continue
 
         let square = board[r][c]
@@ -288,11 +300,13 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
         if (dc == 0) {
             // console.log(attackers[id])
             // movimento endiante
-
+            
             if (!Is_anyThere(square)) {
+                console.log("Ninguém:",r,c,"-",dr, dc)
                 if (dr == -1 || (dr == -2 && can_do_two_steps))
                     add_mobility(id, r, c, color, piece, from_r, from_c)
             } else {
+                console.log("Ninguém:",r,c,"-",dr, dc)
                 if (dr == -1) can_do_two_steps = false
             }
             continue
@@ -307,41 +321,67 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
 }
 
 function calculateJesterSecoundMove(color) {
-    const prefix = `${color}J`
 
-    for (const key in pieceIndex) {
-        if (!key.startsWith(prefix)) continue
+    if (!Have_Jester(color)) return
 
-        const jester = pieceIndex[key]
-        const Jr = jester.r
-        const Jc = jester.c
+    const id_Jester = get_Id_Jester(color)
 
-        const moves = unit_moviment_parts.J.move[0]
+    const jester = pieceIndex[id_Jester]
+    const Jr = jester.r
+    const Jc = jester.c
 
-        for (let m = 0; m < moves.length; m++) {
-            const [dr, dc] = moves[m]
+    const moves = unit_moviment_parts.J.move[0]
+    const moves_sec = unit_moviment_parts.J.move[1]
 
-            for (let i = 1; i <= 2; i++) {
-                const r = Jr + dr * i
-                const c = Jc + dc * i
 
-                if (Is_OutBoard(r, c)) break
+    for (let m = 0; m < moves.length; m++) {
+        const [dr, dc] = moves[m]
 
-                const square = board[r][c]
-                const isSomeone = Is_anyThere(square)
+        for (let i = 1; i <= 2; i++) {
+            const r = Jr + dr * i
+            const c = Jc + dc * i
 
-                if (!isSomeone || (isSomeone && !Is_AllyThere(square, color))) {
-                    const key = `${dr},${dc}`
-                    const list = sqKey_secondMove_Jester.get(key)
+            if (Is_OutBoard(r, c)) break
 
-                    // equivalente a spread, mas sem recriar arrays
-                    for (let j = 0; j < list.length; j++) {
-                        
-                        add_mobility(key, r, c, color, 'J', Jr, Jc)
-                    }
-                } else {
-                    if (i === 1) break
+            const square = board[r][c]
+            const isSomeone = Is_anyThere(square)
+            
+            if (!isSomeone || !There_AllyThere(square,color)) {
+                const key = `${dr},${dc}`
+                const list = sqKey_secondMove_Jester.get(key)
+                
+                
+                // equivalente a spread, mas sem recriar arrays
+                // for (let j = 0; j < list.length; j++) {
+                for (const [ddr, ddc] of moves_sec) {
+                    
+                    const targetR = r + ddr
+                    const targetC = c + ddc
+                    
+                    if (Is_OutBoard(targetR,targetC)) continue
+                    
+                    const square = board[targetR][targetC]
+                    const isSomeone = Is_anyThere(square)
+                    
+                    if (isSomeone || There_AllyThere(square,color)) continue
+                    
+
+                    add_mobility(
+                        id_Jester,
+                        targetR,
+                        targetC,
+                        color,
+                        'J',
+                        Jr,
+                        Jc
+                    )
+
+                    JesterFirstMoveBySecondMove[`${targetR},${targetC}`] =
+                        [r, c]
                 }
+
+            } else {
+                if (i === 1) break
             }
         }
     }

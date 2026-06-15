@@ -36,21 +36,22 @@ function is_Check(color) {
 }
 
 function set_Check(color) {
-    // console.log('Analisando check: ')
+    console.log('Analisando check: ')
 
     const { result, Attacks } = is_Check(color)
 
     // console.log('Resultado: ', result)
     // console.log('Estava em check? ', VISUAL_check.color)
+    console.log(CHECKpin)
 
     const enemy = get_Enemy(color)
 
-    if (VISUAL_check.color && !result) {
+    if (VISUAL_check[color] && !result) {
         // console.log('Removendo animação de check')
         remove_KingAnimationCheck(get_Id_King(enemy))
     } else if (result) set_KingAnimationCheck(get_Id_King(color))
 
-    VISUAL_check.color = result
+    VISUAL_check[color] = result
     // console.log(playMoveSound)
 
     if (result) check.play()
@@ -58,6 +59,9 @@ function set_Check(color) {
     else if (playMoveSound) move.play()
 
     if (result && !Have_Sucessor(color)) {
+
+        CHECKpin[color] = true
+
         const [checkmate, save_king_squares, permited_moves, permited_blocks] =
             estruture_Check(color, Attacks)
 
@@ -69,11 +73,26 @@ function set_Check(color) {
 
         if (checkmate) {
             memory_checkmate = true
+        } else {
+
+            permited_block_check = mergeDictsOfLists(permited_moves, permited_blocks);
         }
-    } else {
+
     }
 
     castle_atives = {}
+}
+
+function mergeDictsOfLists(obj1, obj2) {
+    for (const key in obj2) {
+        if (obj1[key]) {
+            obj1[key].push(...obj2[key]);
+        } else {
+            obj1[key] = obj2[key];
+        }
+    }
+
+    return obj1;
 }
 
 // retorno:
@@ -258,8 +277,8 @@ function get_SafeBlocksMoves(King, enemy, Attacker, num_king_svSquares) {
         const offend = offense[r][c][team]
         const mobili = mobility[r][c][team]
 
-        if (get_numAttacks(offend)) {
-            const Forwards = get_Attackers(offend)
+        if (get_numAttacks(mobili)) {
+            const Forwards = get_Attackers(mobili)
 
             console.log(
                 `Defensores na casa [${r}, ${c}]: `,
@@ -320,19 +339,37 @@ function get_SafeBlocksMoves(King, enemy, Attacker, num_king_svSquares) {
         )
 
         // se tiver Jester na lista de movimentos permitidos, calcular o movimento do primeiro movimento e salvar também o segundo movimento
-        Check_escape_moves = []
-        for (const id in permited_moves) {
-            if (id[1] === 'J') Check_escape_moves.push(permited_moves[id])
+        const id_JESTER = get_Id_Jester(team)
+        Check_escape_moves = {}
+        
+        if (id_JESTER in permited_moves) {
+            
+            const save_permited_J = structuredClone(permited_moves[id_JESTER])
+            const Jr = pieceIndex[id_JESTER].r
+            const Jc = pieceIndex[id_JESTER].c
 
-            const chaves = []
+            permited_moves[id_JESTER] = []
 
-            for (const [k, coo] of sqKey_secondMove_Jester) {
-                if (coo === permited_moves[id]) {
-                    permited_moves[id] = k.split(',').map(Number)
-                    break
-                }
+            console.log('#',save_permited_J)
+
+            // Check_escape_moves[id_JESTER].push(save_permited_J)
+
+            if (Check_escape_moves[id_JESTER]) Check_escape_moves[id_JESTER].push(save_permited_J)
+            else Check_escape_moves[id_JESTER] = save_permited_J
+
+            for (let i = 0; i < save_permited_J.length; i++) {
+                const mover = ([r, c], [a, b]) => [r + a, c + b];
+
+                const r = save_permited_J[i][0]
+                const c = save_permited_J[i][1]
+                console.log(`${r},${c}`)
+                const first_m = JesterFirstMoveBySecondMove[`${r},${c}`]
+                console.log('-',first_m)
+                permited_moves[id_JESTER].push(first_m)
             }
         }
+
+        console.log('Check_escape_moves: ',Check_escape_moves)
     }
 
     // Restaurar Principal Backup
@@ -418,11 +455,14 @@ function createBackup() {
         offense,
         mobility,
         influence,
+        team,
         Complement_Id_Real,
         pieceIndex,
         offenseIndex,
+        offenseIndexRemove,
         piece_moved,
         attackers,
+        memory_moves,
     })
 }
 
@@ -431,9 +471,12 @@ function restoreBackup(backup) {
     offense = backup.offense
     mobility = backup.mobility
     influence = backup.influence
+    team = backup.team
     Complement_Id_Real = backup.Complement_Id_Real
     pieceIndex = backup.pieceIndex
     offenseIndex = backup.offenseIndex
+    offenseIndexRemove = backup.offenseIndexRemove
     piece_moved = backup.piece_moved
     attackers = backup.attackers
+    memory_moves = backup.memory_moves
 }

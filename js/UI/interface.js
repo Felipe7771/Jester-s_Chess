@@ -113,14 +113,15 @@ function renderBoard() {
 function showMoveHints(moves, color) {
     if (!moves.legal) return
 
-    console.log('ShowMove: ', moves)
+    console.log('ShowMove: ')
+    console.table(moves.legal)
 
     const legal_moves = moves.legal
 
     clearMoveHints()
 
     for (const move of legal_moves) {
-        // console.log(move)
+        console.table(move)
 
         const key = sqKey(move[0], move[1])
 

@@ -72,27 +72,27 @@ function calcule_EPS_APT(PART, enemy) {
 
 function calcule_Score(id, PART, color, enemy, r, c) {
     // ? Plaza Score
-    PLZS = calcule_PLZS(PART.piece, r, c)
+    const PLZS = calcule_PLZS(PART.piece, r, c)
 
     const to_num_attackers = get_numAttacks(offense[r][c][enemy])
-    is_to_attacked = !to_num_attackers? 0: 1;
+    const is_to_attacked = !to_num_attackers? 0: 1;
     
-    ({ omegaMAOS, sigmaLAMP } = calcule_omegaMAOS_sigmaLAMP(
-                  r,
-                  c,
-                  PART,
-                  color,
-              )),
+    const { omegaMAOS, sigmaLAMP } = calcule_omegaMAOS_sigmaLAMP(
+        r,
+        c,
+        PART,
+        color,
+    )
         
 
     // ? Attacked Square Tax
-    AST = is_to_attacked * bettaAST * VPS_ally[PART.piece]
+    const AST = is_to_attacked * bettaAST * VPS_ally[PART.piece]
     // const AST = calcule_AST(r,c,PART,color)
 
     const square = board[r][c]
 
     // ? Capture Tax
-    CT = 0
+    let CT = 0
 
     if (Is_anyThere(square) && Is_AllyThere(square, enemy)) {
         let piece_CT = square.type
@@ -101,7 +101,7 @@ function calcule_Score(id, PART, color, enemy, r, c) {
     }
 
     // ? Pawn Struture Tax
-    PST = 0
+    let PST = 0
     if (PART.piece == 'P') {
         const moves = unit_moviment_parts.B.move
         for (const [dr, dc] of moves) {
@@ -114,7 +114,7 @@ function calcule_Score(id, PART, color, enemy, r, c) {
 
             if (
                 Is_anyThere(diagonal_square) &&
-                Is_AllyThere(square, color) &&
+                Is_AllyThere(diagonal_square, color) &&
                 diagonal_square.type == 'P'
             ) {
                 PST += EPS.P * bettaPST
@@ -122,9 +122,7 @@ function calcule_Score(id, PART, color, enemy, r, c) {
         }
     }
 
-    ATT = 0
-
-    ATT = score_Releases(id, PART, color, r, c)
+    const ATT = score_Releases(id, PART, color, r, c, omegaMAOS, sigmaLAMP)
 
     // OPT
     // KST
@@ -192,16 +190,14 @@ function score_Releases(id, PART, color, r, c, omegaMAOS, sigmaLAMP) {
                     There_AllyThere(square,color) &&
                     get_numAttacks(offense[mr][mc][enemy])
                 ) {
-                    ATT += VPS_ally[square.type] * bettaAAT * bettaAPT
-                    console.log('ATT (', id, ') ', ATT)
+                    AAT += VPS_ally[square.type] * bettaAAT * bettaAPT
+                    console.log('AAT (', id, ') ', AAT)
                 }
             }
 
             if(omegaMAOS >= 0 && There_AllyThere(square, enemy) && square.type !== PART.piece) {
                 OT += (bettaCT*-1)*(VPS_enemy[square.type]) + (bettaOT)*(omegaMAOS + sigmaLAMP)
             }
-
-
         }
 
         restoreBackup(backup)

@@ -20,6 +20,8 @@ function startDrag(e, r, c, piece, ID, img) {
 
     showMoveIndicators(board[r][c].id, board[r][c].color)
 
+    console.log(">>>>>>>> ",ID,"<<<<<<<<")
+
     // impede seleção estranha do navegador
     e.preventDefault()
 
@@ -100,7 +102,7 @@ document.addEventListener('mouseup', (e) => {
         renderBoard()
 
         if (sq && Is_InIllegalMoves(drag.id, [sq.r, sq.c]))
-            illegalMovesTratament(drag.piece[1], [sq.r, sq.c], drag.piece[0])
+            illegalMovesTratament(drag.id,drag.piece[1], [sq.r, sq.c], drag.piece[0])
     } else {
         // console.log((drag.fromR, drag.fromC) == (sq.r, sq.c))
 
@@ -166,7 +168,20 @@ function set_MemoryMoves(id, color) {
 
         let legals, illegals, jesterIllegals
 
-        if (Is_JesterFirstMove(id[1])) {
+        if (CHECKpin[color] && id !== get_Id_King(color)) {
+
+            console.log('?? ', Is_JesterSecondMove(id[1]))
+            console.log(Check_escape_moves)
+            console.log(Check_escape_moves[id])
+
+            legals = Is_JesterSecondMove(id[1]) ? Check_escape_moves[id]: permited_block_check[id]
+
+            if (Is_JesterSecondMove(id[1])) legals = getCommonSquares(attackers[id],legals)
+            console.log('legals: ',legals)
+            illegals = subtractIntersection(legals, attackers[id])
+            console.log('illegals: ',illegals)
+
+        } else if (Is_JesterFirstMove(id[1])) {
             ;({ legals, jesterIllegals } = LegalProvocative_Jester(id, color))
             // console.log('Legais: ', legals)
             // console.log('Ilegais por provocação: ', jesterIllegals)
@@ -211,8 +226,6 @@ function set_MemoryMoves(id, color) {
         jesterIllegals = !jesterIllegals ? [] : jesterIllegals
         // console.log(legals)
         let total_moves = [...legals, ...illegals, ...jesterIllegals]
-
-        // por enquanto, não vamos calcular ilegalidades
 
         memory_moves[id] = {
             legal: legals,
