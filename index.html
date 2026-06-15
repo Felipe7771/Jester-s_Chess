@@ -72,6 +72,8 @@
             </div>
         </div>
 
+        <script src="js/ChuckMatt/chat_bot.js"></script>
+
         <script src="js/Database/config.js"></script>
         <script src="js/Database/utilitaries_functions.js"></script>
         <script src="js/Database/code_UI_functions.js"></script>
@@ -155,9 +157,7 @@
                 // 5. Mensagens de boas-vindas no chat */
                 if (mode === 'ai') {
                     setTimeout(() => {
-                        sendBotMessage(
-                            `Olá, ${playerName}! Sou o ChuckMatt. Boa sorte… vai precisar. ♟`,
-                        )
+                        sendBotMessage(get_randomMessage(INICIATE_CHAT_BOT))
                     }, 600)
                 }
 

@@ -4,7 +4,7 @@
 // * Variáveis de incentivo condicional do contexto do jogo
 
 let alphaARMY = 1
-let alphaSPMP = 0.8
+let alphaSPMP = 0.6
 let alphaSSMP = 0.5
 
 let moved_chuck = {
@@ -42,6 +42,7 @@ const bettaPST = 1
 
 const gammaFT = 20
 
+let theta = 0.6
 // ================================================
 // ================================================
 

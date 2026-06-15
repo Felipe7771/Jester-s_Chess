@@ -55,7 +55,7 @@ function SET_ChuckMatt_Move() {
 
                     if (JSON.stringify([r,c]) === JSON.stringify(moved_chuck.step)) {
                         // ? Same Step Move Penalided
-                        score*=alphaSSMP
+                        score*=theta
                     }
 
                     if (id == id_AlreadyPlay) {
@@ -109,12 +109,20 @@ function SET_ChuckMatt_Move() {
         )
     }
 
-    moved_chuck = {
-        id: BestMove.id,
-        step: [BestMove.to_r, BestMove.to_c]
+    if (BestMove.id === moved_chuck.id && JSON.stringify([BestMove.to_r, BestMove.to_c]) === JSON.stringify(moved_chuck.step)) {
+
+        theta -= 0.3
+    } else {
+        theta = 0.6
     }
 
+    
     const BestPiece = pieceIndex[BestMove.id]
+
+    moved_chuck = {
+        id: BestMove.id,
+        step: [BestPiece.r, BestPiece.c]
+    }
     // 11. Executar
     set_Moving(BestMove, BestPiece)
 }
