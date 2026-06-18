@@ -1,4 +1,7 @@
 function checkCastling(id, team) {
+    console.log('========== checkCastling ==========')
+
+    console.table({'CastlePermission': CastlePermission[team], 'hasPieceCastling': kings_castle.has(id)})
     // console.log(`Castling: ${CastlePermission[team]}`)
     if (!(CastlePermission[team] && kings_castle.has(id))) return
     
@@ -14,24 +17,31 @@ function checkBreakCastlePermission(id, color) {
 
 function breakCastlePermission(color) {
     CastlePermission[color] = false
-    console.log("QUEBRA DE ROQUE")
+    // console.log("QUEBRA DE ROQUE")
 }
 
 function check_Kingside_Castle(id_King, team) {
+    console.log('========== check_Kingside_Castle ==========')
     const check_r = team == 'w' ? 7 : 0
     const enemy = getEnemy(team)
 
+    console.table({check_r,enemy})
+
     const cooK = { r: check_r, c: 4 }
     const cooR = { r: check_r, c: 7 }
+
+    console.table({cooK,cooR})
 
     const critic_c = new Set([cooK.c, cooR.c])
 
     let any_problem = false
 
-    for (let dc = cooK.c; dc <= cooR.c; dc++) {
+    for (let dc = cooK.c; dc < cooR.c; dc++) {
         // console.log(board[check_r][dc].id)
         const is_There = Is_anyThere(board[check_r][dc])
         const num_Atcks = get_numAttacks(offense[check_r][dc][enemy])
+
+        console.table({dc,check_r,is_There,num_Atcks})
 
         if (!critic_c.has(dc) && is_There) {
             any_problem = true
@@ -67,7 +77,7 @@ function check_Queenside_Castle(id_King, team) {
 
     let any_problem = false
 
-    for (let dc = cooK.c; dc >= cooR.c; dc--) {
+    for (let dc = cooK.c; dc > cooR.c; dc--) {
         const is_There = Is_anyThere(board[check_r][dc])
         const num_Atcks = get_numAttacks(offense[check_r][dc][enemy])
 

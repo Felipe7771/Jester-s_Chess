@@ -83,31 +83,39 @@ function delete_piece_to_team(id, color, r, c) {
     delete pieceIndex[id]
 }
 
-function checkPromotedPawn(id, team, r, c) {
-    // console.log("Pawn ?",id)
-    if (id[1] != 'P') return
-    console.log("Passou!!!!!")
+function PromotePawn(old_id, team, r, c) {
 
-    const critic_row = team == 'w' ? 0: 7
+    if (PLAYING_WITH_CHUCKMATT && team === PLAY_TURN.chuck) {
+        generate_id_pieces += 1
+        const promotedPiece = 'Q' // por definição, o ChuckMatt sempre promove para Rainha
+        const new_id = `${team}${promotedPiece}${generate_id_pieces}`
 
-    if (r == critic_row) PromotePawn(id, team, r, c)
+        setPromote(old_id, new_id, promotedPiece, team, r, c)
+
+        sendBotMessage(get_randomMessage(PROMOTE_QUEEN_CHUCK_CHAT_BOT))
+
+        return Promise.resolve()
+    }
+
+    return new Promise(resolve => {
+        showPromotionMenu(r, c, team, promotedPiece => {
+            generate_id_pieces += 1
+            const new_id = `${team}${promotedPiece}${generate_id_pieces}`
+
+            setPromote(old_id, new_id, promotedPiece, team, r, c)
+
+            resolve()
+        })
+    })
 }
 
+function checkPromotedPawn(id, team, r, c) {
+    if (id[1] != 'P') return Promise.resolve()
 
-function PromotePawn(old_id, team, r, c) {
-    showPromotionMenu(r, c, team, promotedPiece => {
+    const critic_row = team == 'w' ? 0 : 7
+    if (r == critic_row) return PromotePawn(id, team, r, c)
 
-    console.log(promotedPiece);
-    
-    generate_id_pieces += 1
-    const new_id = `${team}${promotedPiece}${generate_id_pieces}`
-    console.log(new_id);
-
-    setPromote(old_id, new_id, promotedPiece, team, r, c)
-
-    renderBoard()
-
-    });
+    return Promise.resolve()
 }
 
 

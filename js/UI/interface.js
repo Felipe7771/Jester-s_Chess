@@ -7,6 +7,16 @@ function renderBoard() {
             if (!END_GAME) {
                 showCheckmate(get_Enemy(TURN))
                 END_GAME = true
+
+                if (PLAYING_WITH_CHUCKMATT) {
+                    if ((TURN == PLAY_TURN.chuck)) {
+
+                        sendBotMessage(get_randomMessage(ENDED_VICTORY_CHAT_BOT))
+                    } else {
+
+                        sendBotMessage(get_randomMessage(ENDED_DEFEAT_CHAT_BOT))
+                    }
+                }
             }
         }, 500)
 
@@ -113,8 +123,8 @@ function renderBoard() {
 function showMoveHints(moves, color) {
     if (!moves.legal) return
 
-    console.log('ShowMove: ')
-    console.table(moves.legal)
+    // console.log('ShowMove: ')
+    // console.table(moves.legal)
 
     const legal_moves = moves.legal
 

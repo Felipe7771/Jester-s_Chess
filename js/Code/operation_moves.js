@@ -291,7 +291,7 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
         let r = from_r + dr * ajust
         let c = from_c + dc * ajust
 
-        console.log("Peao",dr, dc)
+        // console.log("Peao",dr, dc)
         
         if (Is_OutBoard(r, c)) continue
 
@@ -302,11 +302,11 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
             // movimento endiante
             
             if (!Is_anyThere(square)) {
-                console.log("Ninguém:",r,c,"-",dr, dc)
+                // console.log("Ninguém:",r,c,"-",dr, dc)
                 if (dr == -1 || (dr == -2 && can_do_two_steps))
                     add_mobility(id, r, c, color, piece, from_r, from_c)
             } else {
-                console.log("Ninguém:",r,c,"-",dr, dc)
+                // console.log("Ninguém:",r,c,"-",dr, dc)
                 if (dr == -1) can_do_two_steps = false
             }
             continue

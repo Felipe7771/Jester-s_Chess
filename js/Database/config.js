@@ -20,6 +20,12 @@ const PIECES = {
   bN: 'img/icy_sea/b/bn.png',
   bP: 'img/icy_sea/b/bp.png',
 };
+
+const PLAYERS_IMG = {
+  w: 'img/playerw.png',
+  b: 'img/playerb.png'
+}
+
 const PIECES_CAPTURED = {
   wK: 'img/w/wk.png',
   wQ: 'img/w/wq.png',

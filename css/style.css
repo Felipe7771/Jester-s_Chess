@@ -572,6 +572,10 @@ animation: illegalFlash .8s steps(1) forwards;
   font-weight: 500;
   color: #e0e0e0;
   min-width: 80px;
+      transition:
+        color 0.4s ease,
+        text-shadow 0.4s ease,
+        transform 0.3s ease;
 }
 
 .captured-pieces {
@@ -670,8 +674,8 @@ animation: illegalFlash .8s steps(1) forwards;
 .move-cell:hover { background: #2a2a2a; color: #fff; }
 
 .move-cell.active {
-  background: #4a7c3f;
-  color: #fff;
+  background: #e8d5a3;
+  color: #000000;
 }
 
 .move-icon {
@@ -719,3 +723,62 @@ animation: illegalFlash .8s steps(1) forwards;
 
 .nav-btn:hover { color: #ccc; background: #222; }
 .nav-btn:active { color: #fff; }
+
+.player-strip {
+    border: 2px solid transparent;
+    /* border-radius: 12px; */
+}
+
+.player-name-active {
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #e8d5a3;
+    transition: color .1s;
+
+    text-shadow:
+        0 0 5px #e8d5a3cc,
+        0 0 10px #e8d5a3cc;
+
+    animation: turnPulse 0.4s ease-out;
+}
+
+@keyframes turnPulse {
+    0% {
+        transform: scale(0.9);
+        opacity: 0.5;
+    }
+
+    70% {
+        transform: scale(1.05);
+    }
+
+    90% {
+      transform: scale(1.01);
+    }
+
+    100% {
+        transform: scale(1.);
+        opacity: 1;
+    }
+}
+
+/* Classe adicionada quando for a vez do jogador */
+.player-strip.active-turn {
+    animation: turnBorder 0.6s ease-out forwards;
+}
+
+@keyframes turnBorder {
+    0% {
+        border-image: conic-gradient(
+            #e8d5a3 0deg,
+            transparent 0deg
+        ) 1;
+    }
+
+    100% {
+        border-image: conic-gradient(
+            #e8d5a3 360deg,
+            #e8d5a3 360deg
+        ) 1;
+    }
+}

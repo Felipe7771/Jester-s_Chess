@@ -67,6 +67,7 @@ function chanceTurn() {
   TURN = turns[id_turn]
   encrement_plays++
   plays = Math.floor((encrement_plays + 1)/2) 
+  setTurn(TURN)
 }
 
 // ==========================
@@ -113,7 +114,9 @@ function Is_InLegalMoves(id, coo) {
 function Is_InjesterLegalMoves(id, coo) {
   const j_illegal_moves = memory_moves[id].j_illegal || []
 
-  return j_illegal_moves.includes(coo)
+  return j_illegal_moves.some(
+    move => move[0] === coo[0] && move[1] === coo[1]
+  );
 }
 
 function Is_InMoves(id, coo) {

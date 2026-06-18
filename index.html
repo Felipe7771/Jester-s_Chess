@@ -101,7 +101,6 @@
         <script src="js/UI/interactions.js"></script>
         <script src="js/UI/move_log.js"></script>
 
-        <!-- ✅ NOVO: modal de boas-vindas + chat -->
         <script src="js/UI/welcome_chat.js"></script>
 
         <script>
@@ -112,15 +111,17 @@
 
             // 1. Exibe o modal de boas-vindas ANTES de qualquer coisa.
             showWelcomeModal().then(({ playerName, opponentName, mode }) => {
-                // 2. Inicializa as abas do painel (Lances | Chat)
-                initPanelTabs(playerName, 'img/avatar_white.png')
-
+                
                 // 3. Configura times (mantém sua lógica original)
                 
                 if (mode === 'ai') {
                     const [PLAYER, CHUCK] = set_RandomTeamsAI()
                     PLAYING_WITH_CHUCKMATT = true
-                    setPlayerInfo(PLAYER, playerName, 'img/avatar_white.png')
+                    setPlayerInfo(PLAYER, playerName, PLAYERS_IMG[PLAYER == 'white'? 'w': 'b'])
+
+                    // 2. Inicializa as abas do painel (Lances | Chat)
+                    initPanelTabs(playerName, PLAYERS_IMG[PLAYER == 'white'? 'w': 'b'])
+
                     setPlayerInfo(
                         CHUCK,
                         'ChuckMatt (AI)',
@@ -139,8 +140,8 @@
                     document
                         .querySelector('.panel-tab[data-tab="moves"]')
                         ?.click()
-                    setPlayerInfo('white', playerName, 'img/avatar_white.png')
-                    setPlayerInfo('black', opponentName, 'img/avatar_black.png')
+                    setPlayerInfo('white', playerName, PLAYERS_IMG.w)
+                    setPlayerInfo('black', opponentName, PLAYERS_IMG.b)
                 }
 
                 // 4. Renderiza o tabuleiro
@@ -167,7 +168,9 @@
                         SET_ChuckMatt_Move()
                     }, 1000)
                 }
+                setTurn(TURN)
             })
+
 
             // Bot envia mensagem:
             //sendBotMessage('Xeque! ♞');
