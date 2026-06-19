@@ -1,10 +1,14 @@
-function LegalProvocative_Jester(id, color) {
+function LegalProvocative_Jester(id, color, set_combat) {
+    console.log('===== LegalProvocative_Jester =====')
 
-    // console.log("Verificando")
-    const Jester = pieceIndex[id]
+    // // console.log("Verificando")
+    if (!set_combat) {
+        const Jester = pieceIndex[id]
 
-    attackers[id] = []
-    set_combat_piece(id, color, Jester)
+        attackers[id] = []
+        deleteOffenseMobility(id)
+        set_combat_piece(id, color, Jester)
+    }
 
     const Provocative = attackers[id]
 
@@ -46,7 +50,9 @@ function LegalProvocative_Jester(id, color) {
 
     for (const [ilr, ilc] of jesterIllegals) {
 
-        offenseIndex[id] = offenseIndex[id].filter(item => item.r !== ilr && item.c !== ilc);
+        offenseIndex[id] = offenseIndex[id].filter(
+            item => !(item.r === ilr && item.c === ilc)
+        );
 
         offense[ilr][ilc][color] = offense[ilr][ilc][color].filter(item => item.id !== id);
         mobility[ilr][ilc][color] = mobility[ilr][ilc][color].filter(item => item.id !== id);

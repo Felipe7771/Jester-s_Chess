@@ -104,8 +104,8 @@ const pawnRow = (color) => [
   { id: `${color}P4`, type: "P", color, visualKey: `${color}P` },
   { id: `${color}P5`, type: "P", color, visualKey: `${color}P` },
   { id: `${color}P6`, type: "P", color, visualKey: `${color}P` },
-  { id: `${color}P8`, type: "P", color, visualKey: `${color}P` },
   { id: `${color}P7`, type: "P", color, visualKey: `${color}P` },
+  { id: `${color}P8`, type: "P", color, visualKey: `${color}P` },
 ];
 
 const knightRow = (color) => [
@@ -276,7 +276,7 @@ let pieceIndex = {}
 let attackers = {}
 let pieceEffects = new Map();
 let offenseIndex = {}
-let offenseIndexRemove = {}
+let mobilityIndex = {}
 
 let piece_moved = {
   id: '',

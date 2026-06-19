@@ -46,6 +46,8 @@ function SET_ChuckMatt_Move() {
 
             if (!Is_Jester(id[1])) {
                     let score = calcule_Score(id, PART, color, enemy, r, c)
+                    console.clear()
+
                     score += DPS
 
                     if (id == moved_chuck.id) {
@@ -78,7 +80,7 @@ function SET_ChuckMatt_Move() {
     }
 
     // 9. Exiba resultados
-    log_Scores(Scores)
+    // log_Scores(Scores)
 
     let BestMove = {}
 

@@ -25,9 +25,6 @@ function startDrag(e, r, c, piece, ID, img) {
     // impede seleção estranha do navegador
     e.preventDefault()
 
-    SELECTOR_ID = ID
-    SELECTOR_COLOR = ID[0]
-
     // cria clone visual da peça
     const ghost = document.createElement('img')
 
@@ -182,7 +179,7 @@ function set_MemoryMoves(id, color) {
             console.log('illegals: ',illegals)
 
         } else if (Is_JesterFirstMove(id[1])) {
-            ;({ legals, jesterIllegals } = LegalProvocative_Jester(id, color))
+            ;({ legals, jesterIllegals } = LegalProvocative_Jester(id, color, false))
             // console.log('Legais: ', legals)
             // console.log('Ilegais por provocação: ', jesterIllegals)
             isJesterPinned = Is_pin(id, color)[0]

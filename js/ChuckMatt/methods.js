@@ -165,6 +165,7 @@ function calcule_omegaMAOS_sigmaLAMP(r, c, PART, color) {
 }
 
 function score_Releases(id, PART, color, r, c, omegaMAOS, sigmaLAMP) {
+    console.log('!!!!! ===== score_Releases ===== !!!!!')
 
     // ? Assistence Ally Tax
     let AAT = 0

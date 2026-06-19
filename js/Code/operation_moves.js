@@ -167,16 +167,6 @@ const sqKey_secondMove_Jester = new Map([
     ],
 ])
 
-// const secondMoveToFirstMove = new Map()
-
-// for (const [firstMove, secondMoves] of sqKey_secondMove_Jester) {
-//     for (const secondMove of secondMoves) {
-//         secondMoveToFirstMove.set(
-//             secondMove.join(','),
-//             firstMove
-//         )
-//     }
-// }
 
 // dicionário de funções
 const calculateOffense = {
@@ -226,12 +216,12 @@ function calculateLinearOffense(id, from_r, from_c, piece, color, moves) {
                 const isKingEnemy = square.id === get_Id_King(enemy)
 
                 if (!isKingEnemy || (isKingEnemy && Have_Sucessor(enemy))) {
-                    console.log('--bloqueado')
+                    // console.log('--bloqueado')
                     break
                 }
             }
 
-            console.log('--vazio')
+            // console.log('--vazio')
 
             add_offense_mobility(id, r, c, color, piece, from_r, from_c)
         }
@@ -239,6 +229,7 @@ function calculateLinearOffense(id, from_r, from_c, piece, color, moves) {
 }
 
 function calculateOneStepOffense(id, from_r, from_c, piece, color, moves) {
+    const isJester = Is_JesterSecondMove(piece)
     for (const [dr, dc] of moves) {
         let r = from_r + dr
         let c = from_c + dc
@@ -251,20 +242,23 @@ function calculateOneStepOffense(id, from_r, from_c, piece, color, moves) {
         // ocupado inimigo -> offense & mobility
         // livre           -> offense & mobility
 
-        if (Is_anyThere(square)) {
+
+        if (Is_anyThere(square) && !isJester) {
             if (Is_AllyThere(square, color))
                 add_offense(id, r, c, color, piece, from_r, from_c)
-            else if (!Is_JesterSecondMove(piece))
+            else if (!isJester)
                 add_offense_mobility(id, r, c, color, piece, from_r, from_c)
 
             continue
         }
 
-        add_offense_mobility(id, r, c, color, piece, from_r, from_c)
+        if (!isJester) add_offense_mobility(id, r, c, color, piece, from_r, from_c)
+        else if (!Is_anyThere(square) && isJester) add_mobility(id, r, c, color, piece, from_r, from_c)
     }
 }
 
 function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
+    // console.log(`===== calculatePawnOffense ${id} ${from_r} ${from_c} =====`)
     const type_move = unit_moviment_parts[piece].type_move
 
     // console.log("Antes: ",attackers[id])
@@ -287,6 +281,7 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
 
     let can_do_two_steps = true
 
+
     for (const [dr, dc] of moves) {
         let r = from_r + dr * ajust
         let c = from_c + dc * ajust
@@ -302,11 +297,12 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
             // movimento endiante
             
             if (!Is_anyThere(square)) {
-                // console.log("Ninguém:",r,c,"-",dr, dc)
+
                 if (dr == -1 || (dr == -2 && can_do_two_steps))
                     add_mobility(id, r, c, color, piece, from_r, from_c)
+
             } else {
-                // console.log("Ninguém:",r,c,"-",dr, dc)
+
                 if (dr == -1) can_do_two_steps = false
             }
             continue
@@ -321,6 +317,7 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
 }
 
 function calculateJesterSecoundMove(color) {
+    console.log('===== calculateJesterSecoundMove =====')
 
     if (!Have_Jester(color)) return
 
@@ -350,9 +347,6 @@ function calculateJesterSecoundMove(color) {
                 const key = `${dr},${dc}`
                 const list = sqKey_secondMove_Jester.get(key)
                 
-                
-                // equivalente a spread, mas sem recriar arrays
-                // for (let j = 0; j < list.length; j++) {
                 for (const [ddr, ddc] of moves_sec) {
                     
                     const targetR = r + ddr
@@ -360,10 +354,10 @@ function calculateJesterSecoundMove(color) {
                     
                     if (Is_OutBoard(targetR,targetC)) continue
                     
-                    const square = board[targetR][targetC]
-                    const isSomeone = Is_anyThere(square)
+                    const squareSecondMove = board[targetR][targetC]
+                    const isSomeoneSecondMove = Is_anyThere(squareSecondMove)
                     
-                    if (isSomeone || There_AllyThere(square,color)) continue
+                    if (isSomeoneSecondMove || There_AllyThere(squareSecondMove,color)) continue
                     
 
                     add_mobility(

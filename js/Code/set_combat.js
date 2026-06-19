@@ -10,6 +10,7 @@ function set_initial_combat() {
 }
 
 function set_combat_turn() {
+    console.log('!!!!! ===== set_combat_turn ===== !!!!!')
     /**
      * O set_combat_turn só altera a composição das seguintes peças:
      * - a Peça movida, pois ela vai aterar inevitavelmente as casas que ele ataca e protege;
@@ -96,11 +97,16 @@ function set_combat_turn() {
         const color = id[0]
 
         if (content) {
-            
+            console.log('!! combat_turn !!')
+            const formatMove = (part) => `[${part.r}, ${part.c}]`
+
+
+            console.log(`offense  ${(offenseIndex[id] || []).map(formatMove).join(', ')}`,)
+            console.log(`mobility ${(mobilityIndex[id] || []).map(formatMove).join(', ')}`,)
             deleteOffenseMobility(id, color)
 
             set_combat_piece(id, color, content)
-            if (Is_JesterFirstMove(content.piece)) LegalProvocative_Jester(id, color);
+            if (Is_JesterFirstMove(content.piece)) LegalProvocative_Jester(id, color, true);
         }
     }
 }

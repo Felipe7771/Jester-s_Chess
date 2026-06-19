@@ -2,6 +2,22 @@ function is_Check(color) {
     // console.log("========= IS CHECK? ========")
     const idKing = get_Id_King(color)
     const enemy = get_Enemy(color)
+    // console.log(
+    //         `${color} offense na casa [${4}, ${7}]: `,
+    //         offense[4][7][color].map((item) => item.id),
+    //     )
+    // console.log(
+    //         `${enemy} offense na casa [${4}, ${7}]: `,
+    //         offense[4][7][enemy].map((item) => item.id),
+    //     )
+    // console.log(
+    //         `${color} offense na casa [${3}, ${7}]: `,
+    //         offense[3][7][color].map((item) => item.id),
+    //     )
+    // console.log(
+    //         `${enemy} offense na casa [${3}, ${7}]: `,
+    //         offense[3][7][enemy].map((item) => item.id),
+    //     )
 
     // console.log('id: ',idKing)
     // console.log('color inimigo ', enemy)
@@ -103,6 +119,7 @@ function estruture_Check(color, num_attacks) {
 
     const King = pieceIndex[idKing]
 
+
     // retorno:
     // checkmate: true/false
     // emerging_squares: Set()
@@ -140,7 +157,6 @@ function estruture_Check(color, num_attacks) {
         return [checkmate, [], [], []]
     }
 
-    console.log('===== GET SAFE BLOCKS MOVES =====')
     const [permited_blocks, num_permited_blocks] = get_SafeBlocksMoves(
         King,
         enemy,
@@ -172,11 +188,15 @@ function get_SquareMovesKing_Attacked(King, enemy) {
         let c = King.c + dc
 
         console.log('Olhando: ',r,c)
-
-
+        
+        
         if (Is_OutBoard(r, c)) continue
-
+        
         let square = board[r][c]
+               console.log(
+                `Mobility na casa [${r}, ${c}]: `,
+                offense[r][c][enemy].map((item) => item.id),
+            )
 
         // ocupado aliado  -> não fuga
         // ocupado inimigo & defendido -> não fuga
@@ -214,18 +234,19 @@ function get_Attacker_King(King, enemy) {
 }
 
 function get_SafeKillersAttackerMoves(King, enemy, Attacker) {
+    console.log('!!!!! ===== get_SafeKillersAttackerMoves ===== !!!!!')
     const team = get_Enemy(enemy)
-
+    
     let permited_moves = {}
     let num_permited_moves = 0
-
+    
     const Forward = get_Attackers(offense[Attacker.r][Attacker.c][team])
-
+    
     console.log(
         'Id dos atacantes do atacante: ',
         Forward.map((item) => item.id),
     )
-
+    
     return check_theoretical_move(
         team,
         Forward,
@@ -236,20 +257,21 @@ function get_SafeKillersAttackerMoves(King, enemy, Attacker) {
 }
 
 function get_SafeBlocksMoves(King, enemy, Attacker, num_king_svSquares) {
+    console.log('!!!!! ===== get_SafeBlocksMoves ===== !!!!!')
     const Kr = King.r,
-        Kc = King.c,
-        Ar = Attacker.r,
-        Ac = Attacker.c,
-        PieceAttc = Attacker.piece
+    Kc = King.c,
+    Ar = Attacker.r,
+    Ac = Attacker.c,
+    PieceAttc = Attacker.piece
     const team = get_Enemy(enemy)
     const dist_r = Kr - Ar // ! Acima do Rei: <0, Abaixo do Rei: >0
     const dist_c = Kc - Ac // ! Direita: <0, Esquerda: >0
-
+    
     const closest = new Set([0, 1])
-
+    
     let permited_moves = {}
     let num_permited_moves = 0
-
+    
     console.log('Distância entre o Rei e o Atacante: ', dist_r, dist_c)
 
     if (!num_king_svSquares && closest.has(dist_c) && closest.has(dist_r))
@@ -276,6 +298,15 @@ function get_SafeBlocksMoves(King, enemy, Attacker, num_king_svSquares) {
 
         const offend = offense[r][c][team]
         const mobili = mobility[r][c][team]
+
+        console.log(
+                `Attacker na casa [${r}, ${c}]: `,
+                offend.map((item) => item.id),
+            )
+        console.log(
+                `Mobility na casa [${r}, ${c}]: `,
+                mobili.map((item) => item.id),
+            )
 
         if (get_numAttacks(mobili)) {
             const Forwards = get_Attackers(mobili)
@@ -418,7 +449,7 @@ function check_theoretical_move(
         'Defensores: ',
         Forward.map((item) => item.id),
     )
-    console.log('Defensores é nulo? ', Forward == null)
+    console.log('Defensores é nulo? ', Forward == null || !Forward.length)
     if (Forward == null || !Forward.length) return { permited_moves, num_permited_moves }
 
     for (const fwd of Forward) {
@@ -459,7 +490,7 @@ function createBackup() {
         Complement_Id_Real,
         pieceIndex,
         offenseIndex,
-        offenseIndexRemove,
+        mobilityIndex,
         piece_moved,
         attackers,
         memory_moves,
@@ -475,7 +506,7 @@ function restoreBackup(backup) {
     Complement_Id_Real = backup.Complement_Id_Real
     pieceIndex = backup.pieceIndex
     offenseIndex = backup.offenseIndex
-    offenseIndexRemove = backup.offenseIndexRemove
+    mobilityIndex = backup.mobilityIndex
     piece_moved = backup.piece_moved
     attackers = backup.attackers
     memory_moves = backup.memory_moves

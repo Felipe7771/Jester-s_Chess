@@ -78,11 +78,6 @@ function setPromote(old_id, new_id, new_type, enemy, r, c) {
     set_Check(team_color)
 }
 
-function delete_piece_to_team(id, color, r, c) {
-    deleteOffenseMobility(id,color)
-    delete pieceIndex[id]
-}
-
 function PromotePawn(old_id, team, r, c) {
 
     if (PLAYING_WITH_CHUCKMATT && team === PLAY_TURN.chuck) {
