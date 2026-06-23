@@ -23,11 +23,11 @@ async function Do_Move_Execute(sq, local_drag, capturedPiece) {
     isEndedTurn()
 
     Set_AnalysisCheck()
-
+    
     CHUCK_ChatCheck()
-
+    
     Set_Notation(local_drag, sq, capturedPiece, PROMOTESUCESSOR, TURN)
-
+    
     playMoveSound = false
     castleSound = false
     
@@ -39,9 +39,14 @@ async function Do_Move_Execute(sq, local_drag, capturedPiece) {
 
     renderBoard()
     
+    Set_MemoryMovesTEAM(TURN) // setar todos os movimentos pré renderizados
+    Set_AnalysisDraw(capturedPiece.captured, local_drag.id[1])
+    
     UI_Check()
 
     CHUCK_Turn()
+
+    console.log(team_pieces[TURN])
 }
 
 
@@ -125,6 +130,7 @@ function Set_Notation(local_drag, sq, capturedPiece, PROMOTESUCESSOR, TURN) {
 function UI_Check() {
     CHECKMATE = memory_checkmate
     if (CHECKMATE) renderBoard()
+    else if (DRAW) renderBoard()
 }
 
 function CHUCK_Turn() {

@@ -63,6 +63,7 @@ function set_setupScore() {
 }
  
 function get_Army(color) {
+
     const army = getTeam(color)
     // 3. pegar todos os movimentos possíveis
     for (const id_piece of Object.keys(army)) set_MemoryMoves(id_piece, color)

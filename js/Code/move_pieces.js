@@ -146,20 +146,19 @@ document.addEventListener('mouseup', (e) => {
 function showMoveIndicators(id, color) {
     clearMoveHints()
 
-    const formatMove = ([r, c]) => `[${8 - r}, ${c + 1}]`
+    // const formatMove = ([r, c]) => `[${8 - r}, ${c + 1}]`
 
-    set_MemoryMoves(id, color)
+    // set_MemoryMoves(id, color)
 
-    console.log(
-        `[ ${(memory_moves[id].total || []).map(formatMove).join(', ')} ]`,
-    )
+    // console.log(
+    //     `[ ${(memory_moves[id].total || []).map(formatMove).join(', ')} ]`,
+    // )
 
     showMoveHints(memory_moves[id], color)
 }
 
 function set_MemoryMoves(id, color) {
     if (!memory_moves[id]) {
-        // console.log(memory_moves)
 
         checkCastling(id, color)
 
@@ -230,6 +229,8 @@ function set_MemoryMoves(id, color) {
             j_illegal: jesterIllegals,
             total: total_moves,
         }
+
+        total_moves_TURN += Get_Moves_MemoryMoves(legals)
     }
 }
 

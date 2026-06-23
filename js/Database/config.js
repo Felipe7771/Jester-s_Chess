@@ -89,6 +89,7 @@ const name_pieces = {
 const pieces_one_step = new Set(['N', 'K', 'S', 'P'])
 const sucession = new Set(['K', 'S'])
 const promotions = ['J', 'R', 'B', 'N'];
+const insufficient = new Set(['B','N'])
 
 const pieces_castle = new Set(['wK', 'bK', 'wR0', 'wR1', 'bR0', 'bR1']);
 const kings_castle = new Set(['wK', 'bK'])
@@ -158,6 +159,8 @@ const INIT_BOARD = [
 let plays = 1
 let encrement_plays = 1
 
+let total_moves_TURN = 0
+
 let generate_id_pieces = 10 // evitar duplicação de peças
 
 let TURN = 'w'
@@ -171,9 +174,15 @@ let RUN_CHUCKMATT = false
 let PLAYING_WITH_CHUCKMATT = false
 
 const LimitValueLance = 1
-let valueLancesTurn = 0
+const LimitNoMoves = 50
 
-let memory_moves = {}
+// ?============================
+
+
+// ! CONTADORES
+// ?============================
+
+let valueLancesTurn = 0
 
 let Complement_Id_Real = {
   'w': {
@@ -192,6 +201,17 @@ let MATERIAL_COLETED = {
   b: 0,
 }
 
+let count_no_moves = 0
+
+// ?============================
+
+
+// ! MEMÓRIAS
+// ?============================
+
+let memory_moves = {}
+let memory_checkmate = false
+
 // ?============================
 
 
@@ -199,9 +219,8 @@ let MATERIAL_COLETED = {
 // ?============================
 
 let CHECKMATE = false
+let DRAW = false
 let END_GAME = false
-
-let memory_checkmate = false
 
 let VISUAL_check = {
   'w': false,
@@ -240,6 +259,11 @@ let castle_atives = {}
 let team = {
   w: [],
   b: []
+}
+
+let team_pieces = {
+  w: [],
+  b: [],
 }
 
 // cópia mutável do tabuleiro atual

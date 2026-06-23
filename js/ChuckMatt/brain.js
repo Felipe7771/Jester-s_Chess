@@ -10,8 +10,6 @@ function SET_ChuckMatt_Move() {
 
     let armyMoves = get_Army(color)
 
-    set_alphaARMY(color, armyMoves)
-
     Scores = {
         /**
          * 'id|score': {

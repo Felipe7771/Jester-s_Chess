@@ -43,7 +43,7 @@ function check_Kingside_Castle(id_King, team) {
         const is_There = Is_anyThere(board[check_r][dc])
         const num_Atcks = get_numAttacks(offense[check_r][dc][enemy])
 
-        console.table({dc,check_r,is_There,num_Atcks})
+        // console.table({dc,check_r,is_There,num_Atcks})
 
         if (!critic_c.has(dc) && is_There) {
             any_problem = true

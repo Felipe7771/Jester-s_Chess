@@ -3,7 +3,6 @@
 // ! Coeficientes Alpha 
 // * Variáveis de incentivo condicional do contexto do jogo
 
-let alphaARMY = 1
 let alphaSPMP = 0.25
 let alphaSSMP = 0.5
 
@@ -58,21 +57,6 @@ const rho = {
   PST: 10,
   OT: 45,
   AAT: 45,
-}
-
-
-function set_alphaARMY(color, armyAlly) {
-  const enemy = get_Enemy(color)
-
-  alphaARMY = 1;
-
-  const num_Ally = countUniqueRC(armyAlly);
-
-  let armyEnemy = get_Army(enemy)
-  const num_Enemy = countUniqueRC(armyEnemy)
-
-  alphaARMY = num_Enemy == 0 ? DEFAULT_ERROR : (num_Ally / num_Enemy)
-
 }
 
 function countUniqueRC(dict) {

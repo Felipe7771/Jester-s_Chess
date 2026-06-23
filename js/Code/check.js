@@ -487,6 +487,7 @@ function createBackup() {
         mobility,
         influence,
         team,
+        team_pieces,
         Complement_Id_Real,
         pieceIndex,
         offenseIndex,
@@ -503,6 +504,7 @@ function restoreBackup(backup) {
     mobility = backup.mobility
     influence = backup.influence
     team = backup.team
+    team_pieces = backup.team_pieces
     Complement_Id_Real = backup.Complement_Id_Real
     pieceIndex = backup.pieceIndex
     offenseIndex = backup.offenseIndex

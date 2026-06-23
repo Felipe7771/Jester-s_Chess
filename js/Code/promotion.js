@@ -62,6 +62,10 @@ function setPromote(old_id, new_id, new_type, enemy, r, c) {
     }
     delete pieceIndex[old_id]
 
+    const indice = team_pieces[enemy].indexOf(old_id[1]); 
+    team_pieces[enemy].splice(indice, 1);
+
+    team_pieces[enemy].push(new_type)
     pieceIndex[new_id] = content
     attackers[old_id] = []
     attackers[new_id] = []

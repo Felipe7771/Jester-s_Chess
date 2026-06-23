@@ -84,5 +84,28 @@ const PROMOTE_QUEEN_CHUCK_CHAT_BOT = [
     'Adoro garotas assim'
 ]
 
+const DRAW_ENEMY_CHAT_BOT = [
+    'Você calculou isso? hah',
+    'Está tão contente porquê? Acabou de perder...',
+    'Jogou tudo fora para eu não ganhar? hah',
+    'Você me faz rir muito',
+    'Acho que sua majestade não gostou, parabens',
+    'Obrigado por acabar com essa tortura chamada código mal feito',
+    'Acabou de assumir que não sabe perder e ganhar hahah',
+    '...Ok, tenha um bom dia hah'
+]
+
+const DRAW_CHUCK_CHAT_BOT = [
+    'Meu movimentos são muito bem calculados, não quis te humilhar',
+    'Era o melhor para nós dois hah...',
+    'Se eu não ganho, você também não vai...',
+    'Espero não me arrepender disso',
+    'Minha maior piada: Sua cara de decepção',
+    'Não esperava isso? Meu movimentos são imprevisíveis...',
+    'Pronto, agora saia do computador e aproveite o dia',
+    'Mais tempo para fazer a majestade rir',
+    'Adoro finais inesperados'
+]
+
 // não toque
 const QueenAffinity = 9999

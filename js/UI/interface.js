@@ -21,7 +21,26 @@ function renderBoard() {
         }, 500)
 
         return
-    }
+    } else if (DRAW) {
+        setTimeout(() => {
+            if (!END_GAME) {
+                showTry()
+                END_GAME = true
+
+                if (PLAYING_WITH_CHUCKMATT) {
+                    if ((TURN == PLAY_TURN.chuck)) {
+
+                        sendBotMessage(get_randomMessage(DRAW_CHUCK_CHAT_BOT))
+                    } else {
+
+                        sendBotMessage(get_randomMessage(DRAW_ENEMY_CHAT_BOT))
+                    }
+                }
+            }
+        }, 500)
+
+        return
+    } 
 
     boardEl.innerHTML = ''
     squares = []
@@ -100,7 +119,7 @@ function renderBoard() {
                 }
 
                 img.addEventListener('mousedown', (e) => {
-                    if (e.button !== 0 || board[r][c].color != TURN || !RUN_GAME || (PLAYING_WITH_CHUCKMATT && TURN != PLAY_TURN?.player)) return
+                    if (e.button !== 0 || board[r][c].color != TURN || !(RUN_GAME || CHECKMATE || DRAW || memory_checkmate) || (PLAYING_WITH_CHUCKMATT && TURN != PLAY_TURN?.player)) return
                     startDrag(
                         e,
                         r,

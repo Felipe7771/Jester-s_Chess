@@ -131,9 +131,33 @@ function showTry() {
         const el = getSqEl(K1Pos.r, K1Pos.c)
         el.classList.add('sq-try')
 
+        const piece = el.querySelector('img')
+
+        const effect = pieceEffects.get(board[K1Pos.r][K1Pos.c].id)
+
+        if (effect?.shake) {
+            piece.classList.remove('shake-soft') // limpa estado antigo
+        }
+        
+        piece.classList.add('king-defeat')
+        piece.addEventListener('animationend', () => {
+            piece.classList.add('king-dead-twitch');
+        }, { once: true });
+
+        piece.addEventListener('mouseenter', () => {
+            died.volume = 0.3;
+            died.play()
+        })
+
+        piece.addEventListener('mouseleave', () => {
+            died.pause()
+            died.currentTime = 0
+        })
+
+
         const badge = document.createElement('div')
         badge.className = 'king-badge badge-try'
-        badge.textContent = 'Draw'
+        badge.textContent = 'DRAW'
         el.appendChild(badge)
 
         const icon = document.createElement('div')
@@ -151,9 +175,33 @@ function showTry() {
         const el = getSqEl(K2Pos.r, K2Pos.c)
         el.classList.add('sq-try')
 
+        const piece = el.querySelector('img')
+
+        const effect = pieceEffects.get(board[K2Pos.r][K2Pos.c].id)
+
+        if (effect?.shake) {
+            piece.classList.remove('shake-soft') // limpa estado antigo
+        }
+        
+        piece.classList.add('king-defeat')
+        piece.addEventListener('animationend', () => {
+            piece.classList.add('king-dead-twitch');
+        }, { once: true });
+
+        piece.addEventListener('mouseenter', () => {
+            died.volume = 0.3;
+            died.play()
+        })
+
+        piece.addEventListener('mouseleave', () => {
+            died.pause()
+            died.currentTime = 0
+        })
+        
+
         const badge = document.createElement('div')
         badge.className = 'king-badge badge-try'
-        badge.textContent = 'Draw'
+        badge.textContent = 'DRAW'
         el.appendChild(badge)
 
         const icon = document.createElement('div')
@@ -166,6 +214,8 @@ function showTry() {
         icon.appendChild(img)
         el.appendChild(icon)
     }
+
+    Laugth_Jester()
 }
 
 function Laugth_Jester() {

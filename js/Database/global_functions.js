@@ -356,6 +356,9 @@ function delete_piece_to_team(id, color, r, c) {
 
   deleteOffenseMobility(id)
   delete pieceIndex[id]
+
+  const indice = team_pieces[color].indexOf(id[1]); 
+  team_pieces[color].splice(indice, 1);
 }
 
 function removeCoordinate(list, r, c) {
@@ -438,6 +441,7 @@ function add_piece_team(row, column, color, piece, id) {
   }
   
   team[color].push(PART)
+  team_pieces[color].push(piece)
   pieceIndex[id] = PART
   
 }
@@ -465,6 +469,25 @@ function getTeam(color) {
     }
 
     return result;
+}
+
+// ==========================
+// ! MEMORY_MOVES
+// ==========================
+
+function Set_MemoryMovesTEAM(color) {
+  total_moves_TURN = 0
+  const army = getTeam(color)
+  for (const id_piece of Object.keys(army)) set_MemoryMoves(id_piece, color)
+
+}
+
+function Get_Moves_MemoryMoves(memory) {
+    const unique = new Set();
+
+    for (const [r, c] of memory) unique.add(`${r},${c}`);
+
+    return unique.size;
 }
 
 // ==========================

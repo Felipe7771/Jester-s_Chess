@@ -245,7 +245,6 @@ function log_Scores(Scores,eta0) {
     }
 
     console.log('===========================')
-    console.log(`alpha ARMY: ${alphaARMY}`)
     console.log(`        η₀: ${eta0}`)
     // console.log(
     //     `Strategy: ${alphaARMY >= UPPER_offense ? 'Offense' : alphaARMY <= LOWER_defense ? 'Defense' : 'Neutral'}`,
