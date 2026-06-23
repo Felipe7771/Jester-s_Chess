@@ -27,6 +27,8 @@ function SET_ChuckMatt_Move() {
     // ? Exposed Enemy King Scale
     calcule_EEKS()
 
+    let eta0 = Calcule_η(color)
+
     // 6. se o sucessor está morto, aumente o valor do rei
     if (!Have_Sucessor(color)) growUp_King_ally()
     if (!Have_Sucessor(enemy)) growUp_King_enemy()
@@ -35,22 +37,25 @@ function SET_ChuckMatt_Move() {
     Attackers_plaza = generate_Attackersplaza(EEKS)
 
     // 8. calcular pontuação
+    console.log('REAL GAME')
     for (const id of Object.keys(armyMoves)) {
         const PART = pieceIndex[id]
         const enemy = get_Enemy(color)
 
         // ? Default Piece Score
-        let DPS = calcule_EPS_APT(PART, enemy)
+        let {DPS, kappa0_NAS, omega0_MAOS} = calcule_InitialEstatistics(PART, color, enemy)
+
 
         for (const [r, c] of armyMoves[id]) {
 
             if (!Is_Jester(id[1])) {
-                    let score = calcule_Score(id, PART, color, enemy, r, c)
-                    console.clear()
+                    console.log(`DPS: ${DPS} Ω₀: ${omega0_MAOS}`)
+                    let [score, PLZS, EMP, N_omegaδ, COMBAT, CT, PST, AAT, OT] = calcule_Score(id, PART, color, enemy, r, c, omega0_MAOS, eta0)
+                    // console.clear()
 
                     score += DPS
 
-                    if (id == moved_chuck.id) {
+                    if (id == moved_chuck.id && EMP<0) {
                         // ? Same Piece Move Penalided
                         score*= alphaSPMP
                     }
@@ -68,6 +73,14 @@ function SET_ChuckMatt_Move() {
                     const content = {
                         id,
                         score,
+                        PLZS,
+                        EMP,
+                        'NΔΩ²':N_omegaδ,
+                        'NΔΩη':COMBAT,
+                        CT,
+                        PST,
+                        AAT,
+                        OT,
                         to_r: r,
                         to_c: c,
                     }
@@ -80,12 +93,13 @@ function SET_ChuckMatt_Move() {
     }
 
     // 9. Exiba resultados
-    // log_Scores(Scores)
+    console.clear()
+    log_Scores(Scores, eta0)
 
     let BestMove = {}
 
     // 10. Pegar maior pontuação
-    if (plays <= 3) {
+    if (plays <= 1) {
         console.log('====================')
         console.log('SELECIONADO DO TOP3')
         console.log('====================')

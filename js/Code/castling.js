@@ -12,7 +12,7 @@ function checkCastling(id, team) {
 
 function checkBreakCastlePermission(id, color) {
     console.log('===== checkBreakCastlePermission =====')
-    console.log("verificando QUEBRA DE ROQUE", id)
+    // console.log("verificando QUEBRA DE ROQUE", id)
     if (pieces_castle.has(id)) breakCastlePermission(color)
 }
 
@@ -116,7 +116,7 @@ function check_Queenside_Castle(id_King, team) {
 
 function Castling_Move(id, r, c, color) {
     console.log("===== Castling_Move =====")
-    console.table({'CastlePermission': CastlePermission[color],'kings_castle': kings_castle.has(id)})
+    // console.table({'CastlePermission': CastlePermission[color],'kings_castle': kings_castle.has(id)})
     
     if (!(CastlePermission[color] && kings_castle.has(id))) return
     

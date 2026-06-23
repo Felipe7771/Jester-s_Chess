@@ -10,7 +10,6 @@ function set_initial_combat() {
 }
 
 function set_combat_turn() {
-    console.log('!!!!! ===== set_combat_turn ===== !!!!!')
     /**
      * O set_combat_turn só altera a composição das seguintes peças:
      * - a Peça movida, pois ela vai aterar inevitavelmente as casas que ele ataca e protege;
@@ -33,11 +32,12 @@ function set_combat_turn() {
     calculate_pieces.add(piece_moved.id)
     delete attackers[piece_moved.id]
 
-    for (const [indx, color] of ['w', 'b'].entries()) {
+    const COLORS = ['w', 'b'] // fora da função, criado uma vez só
+    for (const color of COLORS) {
         let survivous = new Map()
 
         for (const [key, piece] of from_square[color]) {
-            if ((!key) in pieceIndex) continue
+            if (!(piece.id in pieceIndex)) continue
 
             if (pieces_one_step.has(piece.type)) {
                 survivous.set(key, piece)
@@ -46,7 +46,7 @@ function set_combat_turn() {
 
             calculate_pieces.add(piece.id)
             delete attackers[piece.id]
-            // console.log('Deletado: ', piece.id)
+
         }
 
         from_square[color] = survivous
@@ -55,7 +55,7 @@ function set_combat_turn() {
         survivous = new Map()
 
         for (const [key, piece] of to_square[color]) {
-            if ((!key) in pieceIndex) continue
+            if (!(piece.id in pieceIndex)) continue
 
             if (pieces_one_step.has(piece.type)) {
                 survivous.set(key, piece)
@@ -78,31 +78,25 @@ function set_combat_turn() {
             }),
         )
 
-        // console.log(`${color}:`, pawns)
-
         const id_pawns = Object.values(pawns).map((piece) => piece.id)
-
-        // console.log(`${color}:`, id_pawns)
-        // console.log(`calculate_pieces `, calculate_pieces)
-
         id_pawns.forEach((id) => calculate_pieces.add(id))
     }
 
     // console.log('Finalizando peãos')
 
     // FALTANDO LIMPAR ANTIGA ANALISE DE OFFENSE PARA ADICIONAR A NOVA
-    console.log(calculate_pieces)
+    // console.log(calculate_pieces)
     for (const id of calculate_pieces) {
         const content = pieceIndex[id]
         const color = id[0]
 
         if (content) {
-            console.log('!! combat_turn !!')
-            const formatMove = (part) => `[${part.r}, ${part.c}]`
+            // console.log('!! combat_turn !!')
+            // const formatMove = (part) => `[${part.r}, ${part.c}]`
 
 
-            console.log(`offense  ${(offenseIndex[id] || []).map(formatMove).join(', ')}`,)
-            console.log(`mobility ${(mobilityIndex[id] || []).map(formatMove).join(', ')}`,)
+            // console.log(`offense  ${(offenseIndex[id] || []).map(formatMove).join(', ')}`,)
+            // console.log(`mobility ${(mobilityIndex[id] || []).map(formatMove).join(', ')}`,)
             deleteOffenseMobility(id, color)
 
             set_combat_piece(id, color, content)

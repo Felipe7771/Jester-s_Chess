@@ -187,14 +187,14 @@ function calculateLinearOffense(id, from_r, from_c, piece, color, moves) {
     const base = unit_moviment_parts[piece]
     const type_move = Is_Jester(piece) ? base.type_move[0] : base.type_move
     const max = freq_move[type_move]
-    console.log('-- ',id)
+    // console.log('-- ',id)
 
     for (const [dr, dc] of moves) {
         for (let len = 1; len <= max; len++) {
             let r = from_r + dr * len
             let c = from_c + dc * len
 
-            console.log(r, c)
+            // console.log(r, c)
 
             if (Is_OutBoard(r, c)) break
 

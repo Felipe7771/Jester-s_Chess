@@ -353,7 +353,6 @@ function add_offense_mobility(id, row, column, color, piece, fromR, fromC) {
 // ==========================
 
 function delete_piece_to_team(id, color, r, c) {
-  console.log('===== delete_piece_to_team =====')
 
   deleteOffenseMobility(id)
   delete pieceIndex[id]
@@ -379,7 +378,7 @@ function deleteOffenseMobility(id) {
 
       const { r, c, color } = entry
 
-      console.log('deleting offense |',r,c, id)
+      // console.log('deleting offense |',r,c, id)
       
       const arr = offense[r][c][color]
       
@@ -396,14 +395,14 @@ function deleteOffenseMobility(id) {
     
     delete offenseIndex[id]
   }
-  console.log('---')
+  // console.log('---')
   if (mobilityIndex[id]) {
     
     for (const entry of mobilityIndex[id]) {
       
       const { r, c, color } = entry
       
-      console.log('deleting mobily  |',r,c, id)
+      // console.log('deleting mobily  |',r,c, id)
 
       const arr = mobility[r][c][color]
       
@@ -421,7 +420,7 @@ function deleteOffenseMobility(id) {
 
     delete mobilityIndex[id]
   }
-  console.log('')
+  // console.log('')
 }
 
 // ==========================

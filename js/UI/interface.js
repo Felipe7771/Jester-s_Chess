@@ -131,7 +131,6 @@ function showMoveHints(moves, color) {
     clearMoveHints()
 
     for (const move of legal_moves) {
-        console.table(move)
 
         const key = sqKey(move[0], move[1])
 

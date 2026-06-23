@@ -4,7 +4,7 @@
 // * Variáveis de incentivo condicional do contexto do jogo
 
 let alphaARMY = 1
-let alphaSPMP = 0.6
+let alphaSPMP = 0.25
 let alphaSSMP = 0.5
 
 let moved_chuck = {
@@ -23,17 +23,18 @@ const DEFAULT_ERROR = 2
 // ? Coeficientes Beta 
 // * Variáveis de incentivo multiplicativo exclusivo de cada score
 
-const bettaEPS = 1
-const bettaAPT = 10
-const bettaAAT = 1.5
-
-const bettaOT = 4
-const bettaFT = 3
-
-const bettaAST = -10
-const bettaCT = 5
-
-const bettaPST = 1
+const betta = {
+  EPS: 1,
+  EMP: 3,      // era 4, leve redução
+  omega: 7,
+  eta: 4,      // era 5, leve redução (pois rho.eta vai compensar com mais gradação)
+  CT: 8,       // era 6, captura direta com mais peso
+  PST: 12,
+  OT: 8,       // era 10
+  AAT: 10,     // era 6 — mas SEM multiplicar por APT
+  APT: 10,     // deixa reservado/decida o que fazer com ele
+  PLZS: 4      // NOVO
+}
 
 // ================================================
 // ================================================
@@ -45,18 +46,32 @@ const gammaFT = 20
 let theta = 0.6
 // ================================================
 // ================================================
+// ? Coeficientes Rho 
+// * Variáveis de sensibilidade para normalização [-1,+1]
+
+const rho = {
+  PLZS: 90,
+  EMP: 15,
+  omega: 180,  // era 20
+  eta: 25,     // era 6
+  CT: 45,
+  PST: 10,
+  OT: 45,
+  AAT: 45,
+}
+
 
 function set_alphaARMY(color, armyAlly) {
-    const enemy = get_Enemy(color)
+  const enemy = get_Enemy(color)
 
-    alphaARMY = 1;
+  alphaARMY = 1;
 
-    const num_Ally = countUniqueRC(armyAlly);
-    
-    let armyEnemy = get_Army(enemy)
-    const num_Enemy = countUniqueRC(armyEnemy)
+  const num_Ally = countUniqueRC(armyAlly);
 
-    alphaARMY = num_Enemy == 0? DEFAULT_ERROR: (num_Ally/num_Enemy)
+  let armyEnemy = get_Army(enemy)
+  const num_Enemy = countUniqueRC(armyEnemy)
+
+  alphaARMY = num_Enemy == 0 ? DEFAULT_ERROR : (num_Ally / num_Enemy)
 
 }
 

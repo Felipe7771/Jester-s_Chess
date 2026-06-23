@@ -55,52 +55,47 @@ function calcule_PLZS(P, r, c) {
     else if (PLZdefenders.has(P)) return Defenders_plaza[r][c]
 }
 
-function calcule_EPS_APT(PART, enemy) {
-    const p = PART.piece
-    const from_r = PART.r,
-        from_c = PART.c
-
-    const from_num_attackers = get_numAttacks(offense[from_r][from_c][enemy])
-
-    const is_from_attacked = !from_num_attackers ? 0 : 1
-
-    const EPSs = EPS[PART.piece] * bettaEPS
-    const APT = is_from_attacked * bettaAPT * VPS_ally[PART.piece]
-
-    return APT + EPSs
-}
-
-function calcule_Score(id, PART, color, enemy, r, c) {
+function calcule_Score(id, PART, color, enemy, r, c, omega0, eta0) {
     // ? Plaza Score
-    const PLZS = calcule_PLZS(PART.piece, r, c)
+    const vPLZS = calcule_PLZS(PART.piece, r, c)
+    const PLZS = Normalization(vPLZS, rho.PLZS)
 
-    const to_num_attackers = get_numAttacks(offense[r][c][enemy])
-    const is_to_attacked = !to_num_attackers? 0: 1;
-    
-    const { omegaMAOS, sigmaLAMP } = calcule_omegaMAOS_sigmaLAMP(
-        r,
-        c,
-        PART,
-        color,
-    )
-        
+    // ? Emergent Piece
+    const EMP = Normalization(omega0, rho.EMP) * -betta.EMP
 
-    // ? Attacked Square Tax
-    const AST = is_to_attacked * bettaAST * VPS_ally[PART.piece]
-    // const AST = calcule_AST(r,c,PART,color)
+    const kappa_NAS = Calcule_κ(r, c, enemy)
+
+    const [omega_MAOS, V_moved_piece, Sum_V_defenders] = Calcule_Ω(r, c, PART, color, kappa_NAS)
+    const sigma_LAMP =                                   Calcule_σ(r, c, color, V_moved_piece, Sum_V_defenders, kappa_NAS)
+    const eta_MCTS =                                     Calcule_η(color)
+
+    const delta_omega = omega_MAOS - omega0
+    const delta_eta = eta_MCTS - eta0
+
+    const omegaδ = Math.sign(delta_omega) * (delta_omega**2) + sigma_LAMP
+    const etaδ = (delta_eta*100)
+
+    const N_omegaδ = Normalization(omegaδ, rho.omega) 
+    const N_etaδ = Normalization(etaδ, rho.eta) 
+
+    const COMBAT = (N_omegaδ) * betta.omega + (N_etaδ) * betta.eta
+
 
     const square = board[r][c]
 
     // ? Capture Tax
+    // console.log('CT')
     let CT = 0
 
     if (Is_anyThere(square) && Is_AllyThere(square, enemy)) {
         let piece_CT = square.type
 
-        CT = bettaCT * (VPS_enemy[piece_CT] + omegaMAOS)
+        vCT = (VPS_enemy[piece_CT] + omega_MAOS)
+        CT = Normalization(vCT, rho.CT) * betta.CT
     }
 
     // ? Pawn Struture Tax
+    // console.log('PST')
     let PST = 0
     if (PART.piece == 'P') {
         const moves = unit_moviment_parts.B.move
@@ -117,52 +112,26 @@ function calcule_Score(id, PART, color, enemy, r, c) {
                 Is_AllyThere(diagonal_square, color) &&
                 diagonal_square.type == 'P'
             ) {
-                PST += EPS.P * bettaPST
+                PST += EPS.P
             }
         }
+
+        PST = Normalization(PST, rho.PST) * betta.PST
     }
 
-    const ATT = score_Releases(id, PART, color, r, c, omegaMAOS, sigmaLAMP)
+    const {AAT, OT} = score_Releases(id, PART, color, r, c, omega_MAOS, sigma_LAMP)
 
     // OPT
     // KST
     // DST
     // AAT
 
-    return PLZS + AST + CT + PST + ATT
+    const SCORE = PLZS + COMBAT + CT + PST + AAT + OT + EMP
+
+    return [SCORE, PLZS, EMP, N_omegaδ, COMBAT, CT, PST, AAT, OT]
 }
 
-function calcule_omegaMAOS_sigmaLAMP(r, c, PART, color) {
-    function Sum_V_teams(offend, color, ChuckTEAM) {
-        let sum = 0
-        for (const part of offend[color])
-            sum +=
-                color === ChuckTEAM
-                    ? VPS_ally[part.piece]
-                    : VPS_enemy[part.piece]
 
-        return sum
-    }
-
-    const V_moved_piece = VPS_ally[PART.piece]
-    const enemy = get_Enemy(color)
-    const offend = offense[r][c]
-
-    let Sum_V_defenders = Sum_V_teams(offend, color, color)
-    let Sum_V_attackers = Sum_V_teams(offend, enemy, color)
-
-    const is_attacked = get_numAttacks(offend[enemy]) ? 1 : 0
-
-    const omegaMAOS =
-        Sum_V_defenders - Sum_V_attackers - is_attacked * V_moved_piece
-    let sigmaLAMP = 0
-
-    if (!omegaMAOS) {
-        sigmaLAMP = -Sum_V_defenders
-    }
-
-    return { omegaMAOS, sigmaLAMP }
-}
 
 function score_Releases(id, PART, color, r, c, omegaMAOS, sigmaLAMP) {
     console.log('!!!!! ===== score_Releases ===== !!!!!')
@@ -181,6 +150,9 @@ function score_Releases(id, PART, color, r, c, omegaMAOS, sigmaLAMP) {
     set_MemoryMoves(id, color)
 
     if (memory_moves[id].legal) {
+        let VPS_CT = 0
+        let Omega_Sigma = 0
+
         for (const [mr, mc] of memory_moves[id].legal) {
 
             const square = board[mr][mc]
@@ -191,28 +163,43 @@ function score_Releases(id, PART, color, r, c, omegaMAOS, sigmaLAMP) {
                     There_AllyThere(square,color) &&
                     get_numAttacks(offense[mr][mc][enemy])
                 ) {
-                    AAT += VPS_ally[square.type] * bettaAAT * bettaAPT
-                    console.log('AAT (', id, ') ', AAT)
+                    AAT += VPS_ally[square.type]
                 }
             }
 
             if(omegaMAOS >= 0 && There_AllyThere(square, enemy) && square.type !== PART.piece) {
-                OT += (bettaCT*-1)*(VPS_enemy[square.type]) + (bettaOT)*(omegaMAOS + sigmaLAMP)
+                VPS_CT +=     (VPS_enemy[square.type])
+                Omega_Sigma += (omegaMAOS + sigmaLAMP)
             }
         }
+        // console.log('AAT')
+        AAT = Normalization(AAT, rho.AAT) * betta.AAT
+        // console.log('OT')
+        OT = Normalization(VPS_CT, rho.OT) * betta.CT + Normalization(Omega_Sigma, rho.OT-30) * betta.OT
 
         restoreBackup(backup)
     }
 
-    return AAT + OT
+    return {AAT, OT}
 }
 
-function log_Scores(Scores) {
+function log_Scores(Scores,eta0) {
     console.log(Scores)
     let bestScore = -Infinity
     let bestMove = null
 
     console.log('===== CHUCKMATT SCORES =====')
+
+    // Campos estruturais que NÃO são métricas a exibir
+    const knownFields = ['id', 'score', 'to_r', 'to_c']
+
+    const formatValue = (v) => (typeof v === 'number' ? v.toFixed(2) : v)
+
+    const buildMetricsStr = (move) =>
+        Object.keys(move)
+            .filter((k) => !knownFields.includes(k))
+            .map((k) => `${k}: ${formatValue(move[k])}`)
+            .join(', ')
 
     for (const key of Object.keys(Scores)) {
         const [id, score] = key.split('|')
@@ -226,15 +213,16 @@ function log_Scores(Scores) {
         }
 
         const piece = pieceIndex[move.id]
+        const metricsStr = buildMetricsStr(move)
 
         if (Array.isArray(move.to_r)) {
             // Jester
             console.log(
-                `${move.id} [${piece.r},${piece.c} -> ${move.to_r[0]},${move.to_c[0]} -> ${move.to_r[1]},${move.to_c[1]}]: (${pts}) pts`,
+                `\n${move.id} [${piece.r},${piece.c} -> ${move.to_r[0]},${move.to_c[0]} -> ${move.to_r[1]},${move.to_c[1]}]: Score: ${pts.toFixed(2)}\n${metricsStr}`,
             )
         } else {
             console.log(
-                `${move.id} [${piece.r},${piece.c} -> ${move.to_r},${move.to_c}]: (${pts}) pts`,
+                `\n${move.id} [${piece.r},${piece.c} -> ${move.to_r},${move.to_c}]: Score: ${pts.toFixed(2)}\n${metricsStr}`,
             )
         }
     }
@@ -243,23 +231,25 @@ function log_Scores(Scores) {
 
     if (bestMove) {
         const piece = pieceIndex[bestMove.id]
+        const metricsStr = buildMetricsStr(bestMove)
 
         if (Array.isArray(bestMove.to_r)) {
             console.log(
-                `RESULTADO: ${bestMove.id} [${piece.r},${piece.c} -> ${bestMove.to_r[0]},${bestMove.to_c[0]} -> ${bestMove.to_r[1]},${bestMove.to_c[1]}]: (${bestScore}) pts`,
+                `RESULTADO: ${bestMove.id} [${piece.r},${piece.c} -> ${bestMove.to_r[0]},${bestMove.to_c[0]} -> ${bestMove.to_r[1]},${bestMove.to_c[1]}]: Score: ${bestScore.toFixed(2)}\n${metricsStr}`,
             )
         } else {
             console.log(
-                `RESULTADO: ${bestMove.id} [${piece.r},${piece.c} -> ${bestMove.to_r},${bestMove.to_c}]: (${bestScore}) pts`,
+                `RESULTADO: ${bestMove.id} [${piece.r},${piece.c} -> ${bestMove.to_r},${bestMove.to_c}]: Score: ${bestScore.toFixed(2)}\n${metricsStr}`,
             )
         }
     }
 
     console.log('===========================')
     console.log(`alpha ARMY: ${alphaARMY}`)
-    console.log(
-        `Strategy: ${alphaARMY >= UPPER_offense ? 'Offense' : alphaARMY <= LOWER_defense ? 'Defense' : 'Neutral'}`,
-    )
+    console.log(`        η₀: ${eta0}`)
+    // console.log(
+    //     `Strategy: ${alphaARMY >= UPPER_offense ? 'Offense' : alphaARMY <= LOWER_defense ? 'Defense' : 'Neutral'}`,
+    // )
     console.log('-------------')
     console.log(`EEKS: ${EEKS.toFixed(2)}`)
 }
