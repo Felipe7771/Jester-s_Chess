@@ -146,92 +146,7 @@ document.addEventListener('mouseup', (e) => {
 function showMoveIndicators(id, color) {
     clearMoveHints()
 
-    // const formatMove = ([r, c]) => `[${8 - r}, ${c + 1}]`
-
-    // set_MemoryMoves(id, color)
-
-    // console.log(
-    //     `[ ${(memory_moves[id].total || []).map(formatMove).join(', ')} ]`,
-    // )
-
     showMoveHints(memory_moves[id], color)
-}
-
-function set_MemoryMoves(id, color) {
-    if (!memory_moves[id]) {
-
-        checkCastling(id, color)
-
-        let legals, illegals, jesterIllegals
-
-        if (CHECKpin[color] && id !== get_Id_King(color)) {
-
-            console.log('?? ', Is_JesterSecondMove(id[1]))
-            console.log(Check_escape_moves)
-            console.log(Check_escape_moves[id])
-
-            legals = Is_JesterSecondMove(id[1]) ? Check_escape_moves[id]: permited_block_check[id]
-
-            if (Is_JesterSecondMove(id[1])) legals = getCommonSquares(attackers[id],legals)
-            console.log('legals: ',legals)
-            illegals = subtractIntersection(legals, attackers[id])
-            console.log('illegals: ',illegals)
-
-        } else if (Is_JesterFirstMove(id[1])) {
-            ;({ legals, jesterIllegals } = LegalProvocative_Jester(id, color, false))
-            // console.log('Legais: ', legals)
-            // console.log('Ilegais por provocação: ', jesterIllegals)
-            isJesterPinned = Is_pin(id, color)[0]
-
-            illegals = []
-
-            // console.log(
-            //     `[ ${(jesterIllegals || []).map(formatMove).join(', ')} ]`,
-            // )
-        } else {
-            if (id !== get_Id_King(color)) {
-                illegals = set_PiecePin(id, color)
-                legals = subtractIntersection(illegals, attackers[id])
-            } else {
-                // proibir movimentos atacados para o rei, mesmo que estejam nos attackers[id], e calcular os movimentos legais normalmente
-                const enemy = get_Enemy(color)
-
-                // Sem sucessor = xeque valido, favor evitar situações assim, mas o jogo não caga se acontecer
-                if (!Have_Sucessor(color)) {
-                    console.log(
-                        'Rei sem sucessor, calculando movimentos legais normalmente',
-                    )
-                    legals = get_SquareMovesKing_Attacked(
-                        pieceIndex[id],
-                        enemy,
-                    ).save_squares
-
-                    illegals = subtractIntersection(legals, attackers[id])
-                } else {
-                    console.log(
-                        'Rei com sucessor, o movimento PODE ou NÃO fugir ',
-                    )
-                    legals = attackers[id] || []
-                    illegals = []
-                }
-            }
-        }
-
-        legals = !legals ? [] : legals
-        illegals = !illegals ? [] : illegals
-        jesterIllegals = !jesterIllegals ? [] : jesterIllegals
-        // console.log(legals)
-        let total_moves = [...legals, ...illegals, ...jesterIllegals]
-
-        memory_moves[id] = {
-            legal: legals,
-            illegal: illegals,
-            j_illegal: jesterIllegals,
-            total: total_moves,
-        }
-
-        total_moves_TURN += Get_Moves_MemoryMoves(legals)
-    }
 }
 
 document.addEventListener('mouseup', (e) => {
@@ -263,37 +178,13 @@ document.addEventListener('mouseup', (e) => {
             playMoveSound = true
         }
 
-        board[global_drag.fromR][global_drag.fromC] = {
-            id: ``,
-            type: '',
-            color: '',
-            visualKey: null,
-        }
+        animateSlide(global_drag.fromR, global_drag.fromC, sq.r, sq.c, default_velocity, default_animation, () => {
+        // Aqui dentro é o seu código real de movimento/captura:
+        // - remover a peça capturada do pieceIndex (se houver)
+        // - mover a peça no estado
+        // - atualizar o DOM (o "teleporte")
+        execute_MovePoiter(global_drag, sq, CAPTURE);
+        });
 
-        if (board[sq.r][sq.c].id != '') {
-            CAPTURE.captured = true
-            CAPTURE.type = board[sq.r][sq.c].type
-            CAPTURE.material = MaterialValue[CAPTURE.type]
-            delete_piece_to_team(
-                board[sq.r][sq.c].id,
-                board[sq.r][sq.c].color,
-                sq.r,
-                sq.c,
-            )
-        }
-
-        // coloca peça na nova casa
-        board[sq.r][sq.c] = {
-            id: global_drag.id,
-            type: global_drag.piece[1],
-            color: global_drag.piece[0],
-            visualKey: global_drag.piece,
-        }
-
-        // lances fora da mesma casa são válidos como um lance jogável
-        if (global_drag.fromR != sq.r || global_drag.fromC != sq.c)
-            Do_Move_Execute(sq, global_drag, CAPTURE)
-
-        renderBoard()
     }
 })

@@ -106,6 +106,8 @@ function Clear_ElementsCheck() {
     }
     permited_block_check = {}
     remove_KingAnimationCheck(get_Id_King(TURN))
+
+
 }
 
 function Set_AnalysisCheck() {
@@ -171,4 +173,41 @@ function view_Notation(local_drag, sanNotation, capturedPiece, PROMOTESUCESSOR, 
         console.log('OSWALDO: ', capturedCode)
         logCapture(capturedCode, TURN != 'w', capturedPiece.material)
     }
+}
+
+
+
+function execute_MovePoiter(local_drag, sq, CAPTURE) {
+            board[local_drag.fromR][local_drag.fromC] = {
+            id: ``,
+            type: '',
+            color: '',
+            visualKey: null,
+        }
+
+        if (board[sq.r][sq.c].id != '') {
+            CAPTURE.captured = true
+            CAPTURE.type = board[sq.r][sq.c].type
+            CAPTURE.material = MaterialValue[CAPTURE.type]
+            delete_piece_to_team(
+                board[sq.r][sq.c].id,
+                board[sq.r][sq.c].color,
+                sq.r,
+                sq.c,
+            )
+        }
+
+        // coloca peça na nova casa
+        board[sq.r][sq.c] = {
+            id: local_drag.id,
+            type: local_drag.piece[1],
+            color: local_drag.piece[0],
+            visualKey: local_drag.piece,
+        }
+
+        // lances fora da mesma casa são válidos como um lance jogável
+        if (local_drag.fromR != sq.r || local_drag.fromC != sq.c)
+            Do_Move_Execute(sq, local_drag, CAPTURE)
+
+        renderBoard()
 }

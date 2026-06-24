@@ -284,6 +284,18 @@ function set_Moving(BestMove, BestPiece) {
     ) {
         playMoveSound = true
     }
+
+    animateSlide(BestPiece.r, BestPiece.c, BestMove.to_r, BestMove.to_c, default_velocity, default_animation, () => {
+    // Aqui dentro é o seu código real de movimento/captura:
+    // - remover a peça capturada do pieceIndex (se houver)
+    // - mover a peça no estado
+    // - atualizar o DOM (o "teleporte")
+    Render_Move(BestMove, local_drag, CAPTURE)
+    });
+
+}
+
+function Render_Move(BestMove, local_drag, CAPTURE) {
     if (board[BestMove.to_r][BestMove.to_c].id != '') {
         CAPTURE.captured = true
         CAPTURE.type = board[BestMove.to_r][BestMove.to_c].type

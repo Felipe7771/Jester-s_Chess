@@ -108,7 +108,9 @@ function Is_OutBoard(r, c) {
 function Is_InLegalMoves(id, coo) {
   const legal_moves = memory_moves[id].legal || []
 
-  return legal_moves.includes(coo)
+  return legal_moves.some(
+    move => move[0] === coo[0] && move[1] === coo[1]
+  );
 }
 
 function Is_InjesterLegalMoves(id, coo) {
@@ -362,15 +364,20 @@ function delete_piece_to_team(id, color, r, c) {
 }
 
 function removeCoordinate(list, r, c) {
+    if (!list) return;
 
-  if (!list) return
+    let i = 0;
 
-  const index = list.findIndex(([rr, cc]) => rr === r && cc === c);
+    while (i < list.length) {
+        const [rr, cc] = list[i];
 
-  if (index !== -1) {
-      list[index] = list[list.length - 1];
-      list.pop();
-  }
+        if (rr === r && cc === c) {
+            list[i] = list[list.length - 1];
+            list.pop();
+        } else {
+            i++;
+        }
+    }
 }
 
 function deleteOffenseMobility(id) {

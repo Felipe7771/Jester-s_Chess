@@ -176,6 +176,9 @@ let PLAYING_WITH_CHUCKMATT = false
 const LimitValueLance = 1
 const LimitNoMoves = 50
 
+let mouseDownPos = null
+const DRAG_THRESHOLD = 5 // pixels de tolerância
+
 // ?============================
 
 
@@ -211,6 +214,7 @@ let count_no_moves = 0
 
 let memory_moves = {}
 let memory_checkmate = false
+let memory_castling = []
 
 // ?============================
 
@@ -341,6 +345,9 @@ let arrows = [];
 // referência das casas DOM (uso futuro/otimização)
 let squares = [];
 
+const default_velocity = 60
+const default_animation = 'ease'
+
 // ?============================
 
 
@@ -350,7 +357,8 @@ let squares = [];
 // guarda origem do arraste com botão direito
 let rightDragFrom = null;
 
-let drag = null;
+let drag = null          // só existe se de fato começou a arrastar (ghost criado)
+
 /*
 {
   piece,

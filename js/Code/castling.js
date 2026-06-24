@@ -4,6 +4,8 @@ function checkCastling(id, team) {
     // console.table({'CastlePermission': CastlePermission[team], 'hasPieceCastling': kings_castle.has(id)})
     // console.log(`Castling: ${CastlePermission[team]}`)
     if (!(CastlePermission[team] && kings_castle.has(id))) return
+
+    memory_castling = []
     
     // console.log(`Adicionando Castling`)
     check_Kingside_Castle(id, team)
@@ -58,6 +60,7 @@ function check_Kingside_Castle(id_King, team) {
         console.log(`Adicionando VERDADEIRO Kingside`)
 
         attackers[id_King].push([check_r, 6])
+        memory_castling.push([check_r, 6])
         const id_coo = `${check_r}6${team}`
 
         castle_atives[id_coo] = {
@@ -100,6 +103,7 @@ function check_Queenside_Castle(id_King, team) {
         console.log(`Adicionando VERDADEIRO`)
         
         attackers[id_King].push([check_r, 2])
+        memory_castling.push([check_r, 2])
         // console.log(attackers[id_King])
         
         const id_coo = `${check_r}2${team}`
@@ -129,16 +133,31 @@ function Castling_Move(id, r, c, color) {
     if (Keys.has(id_coo)) {
         console.log("EXECUTADO CASTLING")
 
+        
         castleSound = true;
         const id_Rook = castle_atives[id_coo].id
-
+        
         const Rr = pieceIndex[id_Rook].r
         const Rc = pieceIndex[id_Rook].c
-
+        
         const tr = castle_atives[id_coo].to_r
         const tc = castle_atives[id_coo].to_c
+        
+        animateSlide(Rr, Rc, tr, tc, default_velocity, default_animation, () => {
+        // Aqui dentro é o seu código real de movimento/captura:
+        // - remover a peça capturada do pieceIndex (se houver)
+        // - mover a peça no estado
+        // - atualizar o DOM (o "teleporte")
+        Do_MoveCastling(Rr, Rc, tr,tc,id_Rook,color)
+        });
 
-        board[Rr][Rc] = {
+
+    }
+}
+
+function Do_MoveCastling(Rr, Rc, tr,tc,id_Rook,color) {
+
+            board[Rr][Rc] = {
             id: ``,
             type: '',
             color: '',
@@ -167,5 +186,5 @@ function Castling_Move(id, r, c, color) {
         set_piece_moved_team(tr, tc, id_Rook, color)
 
         set_combat_turn()
-    }
+        renderBoard();
 }

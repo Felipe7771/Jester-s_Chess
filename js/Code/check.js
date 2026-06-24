@@ -198,12 +198,6 @@ function get_SquareMovesKing_Attacked(King, enemy) {
                 offense[r][c][enemy].map((item) => item.id),
             )
 
-        // ocupado aliado  -> não fuga
-        // ocupado inimigo & defendido -> não fuga
-        // ocupado inimigo -> fuga
-        // livre & atacado -> não fuga
-        // livre -> fuga
-
         if (Is_anyThere(square)) {
             if (
                 !Is_AllyThere(square, team) &&
