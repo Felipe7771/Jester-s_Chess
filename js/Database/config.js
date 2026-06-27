@@ -244,6 +244,33 @@ let JesterFirstMoveBySecondMove = {}
 // ?============================
 
 
+// ! CONFIGURAÇÕES DE JOKEMOVE
+// ?============================
+
+let JOKEMOVE = {
+  w: false,
+  b: false,
+}
+let JOKER = {
+  w: '',
+  b: '',
+}
+let KINGER = {
+  w: '',
+  b: '',
+}
+let SADSQUARE = {
+  w: '',
+  b: '',
+}
+let LAUGHTER = {
+  w: new Set(),
+  b: new Set(),
+}
+
+// ?============================
+
+
 // ! CONFIGURAÇÕES DE CASTLING
 // ?============================
 
@@ -288,10 +315,11 @@ let mobility = Array.from({ length: 8 }, () =>
 );
 
 let influence = Array.from({ length: 8 }, () =>
-  Array.from({ length: 8 }, () => ({
-    w: new Map(),
-    b: new Map()
-  }))
+  Array.from({ length: 8 }, () => (new Map()))
+);
+
+let pawnMemory = Array.from({ length: 8 }, () =>
+  Array.from({ length: 8 }, () => (new Set()))
 );
 
 // ?============================
@@ -305,6 +333,7 @@ let attackers = {}
 let pieceEffects = new Map();
 let offenseIndex = {}
 let mobilityIndex = {}
+let pawnMemoIndex = {}
 
 let piece_moved = {
   id: '',

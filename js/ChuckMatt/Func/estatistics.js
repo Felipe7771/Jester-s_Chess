@@ -2,13 +2,19 @@ function calcule_InitialEstatistics(PART, color, enemy) {
     const p = PART.piece
     const from_r = PART.r
     const from_c = PART.c
-
+    
     const kappa0_NAS =               Calcule_κ(from_r, from_c, enemy)
     const [omega0_MAOS, SV, SD] =    Calcule_Ω(from_r, from_c, PART, color, kappa0_NAS)
 
-    const DPS = EPS[PART.piece] * betta.EPS
+    const φ = Calcule_φ(color, PART.id, enemy)
+    
+    return {omega0_MAOS, φ}
+}
 
-    return {DPS, kappa0_NAS, omega0_MAOS}
+function Normalization(estatistic, rho) {
+    console.log('estatist: ',estatistic)
+    console.log('rho: ',rho)
+    return Math.tanh(estatistic/ rho)
 }
 
 /**
@@ -55,25 +61,6 @@ function Calcule_η(color) {
 
 }
 
-/**
- * Versão "barra de avaliação": η normalizado em -1..+1 e em % de favorabilidade.
- * scale controla a sensibilidade — quanto menor, mais rápido a barra satura.
- */
-function Calcule_normalize_η(color, scale = 5) {
-    const eta = Calcule_η(color);
-    // const eta = 0;
-    const normalized = Math.tanh(eta / scale);
-    const percent = (normalized + 1) / 2 * 100; // 0% = domínio total inimigo, 100% = domínio total aliado
-
-    return { eta, normalized, percent };
-}
-
-function Normalization(estatistic, rho) {
-    console.log('estatist: ',estatistic)
-    console.log('rho: ',rho)
-    return Math.tanh(estatistic/ rho)
-}
-
 // ! κ - kappa
 // ? Number Attackers Square
 
@@ -94,7 +81,7 @@ function Calcule_Ω(r, c, PART, color, kappa) {
                 color === ChuckTEAM
                     ? VPS_ally[part.piece]
                     : VPS_enemy[part.piece]
-
+                    
         return sum
     }
 
@@ -116,4 +103,24 @@ function Calcule_Ω(r, c, PART, color, kappa) {
 function Calcule_σ(r, c, color, V_moved_piece, Sum_V_defenders, kappa) {
 
     return (-1) * Math.sign(kappa) * (Sum_V_defenders + V_moved_piece)
+}
+
+function Calcule_φ(color, id, enemy) {
+
+    let φ = 0
+    const King = pieceIndex[get_Id_King(enemy)]
+
+    φ += (is_Check(enemy).result)? (1): (0)
+    
+    φ += (8 - get_SquareMovesKing_Attacked(King,color).num_squares)
+
+    return φ
+}
+
+function μ(x) {
+    return (x + Math.abs(x))/2
+}
+
+function ω(x) {
+    return x === 0? 0: μ(x)**(Math.abs(x) - x)
 }

@@ -215,11 +215,6 @@ function showWelcomeModal() {
   });
 }
 
-
-/* ──────────────────────────────────────────────────
-   2. ABAS DO PAINEL LATERAL (Lances | Chat)
-   ────────────────────────────────────────────────── */
-
 /* Estado do chat */
 const _chat = {
   playerName:   'Jogador',
@@ -228,13 +223,7 @@ const _chat = {
   botAvatar:    'img/ChuckMattIcon_beta.png',
 };
 
-/**
- * Inicializa as abas e o chat dentro de #move-panel.
- * Chamar UMA vez, após o DOM estar pronto.
- *
- * @param {string} playerName   - Nome do jogador humano
- * @param {string|null} playerAvatar - URL do avatar (ou null)
- */
+
 function initPanelTabs(playerName, playerAvatar = null) {
   _chat.playerName   = playerName  || 'Jogador';
   _chat.playerAvatar = playerAvatar;
@@ -333,27 +322,15 @@ function initPanelTabs(playerName, playerAvatar = null) {
 }
 
 
-/* ──────────────────────────────────────────────────
-   3. FUNÇÕES INTERNAS DO CHAT
-   ────────────────────────────────────────────────── */
-
-/**
- * Formata HH:MM a partir de um Date.
- */
 function _formatTime(date) {
   return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 }
 
-/**
- * Retorna a inicial do nome para o avatar-fallback.
- */
+
 function _initials(name) {
   return (name || '?').charAt(0).toUpperCase();
 }
 
-/**
- * Renderiza avatar: imagem real ou círculo com inicial.
- */
 function _renderAvatar(avatarUrl, name, isSelf) {
   if (avatarUrl) {
     return `<img class="chat-avatar" src="${avatarUrl}" alt="${name}" onerror="this.replaceWith(_makeFallbackAvatar('${name}'))">`;
@@ -362,14 +339,6 @@ function _renderAvatar(avatarUrl, name, isSelf) {
   return `<div class="chat-avatar-fallback" style="background:${bg}">${_initials(name)}</div>`;
 }
 
-/**
- * Appenda uma mensagem na janela de chat.
- * @param {Object} opts
- * @param {string}      opts.name    - Nome do remetente
- * @param {string|null} opts.avatar  - URL da imagem ou null
- * @param {string}      opts.text    - Conteúdo da mensagem
- * @param {'self'|'bot'|'other'} opts.type
- */
 function _appendChatMessage({ name, avatar, text, type }) {
   const container = document.getElementById('chat-messages');
   if (!container) return;
@@ -405,19 +374,8 @@ function _escapeHtml(str) {
 }
 
 
-/* ──────────────────────────────────────────────────
-   4. API PÚBLICA — use no seu código de jogo
-   ────────────────────────────────────────────────── */
 
-/**
- * Envia uma mensagem como o BOT (ChuckMatt).
- * Chamar de qualquer lugar no código de jogo.
- *
- * @param {string} message - Texto da mensagem
- *
- * @example
- *   sendBotMessage('Xeque! Proteja seu rei. ♟');
- */
+
 function sendBotMessage(message) {
   _appendChatMessage({
     name:   _chat.botName,
@@ -433,12 +391,7 @@ function sendBotMessage(message) {
   }
 }
 
-/**
- * Envia uma mensagem como o JOGADOR via código (sem digitar).
- * Útil para mensagens automáticas de sistema no lado do jogador.
- *
- * @param {string} message
- */
+
 function sendPlayerMessage(message) {
   _appendChatMessage({
     name:   _chat.playerName,

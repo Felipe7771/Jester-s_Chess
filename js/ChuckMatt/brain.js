@@ -41,19 +41,17 @@ function SET_ChuckMatt_Move() {
         const enemy = get_Enemy(color)
 
         // ? Default Piece Score
-        let {DPS, kappa0_NAS, omega0_MAOS} = calcule_InitialEstatistics(PART, color, enemy)
+        let {omega0_MAOS, φ0} = calcule_InitialEstatistics(PART, color, enemy)
 
 
         for (const [r, c] of armyMoves[id]) {
 
             if (!Is_Jester(id[1])) {
-                    console.log(`DPS: ${DPS} Ω₀: ${omega0_MAOS}`)
-                    let [score, PLZS, EMP, N_omegaδ, COMBAT, CT, PST, AAT, OT] = calcule_Score(id, PART, color, enemy, r, c, omega0_MAOS, eta0)
+                    console.log(`Ω₀: ${omega0_MAOS}`)
+                    let [score, vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS] = calcule_Score(id, PART, color, enemy, r, c, omega0_MAOS, eta0, φ0)
                     // console.clear()
 
-                    score += DPS
-
-                    if (id == moved_chuck.id && EMP<0) {
+                    if (id == moved_chuck.id && vEP<0) {
                         // ? Same Piece Move Penalided
                         score*= alphaSPMP
                     }
@@ -71,14 +69,7 @@ function SET_ChuckMatt_Move() {
                     const content = {
                         id,
                         score,
-                        PLZS,
-                        EMP,
-                        'NΔΩ²':N_omegaδ,
-                        'NΔΩη':COMBAT,
-                        CT,
-                        PST,
-                        AAT,
-                        OT,
+                        score, vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS,
                         to_r: r,
                         to_c: c,
                     }

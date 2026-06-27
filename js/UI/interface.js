@@ -143,7 +143,7 @@ function showMoveHints(moves, color) {
     if (!moves.legal) return
 
     // console.log('ShowMove: ')
-    console.table(moves.legal)
+    // console.table(moves.legal)
 
     const legal_moves = moves.legal
 

@@ -8,16 +8,7 @@
   let moveHistory = [];   /* [{san, pieceKey, isWhite}, ...] */
   let activeIndex  = -1;
 
-  /* ── API pública ── */
 
-  /**
-   * Registra um lance e atualiza o painel.
-   *
-   * @param {string} san       - Notação algébrica, ex: "e4", "Nf3", "O-O"
-   * @param {string} pieceCode - Código da peça: 'wP','bN','wQ', etc.
-   *                             (cor + tipo, ex: isWhite=true + tipo='P' → 'wP')
-   * @param {boolean} isWhite  - true = lance das brancas
-   */
   window.logMove = function(san, pieceCode, isWhite) {
     moveHistory.push({ san, pieceCode, isWhite });
     activeIndex = moveHistory.length - 1;
@@ -25,13 +16,7 @@
     scrollMoveListToBottom();
   };
 
-  /**
-   * Registra uma peça capturada e atualiza o strip do jogador.
-   *
-   * @param {string} pieceCode  - Código da peça capturada, ex: 'wP'
-   * @param {boolean} capturedByWhite - true = brancas capturaram
-   * @param {number}  materialDiff    - diferença de material (+1, +3, etc.)
-   */
+
   window.logCapture = function(pieceCode, capturedByWhite, materialDiff) {
     const containerId = capturedByWhite ? 'captured-white' : 'captured-black';
     const diffId      = capturedByWhite ? 'diff-white'     : 'diff-black';
@@ -62,12 +47,7 @@
     }
   };
 
-  /**
-   * Define nome e avatar de um jogador.
-   * @param {'white'|'black'} side
-   * @param {string} name
-   * @param {string} [avatarUrl]  - URL da foto (opcional)
-   */
+
   window.setPlayerInfo = function(side, name, avatarUrl) {
     const nameEl   = document.getElementById('name-' + side);
     const avatarEl = document.getElementById('avatar-' + side);
@@ -92,7 +72,6 @@
     });
   };
 
-  /* ── renderização interna ── */
 
   function renderMoveList() {
     const list = document.getElementById('move-list');

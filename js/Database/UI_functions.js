@@ -61,20 +61,7 @@ function setTurn(color) {
     name.classList.add('player-name-active')
 }
 
-/**
- * Anima o deslize visual de uma peça de uma casa até outra.
- * Não altera o estado do jogo - isso deve ser feito dentro do callback onDone.
- *
- * @param {number} fromR - linha de origem
- * @param {number} fromC - coluna de origem
- * @param {number} toR   - linha de destino
- * @param {number} toC   - coluna de destino
- * @param {number} duration - duração da animação em ms
- * @param {string} easing   - timing function CSS (ex: 'ease', 'linear', 'cubic-bezier(...)')
- * @param {Function} onDone - callback chamado quando a animação termina.
- *                            É AQUI que você deve fazer o teleporte real de estado
- *                            (mover a peça e remover a capturada, se houver).
- */
+
 function animateSlide(fromR, fromC, toR, toC, duration, easing, onDone) {
     function getSqEl(r, c) {
         return squares[r * 8 + c]

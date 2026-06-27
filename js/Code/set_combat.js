@@ -5,7 +5,7 @@ function getEnemy(color) {
 function set_initial_combat() {
     for (const [id, content] of Object.entries(pieceIndex)) {
         let color = id[0] // id: [cor][peça][identificador]
-        set_combat_piece(id, color, content)
+        set_combat_piece(id, color, content, initial=true)
     }
 }
 
@@ -19,6 +19,39 @@ function set_combat_turn() {
      * # Demais peças não alteram suas composições de ataque já que não estão interagindo com o movimento da peça
      *
      */
+    function updateInfluenceSquare(r,c, square, pawnSet, calculate_pieces, idMoved) {
+        console.log('----')
+        addPawnMemory_toInfluence(r,c,idMoved)
+        const survivous = new Map()
+
+        for (const [key, piece] of square) {
+            if (!(piece.id in pieceIndex)) continue
+
+            console.log(`WWW ${r} ${c}`, pawnSet)
+
+            if (pieces_one_step.has(piece.type) && !pawnSet.has(piece.id)) {
+                survivous.set(key, piece)
+                continue
+            }
+
+            console.log('Adicionando: ',piece.id)
+
+            calculate_pieces.add(piece.id)
+            delete attackers[piece.id]
+        }
+
+        influence[r][c] = survivous
+    }
+
+    function addPawnMemory_toInfluence(r, c, idMoved) {
+        for (const idpawn of pawnMemory[r][c]) {
+
+            if (idMoved[1] === 'P' && idpawn === idMoved) continue
+            const Pawn = pieceIndex[idpawn]
+
+            add_influence(idpawn, r, c, Pawn.color, 'P', Pawn.r, Pawn.c)
+        }
+    }
 
     let fr = piece_moved.from_r
     let fc = piece_moved.from_c
@@ -28,61 +61,14 @@ function set_combat_turn() {
     const from_square = influence[fr][fc]
     const to_square = influence[tr][tc]
 
+    if (piece_moved.piece == 'P') PawnMovedDeleteMemory(piece_moved.id)
+
     const calculate_pieces = new Set()
     calculate_pieces.add(piece_moved.id)
     delete attackers[piece_moved.id]
 
-    const COLORS = ['w', 'b'] // fora da função, criado uma vez só
-    for (const color of COLORS) {
-        let survivous = new Map()
-
-        for (const [key, piece] of from_square[color]) {
-            if (!(piece.id in pieceIndex)) continue
-
-            if (pieces_one_step.has(piece.type)) {
-                survivous.set(key, piece)
-                continue
-            }
-
-            calculate_pieces.add(piece.id)
-            delete attackers[piece.id]
-
-        }
-
-        from_square[color] = survivous
-        influence[fr][fc][color] = survivous
-
-        survivous = new Map()
-
-        for (const [key, piece] of to_square[color]) {
-            if (!(piece.id in pieceIndex)) continue
-
-            if (pieces_one_step.has(piece.type)) {
-                survivous.set(key, piece)
-                continue
-            }
-
-            calculate_pieces.add(piece.id)
-            delete attackers[piece.id]
-        }
-
-        to_square[color] = survivous
-        influence[tr][tc][color] = survivous
-
-        
-        const pawns = Object.fromEntries(
-            Object.entries(pieceIndex).filter(([id_piece, piece]) => {
-                return (
-                    id_piece.substring(0, 2) == `${color}P`
-                )
-            }),
-        )
-
-        const id_pawns = Object.values(pawns).map((piece) => piece.id)
-        id_pawns.forEach((id) => calculate_pieces.add(id))
-    }
-
-    // console.log('Finalizando peãos')
+    updateInfluenceSquare(fr,fc, from_square, pawnMemory[fr][fc], calculate_pieces, piece_moved.id);
+    updateInfluenceSquare(tr,tc, to_square, pawnMemory[tr][tc], calculate_pieces, piece_moved.id);
 
     // FALTANDO LIMPAR ANTIGA ANALISE DE OFFENSE PARA ADICIONAR A NOVA
     // console.log(calculate_pieces)
@@ -91,12 +77,7 @@ function set_combat_turn() {
         const color = id[0]
 
         if (content) {
-            // console.log('!! combat_turn !!')
-            // const formatMove = (part) => `[${part.r}, ${part.c}]`
 
-
-            // console.log(`offense  ${(offenseIndex[id] || []).map(formatMove).join(', ')}`,)
-            // console.log(`mobility ${(mobilityIndex[id] || []).map(formatMove).join(', ')}`,)
             deleteOffenseMobility(id, color)
 
             set_combat_piece(id, color, content)
@@ -105,7 +86,7 @@ function set_combat_turn() {
     }
 }
 
-function set_combat_piece(id, color, content) {
+function set_combat_piece(id, color, content, initial=false) {
     let piece = content.piece
     let type_move_piece
     let moves
@@ -130,6 +111,7 @@ function set_combat_piece(id, color, content) {
         piece,
         color,
         moves,
+        initial
     )
 
 }

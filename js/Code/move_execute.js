@@ -5,6 +5,8 @@ async function Do_Move_Execute(sq, local_drag, capturedPiece) {
 
     Add_LanceValue(local_drag)
 
+    Check_BreakJokemove(sq, local_drag)
+
     UI_yellowFlag(local_drag, sq)
 
     Empty_Memory_moves()
@@ -30,10 +32,8 @@ async function Do_Move_Execute(sq, local_drag, capturedPiece) {
     
     playMoveSound = false
     castleSound = false
-    
-    if (valueLancesTurn == 0 && local_drag.piece[1] == 'J') {
-        pieceEffects.set(local_drag.id, { spin: true })
-    }
+
+    JesterAnalysis(local_drag)
 
     global_drag = null
 
@@ -46,7 +46,9 @@ async function Do_Move_Execute(sq, local_drag, capturedPiece) {
 
     CHUCK_Turn()
 
-    console.log(team_pieces[TURN])
+    // console.log(team_pieces[TURN])
+    // console.log(pawnMemory[5][4])
+    // console.log(pawnMemory[4][4])
 }
 
 
@@ -120,7 +122,25 @@ function Set_AnalysisCheck() {
 function CHUCK_ChatCheck() {
     if (PLAYING_WITH_CHUCKMATT && !memory_checkmate) {
         if (CHECKpin[TURN] && TURN !== PLAY_TURN.chuck) sendBotMessage(get_randomMessage(CHECK_CHUCK_CHAT_BOT))
+        else if (CHECKpin[TURN] && TURN === PLAY_TURN.chuck && Math.random() < 0.6) {
+    sendBotMessage(get_randomMessage(CHECK_ENEMY_CHAT_BOT))
     }
+    }
+}
+
+function JesterAnalysis(local_drag) {
+    if (valueLancesTurn !== 0 || local_drag.piece[1] !== 'J') return
+
+    const color = get_Enemy(TURN)
+
+    pieceEffects.set(local_drag.id, { spin: true })
+
+    set_MemoryMoves(local_drag.id, color)
+
+    Is_Jokemove(local_drag.id, TURN)
+
+    Empty_Memory_moves()
+
 }
 
 function Set_Notation(local_drag, sq, capturedPiece, PROMOTESUCESSOR, TURN) {

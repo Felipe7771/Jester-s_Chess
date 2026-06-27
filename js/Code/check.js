@@ -181,22 +181,22 @@ function get_SquareMovesKing_Attacked(King, enemy) {
     const team = get_Enemy(enemy)
 
     let save_squares = []
-    console.log('King: ',King.r,King.c)
+    // console.log('King: ',King.r,King.c)
 
     for (const [dr, dc] of moves) {
         let r = King.r + dr
         let c = King.c + dc
 
-        console.log('Olhando: ',r,c)
+        // console.log('Olhando: ',r,c)
         
         
         if (Is_OutBoard(r, c)) continue
         
         let square = board[r][c]
-               console.log(
-                `Mobility na casa [${r}, ${c}]: `,
-                offense[r][c][enemy].map((item) => item.id),
-            )
+            //    console.log(
+            //     `Mobility na casa [${r}, ${c}]: `,
+            //     offense[r][c][enemy].map((item) => item.id),
+            // )
 
         if (Is_anyThere(square)) {
             if (
@@ -214,7 +214,7 @@ function get_SquareMovesKing_Attacked(King, enemy) {
         }
     }
 
-    console.log('Casas de fuga: ', save_squares)
+    // console.log('Casas de fuga: ', save_squares)
 
     const num_squares = save_squares.length
 

@@ -278,9 +278,10 @@ function add_influence(id, row, column, color, piece, fromR, fromC) {
 
   const key = `${id}-${fromR}-${fromC}-${row}-${column}`;
 
-  influence[row][column][color].set(key, {
+  influence[row][column].set(key, {
     id,
     piece,
+    color,
     r: fromR,
     c: fromC
   });
@@ -344,6 +345,26 @@ function add_mobility(id, row, column, color, piece, fromR, fromC) {
 }
 
 
+function add_pawnMemory(id, row, column) {
+  console.log('===== add_pawnMemory =====')
+  console.log(row,column)
+  const content = {
+    r: row,
+    c: column,
+  }
+
+  
+  if (!pawnMemory[row][column].has(id)) {
+    if (pawnMemoIndex[id]) pawnMemoIndex[id].push(content)
+      else pawnMemoIndex[id] = [content]
+  }
+  
+  pawnMemory[row][column].add(id);
+  console.log(pawnMemory[row][column])
+  
+}
+
+
 function add_offense_mobility(id, row, column, color, piece, fromR, fromC) {
 
   add_offense(id, row, column, color, piece, fromR, fromC)
@@ -357,6 +378,7 @@ function add_offense_mobility(id, row, column, color, piece, fromR, fromC) {
 function delete_piece_to_team(id, color, r, c) {
 
   deleteOffenseMobility(id)
+  if (id[1] === 'P') PawnMovedDeleteMemory(id)
   delete pieceIndex[id]
 
   const indice = team_pieces[color].indexOf(id[1]); 
@@ -378,6 +400,20 @@ function removeCoordinate(list, r, c) {
             i++;
         }
     }
+}
+
+function PawnMovedDeleteMemory(id) {
+  if (pawnMemoIndex[id]) {
+
+    for (const entry of pawnMemoIndex[id]) {
+
+      const { r, c } = entry
+      pawnMemory[r][c].delete(id)
+
+    }
+
+    delete pawnMemoIndex[id]
+  }
 }
 
 function deleteOffenseMobility(id) {

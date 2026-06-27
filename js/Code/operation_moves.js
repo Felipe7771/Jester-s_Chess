@@ -185,7 +185,7 @@ freq_move = {
     pawn: 1,
 }
 
-function calculateLinearOffense(id, from_r, from_c, piece, color, moves) {
+function calculateLinearOffense(id, from_r, from_c, piece, color, moves, initial=false) {
     const base = unit_moviment_parts[piece]
     const type_move = Is_Jester(piece) ? base.type_move[0] : base.type_move
     const max = freq_move[type_move]
@@ -230,7 +230,7 @@ function calculateLinearOffense(id, from_r, from_c, piece, color, moves) {
     }
 }
 
-function calculateOneStepOffense(id, from_r, from_c, piece, color, moves) {
+function calculateOneStepOffense(id, from_r, from_c, piece, color, moves,initial=false) {
     const isJester = Is_JesterSecondMove(piece)
     for (const [dr, dc] of moves) {
         let r = from_r + dr
@@ -259,7 +259,7 @@ function calculateOneStepOffense(id, from_r, from_c, piece, color, moves) {
     }
 }
 
-function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
+function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves,initial=false) {
     // console.log(`===== calculatePawnOffense ${id} ${from_r} ${from_c} =====`)
     const type_move = unit_moviment_parts[piece].type_move
 
@@ -298,10 +298,18 @@ function calculatePawnOffense(id, from_r, from_c, piece, color, list_moves) {
             // console.log(attackers[id])
             // movimento endiante
             
-            if (!Is_anyThere(square)) {
+            if (!Is_anyThere(square) || (initial && dr == -1)) {
 
-                if (dr == -1 || (dr == -2 && can_do_two_steps))
+                if (dr == -1 || (dr == -2 && (can_do_two_steps || initial))) {
+                    add_pawnMemory(id, r, c)
+
+                    if (!Is_anyThere(square) && (dr == -1 || (dr == -2 && can_do_two_steps)))
                     add_mobility(id, r, c, color, piece, from_r, from_c)
+                }
+
+                if (Is_anyThere(square) && initial) {
+                    can_do_two_steps = false
+                }
 
             } else {
 
