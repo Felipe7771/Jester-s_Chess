@@ -55,7 +55,7 @@ function calcule_PLZS(P, r, c) {
     else if (PLZdefenders.has(P)) return Defenders_plaza[r][c]
 }
 
-function log_Scores(Scores,eta0) {
+function log_Scores(Scores,eta0,φ) {
     console.log(Scores)
     let bestScore = -Infinity
     let bestMove = null
@@ -77,7 +77,7 @@ function log_Scores(Scores,eta0) {
         const [id, score] = key.split('|')
 
         const move = Scores[key]
-        const pts = Number(score)
+        const pts = Number(move.score)
 
         if (pts > bestScore) {
             bestScore = pts
@@ -118,6 +118,7 @@ function log_Scores(Scores,eta0) {
 
     console.log('===========================')
     console.log(`        η₀: ${eta0}`)
+    console.log(`        φ₀: ${φ}`)
     // console.log(
     //     `Strategy: ${alphaARMY >= UPPER_offense ? 'Offense' : alphaARMY <= LOWER_defense ? 'Defense' : 'Neutral'}`,
     // )

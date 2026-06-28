@@ -33,22 +33,20 @@ function SET_ChuckMatt_Move() {
 
     // 7. Gerar plaza dos atacantes
     Attackers_plaza = generate_Attackersplaza(EEKS)
-
     // 8. calcular pontuação
-    console.log('REAL GAME')
     for (const id of Object.keys(armyMoves)) {
         const PART = pieceIndex[id]
         const enemy = get_Enemy(color)
 
         // ? Default Piece Score
-        let {omega0_MAOS, φ0} = calcule_InitialEstatistics(PART, color, enemy)
+        let {omega0_MAOS, φ} = calcule_InitialEstatistics(PART, color, enemy)
 
+        console.log(`id: ${id} Ω₀: ${omega0_MAOS} φ₀: ${φ}`)
 
         for (const [r, c] of armyMoves[id]) {
 
             if (!Is_Jester(id[1])) {
-                    console.log(`Ω₀: ${omega0_MAOS}`)
-                    let [score, vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS] = calcule_Score(id, PART, color, enemy, r, c, omega0_MAOS, eta0, φ0)
+                    let [score,η, vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS] = Calcule_Score(id, PART, color, enemy, r, c, omega0_MAOS, eta0, φ)
                     // console.clear()
 
                     if (id == moved_chuck.id && vEP<0) {
@@ -69,7 +67,7 @@ function SET_ChuckMatt_Move() {
                     const content = {
                         id,
                         score,
-                        score, vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS,
+                        η, vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS,
                         to_r: r,
                         to_c: c,
                     }
@@ -83,7 +81,7 @@ function SET_ChuckMatt_Move() {
 
     // 9. Exiba resultados
     console.clear()
-    log_Scores(Scores, eta0)
+    log_Scores(Scores, eta0, typeof minhaVariavel !== 'undefined'? φ: 0)
 
     let BestMove = {}
 

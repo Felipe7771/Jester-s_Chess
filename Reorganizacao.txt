@@ -1,0 +1,57 @@
+PIECES
+PLAYERS_IMG
+PIECES_CAPTURED
+PIECE_FALLBACK
+LIST_NOTATION
+MaterialValue
+
+pieces_one_step
+sucession*
+promotions (unificar melhor)
+insufficient
+pieces_castle (nomear melhor, guarda Set dos ids únicos das peças que podem realizar o roque)
+kings_castle (utilidade melhor para caso geral, um Set dos ids dos reis originais)
+pawnRow
+knightRow
+backRow
+emptyCell
+emptyRow
+plays & encrement_plays*
+total_moves_TURN (nomear melhor, contabiliza quantos movimentos possíveis podem ser feitos pelo jogador)
+generate_id_pieces
+TURN/ turns/ id_turn (pode ser unificado para apenas uma var e uma função)
+RUN_GAME
+PLAY_TURN/ RUN_CHUCKMATT/ PLAYING_WITH_CHUCKMATT (as 3 só fazem sentido se o ChuckMatt ativado, possivelmente unificadas em um dicionário)
+LimitValueLance
+LimitNoMoves
+mouseDownPos*
+DRAG_THRESHOLD*
+valueLancesTurn
+Complement_Id_Real
+MATERIAL_COLETED (não útil por enquanto)
+count_no_moves (conta movimentos sem progresso: não captura E não movimento de peões)
+memory_moves
+memory_checkmate (repensar utilidade)
+memory_castling (utilidade local)
+CHECKMATE/ DRAW/ END_GAME (simplificar em uma)
+CHECKpin (nome melhor. Define se o jogo deve se preocupar com o rei em cheque)
+permited_block_check (nome melhor. Define movimentos permitidos SE CheckPin verdadeiro)
+Check_escape_moves (mesma utilidade porém para o segundo movimento do Jester)
+JesterFirstMoveBySecondMove (?) - Confuso
+JOKEMOVE / JOKER / KINGER / SADSQUARE / LAUGHTER (deve ser pensado de forma mais suave)
+CastlePermission
+castle_atives (?)
+team*
+team_pieces (util APENAS para detectar empate)
+board [APENAS: infromações físicas das peças que são diretamente descritas ao UI]
+offense [APENAS: setamento de casas controladas das peças]
+mobility [APENAS: setamento de cadas de movimento das peças]
+influence [APENAS: setamento de ativadores de recálculo de combate]
+pawnMemory**
+pawnMemoIndex**
+pieceIndex/ attackers/ offenseIndex/ mobilityIndex [unir]
+influenceIndex+
+piece_moved
+
+
+Obs: talvez organizar tudo como grupos de dicionários, tipo: game = {}, checkmate = {}, Chuck = {}...

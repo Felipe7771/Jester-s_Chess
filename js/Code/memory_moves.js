@@ -5,8 +5,8 @@ function set_MemoryMoves(id, color) {
 
         complemnt_illegals = Check_Jokemove(id, color)
 
-        console.log('id: ',id,JOKEMOVE[color])
-        console.log(JSON.stringify(complemnt_illegals))
+        // console.log('id: ',id,JOKEMOVE[color])
+        // console.log(JSON.stringify(complemnt_illegals))
 
         if (CHECKpin[color] && id !== get_Id_King(color)) {
 
@@ -71,11 +71,11 @@ function set_MemoryMoves(id, color) {
         illegals = !illegals ? [] : illegals
         jesterIllegals = !jesterIllegals ? [] : jesterIllegals
 
-        console.log(complemnt_illegals.length)
+        // console.log(complemnt_illegals.length)
         
         if (complemnt_illegals.length) illegals.push(...complemnt_illegals)
 
-        console.log(JSON.stringify(illegals))
+        // console.log(JSON.stringify(illegals))
             
 
         let total_moves = [...legals, ...illegals, ...jesterIllegals]

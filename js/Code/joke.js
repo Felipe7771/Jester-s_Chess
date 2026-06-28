@@ -64,11 +64,11 @@ function Check_Jokemove(id, color) {
 function Check_BreakJokemove(sq, local_drag) {
     const color = TURN
 
-    console.log('sq: ',sq.r,sq.c)
-    console.log('color:', color)
-    console.log('JOKEMOVE:', JOKEMOVE[color])
-    console.log('Lance:', valueLancesTurn !== 1)
-    console.log('Portanto:', valueLancesTurn !== 1 || !JOKEMOVE[color])
+    // console.log('sq: ',sq.r,sq.c)
+    // console.log('color:', color)
+    // console.log('JOKEMOVE:', JOKEMOVE[color])
+    // console.log('Lance:', valueLancesTurn !== 1)
+    // console.log('Portanto:', valueLancesTurn !== 1 || !JOKEMOVE[color])
     
     if (valueLancesTurn !== 1 || !JOKEMOVE[color]) return
     
@@ -77,13 +77,13 @@ function Check_BreakJokemove(sq, local_drag) {
     const enemy = get_Enemy(color)
     
     const [jr, jc] = sqFromKey(JOKER[color])
-    console.log('JOKER:', jr,jc)
+    // console.log('JOKER:', jr,jc)
     const plJoker = board[jr][jc]
     
     const JokerAlive = (plJoker.type == 'J' && plJoker.color == enemy)
     
     const [kr, kc] = sqFromKey(KINGER[color])
-    console.log('KINGER:', kr,kc)
+    // console.log('KINGER:', kr,kc)
     const plKinger = board[kr][kc]
 
     const KingerAlive = (plKinger.type == 'K' && plKinger.color == color)

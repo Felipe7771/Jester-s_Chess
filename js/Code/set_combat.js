@@ -20,21 +20,21 @@ function set_combat_turn() {
      *
      */
     function updateInfluenceSquare(r,c, square, pawnSet, calculate_pieces, idMoved) {
-        console.log('----')
+        // console.log('----')
         addPawnMemory_toInfluence(r,c,idMoved)
         const survivous = new Map()
 
         for (const [key, piece] of square) {
             if (!(piece.id in pieceIndex)) continue
 
-            console.log(`WWW ${r} ${c}`, pawnSet)
+            // console.log(`WWW ${r} ${c}`, pawnSet)
 
             if (pieces_one_step.has(piece.type) && !pawnSet.has(piece.id)) {
                 survivous.set(key, piece)
                 continue
             }
 
-            console.log('Adicionando: ',piece.id)
+            // console.log('Adicionando: ',piece.id)
 
             calculate_pieces.add(piece.id)
             delete attackers[piece.id]

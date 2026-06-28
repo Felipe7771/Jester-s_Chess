@@ -12,8 +12,8 @@ function calcule_InitialEstatistics(PART, color, enemy) {
 }
 
 function Normalization(estatistic, rho) {
-    console.log('estatist: ',estatistic)
-    console.log('rho: ',rho)
+    // console.log('estatist: ',estatistic)
+    // console.log('rho: ',rho)
     return Math.tanh(estatistic/ rho)
 }
 
@@ -51,11 +51,11 @@ function Calcule_η(color) {
         }
     }
 
-    console.log({
-        ally,
-        enemy: enemy_total,
-        diff: ally - enemy_total
-    });
+    // console.log({
+    //     ally,
+    //     enemy: enemy_total,
+    //     diff: ally - enemy_total
+    // });
 
     return total / 64;
 

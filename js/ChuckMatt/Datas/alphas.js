@@ -51,15 +51,15 @@ const betta = {
 // * Peso de cada neurônio
 
 const lambda = {
-  lamb_vΔΩη: 6,
+  lamb_vΔΩη: 5,
   lamb_vPlz: 1,
-  lamb_vEP: 3,
+  lamb_vEP: 5,
   lamb_vCE: 4,
   lamb_vPS: 2,
-  lamb_vΔφ: 6,
+  lamb_vΔφ: 7,
   lamb_AA: 4,
   lamb_OO: 4,
-  lamb_ωDS: 10,
+  lamb_ωDS: 8,
 }
 
 // ================================================
@@ -70,7 +70,7 @@ const lambda = {
 const rho = {
 
   rh_vΔη: 25,
-  rh_vΔΩ: 180,
+  rh_vΔΩ: 80,
   rh_vPlzS: 90,
 
   rh_EP: 18,

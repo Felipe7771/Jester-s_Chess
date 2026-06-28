@@ -346,8 +346,8 @@ function add_mobility(id, row, column, color, piece, fromR, fromC) {
 
 
 function add_pawnMemory(id, row, column) {
-  console.log('===== add_pawnMemory =====')
-  console.log(row,column)
+  // console.log('===== add_pawnMemory =====')
+  // console.log(row,column)
   const content = {
     r: row,
     c: column,
@@ -360,7 +360,7 @@ function add_pawnMemory(id, row, column) {
   }
   
   pawnMemory[row][column].add(id);
-  console.log(pawnMemory[row][column])
+  // console.log(pawnMemory[row][column])
   
 }
 
@@ -474,7 +474,7 @@ function deleteOffenseMobility(id) {
 // ==========================
 
 function add_piece_team(row, column, color, piece, id) {
-  console.log('===== add_piece_team =====')
+  // console.log('===== add_piece_team =====')
 
   const PART = {
     id,
@@ -491,7 +491,7 @@ function add_piece_team(row, column, color, piece, id) {
 
 
 function set_piece_moved_team(to_r, to_c, id, color) {
-  console.log('===== set_piece_moved_team =====')
+  // console.log('===== set_piece_moved_team =====')
 
   const indx = team[color].findIndex(piece => piece.id === id);
   

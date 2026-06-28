@@ -1,5 +1,5 @@
 function LegalProvocative_Jester(id, color, set_combat) {
-    console.log('===== LegalProvocative_Jester =====')
+    // console.log('===== LegalProvocative_Jester =====')
 
     // // console.log("Verificando")
     if (!set_combat) {
@@ -67,12 +67,12 @@ function LegalProvocative_Jester(id, color, set_combat) {
 }
 
 function illegalMovesTratament(id, piece, coo_try_move, color) {
-    console.log("===== ILLEGAL MOVES TRATAMENT ===")
+    // console.log("===== ILLEGAL MOVES TRATAMENT ===")
 
     const r = coo_try_move[0]
     const c = coo_try_move[1]
 
-    console.log("BASE: ",r, c)
+    // console.log("BASE: ",r, c)
 
 
     if (Is_Jester(piece) && Is_InjesterLegalMoves(id,coo_try_move)) {
@@ -82,7 +82,7 @@ function illegalMovesTratament(id, piece, coo_try_move, color) {
         const moves = unit_moviment_parts.J.move[1]
 
         for (const [dr, dc] of moves) {
-            console.log("ADICIONAL: ",dr, dc)
+            // console.log("ADICIONAL: ",dr, dc)
             const Ar = r + dr
             const Ac = c + dc
 
@@ -91,7 +91,7 @@ function illegalMovesTratament(id, piece, coo_try_move, color) {
             illegal_alerts.push([Ar,Ac])
         }
 
-        console.log(illegal_alerts)
+        // console.log(illegal_alerts)
 
         flashIllegal(illegal_alerts)
         

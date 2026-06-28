@@ -37,8 +37,8 @@ function Calcule_Score(id, PART, color, enemy, r, c, Ω0, Ψ, φ0) {
     const sigma =               Calcule_σ (r, c, color, vPiece,ΣvDef, κ)
     const η =                   Calcule_η (color)
 
-    const vδΩ = (Ω0 - Ω)
-    const vΔη = Normalization ( betta.b_vΔη * (Ψ - η), rho.rh_vΔη)
+    const vδΩ = (Ω - Ω0)
+    const vΔη = Normalization ( betta.b_vΔη * (η - Ψ), rho.rh_vΔη)
     const vΔΩ = Normalization ( Math.sign(vδΩ) * (vδΩ**2) + sigma, rho.rh_vΔΩ )
 
     /**
@@ -68,7 +68,7 @@ function Calcule_Score(id, PART, color, enemy, r, c, Ω0, Ψ, φ0) {
      * A Plaza APENAS TEM SENTIDO se e apenas se á uma defesa positiva (@param {vΔΩ})
      */
     const Plz  = calcule_PLZS (PART.piece, r, c) * vΔΩ
-    const vPlz = Normalization ( PlzS, rho.rh_vPlzS )
+    const vPlz = Normalization ( Plz, rho.rh_vPlzS )
 
 
     /**
@@ -92,6 +92,7 @@ function Calcule_Score(id, PART, color, enemy, r, c, Ω0, Ψ, φ0) {
      * O melhor composto trata-se de @material_enemy (ao quadrado), @param {Ω} e @param {σ}, pois o pontencial de material deve se levado em conta junto PRINCIPALMENTE se for uma captura interessante
      */
     let vCE = 0
+    const square = board[r][c]
 
     if (There_AllyThere(square, enemy)) {
         const piece_CT = square.type
@@ -129,14 +130,14 @@ function Calcule_Score(id, PART, color, enemy, r, c, Ω0, Ψ, φ0) {
             }
         }
 
-        vPS = Normalization(PST, rho.rh_PS)
+        vPS = Normalization(PS, rho.rh_PS)
     }
 
     const {φ, vΔφ, AA, OO} = Calcule_ScoresOf_Moviment(id, PART, color, enemy, r, c, Ω,sigma,κ, φ0)
 
     const Score = calcule_Neurons(vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS)
 
-    return [Score, vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS]
+    return [Score, η, vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS]
 }
 
 function Calcule_ScoresOf_Moviment(id,PART, color, enemy, r, c, Ω, sigma,κ,φ0) {
@@ -166,7 +167,20 @@ function Calcule_ScoresOf_Moviment(id,PART, color, enemy, r, c, Ω, sigma,κ,φ0
     const ξκ = 1/((1+κ)**(betta.b_π))
     const ξΩ = Ω < 0 ? 0: 1+Normalization(μ(Ω+1), rho.rh_ξΩ)
 
-    const vΔφ = (φ0 - φ)*(PhiApply)*(ξκ)*(ξΩ)
+    // console.table({
+    //     φ,
+    //     φ0,
+    //     PhiApply,
+    //     κ,
+    //     ξκ,
+    //     'betta':betta.b_π,
+    //     Ω,
+    //     'μ':μ(Ω+1),
+    //     'rho':rho.rh_ξΩ,
+    //     ξΩ
+    // })
+
+    const vΔφ = (φ - φ0)*(PhiApply)*(ξκ)*(ξΩ)
 
 
     /**
@@ -192,6 +206,7 @@ function Calcule_ScoresOf_Moviment(id,PART, color, enemy, r, c, Ω, sigma,κ,φ0
      * motivos
      */
     const ωΩsigma = ω(Ω+sigma+1)
+    console.log('=====gfdgdfgdffdhfdhfhdry6457677== ',ωΩsigma)
     let OO = 0
 
 
@@ -246,7 +261,7 @@ function calcule_Neurons(vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS
 
 }
 
-function calcule_Score(id, PART, color, enemy, r, c, omega0, eta0) {
+function calcule_Scores(id, PART, color, enemy, r, c, omega0, eta0) {
     // ? Plaza Score
     const vPLZS = calcule_PLZS(PART.piece, r, c)
     const PLZS = Normalization(vPLZS, rho.PLZS)
