@@ -1,14 +1,13 @@
 function clearMoveHints() {
-    UI.state.moveCircles.clear()
-    UI.state.moveRings.clear()
+    moveCircles.clear()
+    moveRings.clear()
 }
 
 function flashIllegal(sqList) {
-    UI.audio.sounds.invalid.play()
-    
+    invalid.play()
     for (const [r, c] of sqList) {
         // console.log(r,c)
-        const el = UI.dom.boardEl.querySelector(`[data-r="${r}"][data-c="${c}"]`)
+        const el = boardEl.querySelector(`[data-r="${r}"][data-c="${c}"]`)
         console.log(r, c, ': ', !el ? 'NAO DEU' : 'W')
         if (!el) continue
 
@@ -65,7 +64,7 @@ function setTurn(color) {
 
 function animateSlide(fromR, fromC, toR, toC, duration, easing, onDone) {
     function getSqEl(r, c) {
-        return UI.state.squares[r * 8 + c]
+        return squares[r * 8 + c]
     }
 
     const fromEl = getSqEl(fromR, fromC)

@@ -71,13 +71,12 @@
             </div>
         </div>
 
-        <script src="js/ChuckMatt/Datas/chat_bot.js"></script>
+        <script src="js/Database/new_config.js"></script>
 
-        <script src="js/Database/config.js"></script>
+        <script src="js/Chuck/Datas/chat_bot.js"></script>
         <script src="js/Database/global_functions.js"></script>
         <script src="js/Database/UI_functions.js"></script>
 
-        
         <script src="js/Code/operation_moves.js"></script>
         <script src="js/Code/set_combat.js"></script>
         <script src="js/Code/check.js"></script>
@@ -92,13 +91,13 @@
         <script src="js/Code/move_execute.js"></script>
         <script src="js/Code/move_pieces.js"></script>
 
-        <script src="js/ChuckMatt/Func/plazas_default.js"></script>
-        <script src="js/ChuckMatt/Datas/data.js"></script>
-        <script src="js/ChuckMatt/Datas/alphas.js"></script>
-        <script src="js/ChuckMatt/Func/estatistics.js"></script>
-        <script src="js/ChuckMatt/Func/methods.js"></script>
-        <script src="js/ChuckMatt/Func/scores.js"></script>
-        <script src="js/ChuckMatt/brain.js"></script>
+        <script src="js/Chuck/Func/plazas_default.js"></script>
+        <script src="js/Chuck/Datas/data.js"></script>
+        <script src="js/Chuck/Datas/alphas.js"></script>
+        <script src="js/Chuck/Func/estatistics.js"></script>
+        <script src="js/Chuck/Func/methods.js"></script>
+        <script src="js/Chuck/Func/scores.js"></script>
+        <script src="js/Chuck/brain.js"></script>
 
         <script src="js/UI/events.js"></script>
         <script src="js/UI/draw.js"></script>
@@ -116,16 +115,22 @@
 
             // 1. Exibe o modal de boas-vindas ANTES de qualquer coisa.
             showWelcomeModal().then(({ playerName, opponentName, mode }) => {
-                
                 // 3. Configura times (mantém sua lógica original)
-                
+
                 if (mode === 'ai') {
                     const [PLAYER, CHUCK] = set_RandomTeamsAI()
                     PLAYING_WITH_CHUCKMATT = true
-                    setPlayerInfo(PLAYER, playerName, PLAYERS_IMG[PLAYER == 'white'? 'w': 'b'])
+                    setPlayerInfo(
+                        PLAYER,
+                        playerName,
+                        UI.imgs.player[PLAYER == 'white' ? 'w' : 'b'],
+                    )
 
                     // 2. Inicializa as abas do painel (Lances | Chat)
-                    initPanelTabs(playerName, PLAYERS_IMG[PLAYER == 'white'? 'w': 'b'])
+                    initPanelTabs(
+                        playerName,
+                        UI.imgs.player[PLAYER == 'white' ? 'w' : 'b'],
+                    )
 
                     setPlayerInfo(
                         CHUCK,
@@ -145,15 +150,15 @@
                     document
                         .querySelector('.panel-tab[data-tab="moves"]')
                         ?.click()
-                    setPlayerInfo('white', playerName, PLAYERS_IMG.w)
-                    setPlayerInfo('black', opponentName, PLAYERS_IMG.b)
+                    setPlayerInfo('white', playerName, UI.imgs.player.w)
+                    setPlayerInfo('black', opponentName, UI.imgs.player.b)
                 }
 
                 // 4. Renderiza o tabuleiro
                 renderBoard()
-                ctx.fillStyle = 'red'
-                ctx.fillRect(100, 100, 100, 100)
-                start.play()
+                UI.dom.ctx.fillStyle = 'red'
+                UI.dom.ctx.fillRect(100, 100, 100, 100)
+                UI.audio.sounds.start.play()
                 drawArrows()
 
                 set_initial_team()
@@ -176,7 +181,6 @@
                 setTurn(TURN)
                 Set_MemoryMovesTEAM(TURN)
             })
-
 
             // Bot envia mensagem:
             //sendBotMessage('Xeque! ♞');

@@ -3,9 +3,9 @@
    ========================= */
 function drawArrows() {
     if (TURN == '') return
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    UI.dom.ctx.clearRect(0, 0, UI.dom.canvas.width, UI.dom.canvas.height)
 
-    for (let a of arrows) {
+    for (let a of UI.state.arrows) {
         drawArrow(a.fr, a.fc, a.tr, a.tc)
     }
 }
@@ -52,19 +52,19 @@ function drawArrow(fr, fc, tr, tc) {
         let sy = dy > 0 ? 1 : -1
 
         let cornerR = 10 // raio da curva no cotovelo
-        ctx.fillStyle = 'rgba(246, 166, 35, 0.7)'
-        ctx.strokeStyle = 'rgba(246, 166, 35, 0.7)'
+        UI.dom.ctx.fillStyle = 'rgba(246, 166, 35, 0.7)'
+        UI.dom.ctx.strokeStyle = 'rgba(246, 166, 35, 0.7)'
 
-        ctx.save()
-        ctx.lineWidth = shaftWid
+        UI.dom.ctx.save()
+        UI.dom.ctx.lineWidth = shaftWid
 
-        // ctx.lineCap     = 'round';
-        // ctx.lineJoin    = 'round';
+        // UI.dom.ctx.lineCap     = 'round';
+        // UI.dom.ctx.lineJoin    = 'round';
 
         ex = to.x
         ey = to.y
 
-        ctx.beginPath()
+        UI.dom.ctx.beginPath()
 
         if (wide) {
             // trecho longo = horizontal, trecho curto = vertical
@@ -72,12 +72,12 @@ function drawArrow(fr, fc, tr, tc) {
             const pivotX = to.x + sx * cornerR
             const pivotY = to.y - sy * cornerR
 
-            ctx.moveTo(from.x, from.y)
-            ctx.lineTo(pivotX, from.y) // vai pra direita/esquerda (longo)
-            ctx.closePath()
-            ctx.fill()
-            ctx.stroke()
-            ctx.restore()
+            UI.dom.ctx.moveTo(from.x, from.y)
+            UI.dom.ctx.lineTo(pivotX, from.y) // vai pra direita/esquerda (longo)
+            UI.dom.ctx.closePath()
+            UI.dom.ctx.fill()
+            UI.dom.ctx.stroke()
+            UI.dom.ctx.restore()
 
             dx = 0
             dy = to.y - from.y
@@ -87,38 +87,38 @@ function drawArrow(fr, fc, tr, tc) {
             sx = dx > 0 ? 1 : -1
             sy = dy > 0 ? 1 : -1
 
-            ;((ux = dx / len), (uy = dy / len))
+                ; ((ux = dx / len), (uy = dy / len))
 
             ex = to.x - ux * shorten
             ey = to.y - uy * shorten
 
-            ;((px = -uy), (py = ux))
+                ; ((px = -uy), (py = ux))
 
             ex = to.x - ux * shorten
             ey = to.y - uy * shorten
             // // ponta triangular na direção de chegada
-            ctx.beginPath()
-            ctx.moveTo(to.x + (px * shaftWid) / 2, from.y + (sy * shaftWid) / 2)
-            ctx.lineTo(ex + (px * shaftWid) / 2, ey + (py * shaftWid) / 2)
-            ctx.lineTo(ex + (px * headWid) / 2, ey + (py * headWid) / 2)
-            ctx.lineTo(to.x, to.y)
-            ctx.lineTo(ex - (px * headWid) / 2, ey - (py * headWid) / 2)
-            ctx.lineTo(ex - (px * shaftWid) / 2, ey - (py * shaftWid) / 2)
-            ctx.lineTo(to.x - (px * shaftWid) / 2, from.y + (sy * shaftWid) / 2)
-            ctx.restore()
+            UI.dom.ctx.beginPath()
+            UI.dom.ctx.moveTo(to.x + (px * shaftWid) / 2, from.y + (sy * shaftWid) / 2)
+            UI.dom.ctx.lineTo(ex + (px * shaftWid) / 2, ey + (py * shaftWid) / 2)
+            UI.dom.ctx.lineTo(ex + (px * headWid) / 2, ey + (py * headWid) / 2)
+            UI.dom.ctx.lineTo(to.x, to.y)
+            UI.dom.ctx.lineTo(ex - (px * headWid) / 2, ey - (py * headWid) / 2)
+            UI.dom.ctx.lineTo(ex - (px * shaftWid) / 2, ey - (py * shaftWid) / 2)
+            UI.dom.ctx.lineTo(to.x - (px * shaftWid) / 2, from.y + (sy * shaftWid) / 2)
+            UI.dom.ctx.restore()
         } else {
             // trecho longo = vertical, trecho curto = horizontal
             // cotovelo na linha de origem, coluna de destino
             const pivotX = to.x - sx * cornerR
             const pivotY = to.y + sy * cornerR
 
-            ctx.moveTo(from.x, from.y)
-            ctx.lineTo(from.x, pivotY) // sobe/desce (longo)
+            UI.dom.ctx.moveTo(from.x, from.y)
+            UI.dom.ctx.lineTo(from.x, pivotY) // sobe/desce (longo)
 
-            ctx.closePath()
-            ctx.fill()
-            ctx.stroke()
-            ctx.restore()
+            UI.dom.ctx.closePath()
+            UI.dom.ctx.fill()
+            UI.dom.ctx.stroke()
+            UI.dom.ctx.restore()
 
             dx = to.x - from.x
             dy = 0
@@ -128,47 +128,47 @@ function drawArrow(fr, fc, tr, tc) {
 
             len = Math.sqrt(dx * dx + dy * dy)
 
-            ;((ux = dx / len), (uy = dy / len))
+                ; ((ux = dx / len), (uy = dy / len))
 
             ex = to.x - ux * shorten
             ey = to.y - uy * shorten
 
-            ;((px = -uy), (py = ux))
+                ; ((px = -uy), (py = ux))
 
             ex = to.x - ux * shorten
             ey = to.y - uy * shorten
             // // ponta triangular na direção de chegada
-            ctx.beginPath()
-            ctx.moveTo(from.x + (sx * shaftWid) / 2, to.y + (py * shaftWid) / 2)
-            ctx.lineTo(ex + (px * shaftWid) / 2, ey + (py * shaftWid) / 2)
-            ctx.lineTo(ex + (px * headWid) / 2, ey + (py * headWid) / 2)
-            ctx.lineTo(to.x, to.y)
-            ctx.lineTo(ex - (px * headWid) / 2, ey - (py * headWid) / 2)
-            ctx.lineTo(ex - (px * shaftWid) / 2, ey - (py * shaftWid) / 2)
-            ctx.lineTo(from.x + (sx * shaftWid) / 2, to.y - (py * shaftWid) / 2)
-            ctx.restore()
+            UI.dom.ctx.beginPath()
+            UI.dom.ctx.moveTo(from.x + (sx * shaftWid) / 2, to.y + (py * shaftWid) / 2)
+            UI.dom.ctx.lineTo(ex + (px * shaftWid) / 2, ey + (py * shaftWid) / 2)
+            UI.dom.ctx.lineTo(ex + (px * headWid) / 2, ey + (py * headWid) / 2)
+            UI.dom.ctx.lineTo(to.x, to.y)
+            UI.dom.ctx.lineTo(ex - (px * headWid) / 2, ey - (py * headWid) / 2)
+            UI.dom.ctx.lineTo(ex - (px * shaftWid) / 2, ey - (py * shaftWid) / 2)
+            UI.dom.ctx.lineTo(from.x + (sx * shaftWid) / 2, to.y - (py * shaftWid) / 2)
+            UI.dom.ctx.restore()
         }
     } else {
-        ctx.save()
-        ctx.fillStyle = 'rgba(246, 166, 35, 0.7)'
-        ctx.strokeStyle = 'rgba(246, 166, 35, 0)'
-        // ctx.lineWidth = 10;
-        // ctx.globalAlpha = 0.5;
+        UI.dom.ctx.save()
+        UI.dom.ctx.fillStyle = 'rgba(246, 166, 35, 0.7)'
+        UI.dom.ctx.strokeStyle = 'rgba(246, 166, 35, 0)'
+        // UI.dom.ctx.lineWidth = 10;
+        // UI.dom.ctx.globalAlpha = 0.5;
 
-        ctx.beginPath()
+        UI.dom.ctx.beginPath()
 
         // letrução da forma da seta (polígono)
-        ctx.moveTo(from.x + (px * shaftWid) / 2, from.y + (py * shaftWid) / 2)
-        ctx.lineTo(ex + (px * shaftWid) / 2, ey + (py * shaftWid) / 2)
-        ctx.lineTo(ex + (px * headWid) / 2, ey + (py * headWid) / 2)
-        ctx.lineTo(to.x, to.y)
-        ctx.lineTo(ex - (px * headWid) / 2, ey - (py * headWid) / 2)
-        ctx.lineTo(ex - (px * shaftWid) / 2, ey - (py * shaftWid) / 2)
-        ctx.lineTo(from.x - (px * shaftWid) / 2, from.y - (py * shaftWid) / 2)
+        UI.dom.ctx.moveTo(from.x + (px * shaftWid) / 2, from.y + (py * shaftWid) / 2)
+        UI.dom.ctx.lineTo(ex + (px * shaftWid) / 2, ey + (py * shaftWid) / 2)
+        UI.dom.ctx.lineTo(ex + (px * headWid) / 2, ey + (py * headWid) / 2)
+        UI.dom.ctx.lineTo(to.x, to.y)
+        UI.dom.ctx.lineTo(ex - (px * headWid) / 2, ey - (py * headWid) / 2)
+        UI.dom.ctx.lineTo(ex - (px * shaftWid) / 2, ey - (py * shaftWid) / 2)
+        UI.dom.ctx.lineTo(from.x - (px * shaftWid) / 2, from.y - (py * shaftWid) / 2)
     }
 
-    ctx.closePath()
-    ctx.fill()
-    ctx.stroke()
-    ctx.restore()
+    UI.dom.ctx.closePath()
+    UI.dom.ctx.fill()
+    UI.dom.ctx.stroke()
+    UI.dom.ctx.restore()
 }

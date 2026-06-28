@@ -1,7 +1,7 @@
 async function Do_Move_Execute(sq, local_drag, capturedPiece) {
     Castling_Move(local_drag.id, sq.r, sq.c, local_drag.piece[0])
 
-    if (!Is_JesterSecondMove(local_drag.piece[1])) UI.state.yellowSquares.clear()
+    if (!Is_JesterSecondMove(local_drag.piece[1])) yellowSquares.clear()
 
     Add_LanceValue(local_drag)
 
@@ -10,13 +10,13 @@ async function Do_Move_Execute(sq, local_drag, capturedPiece) {
     UI_yellowFlag(local_drag, sq)
 
     Empty_Memory_moves()
-
+    
     const PROMOTESUCESSOR = Check_SpecialActivities(sq)
 
     Set_ConfigsPieceMoved(local_drag, sq)
-
+    
     await checkPromotedPawn(board[sq.r][sq.c].id, TURN, sq.r, sq.c)
-
+    
     // Tudo abaixo só roda depois da promoção estar concluída
     set_combat_turn()
 
@@ -25,23 +25,23 @@ async function Do_Move_Execute(sq, local_drag, capturedPiece) {
     isEndedTurn()
 
     Set_AnalysisCheck()
-
+    
     CHUCK_ChatCheck()
-
+    
     Set_Notation(local_drag, sq, capturedPiece, PROMOTESUCESSOR, TURN)
-
-    UI.audio.enabled.playMoveSound = false
-    UI.audio.enabled.castleSound = false
+    
+    playMoveSound = false
+    castleSound = false
 
     JesterAnalysis(local_drag)
 
     global_drag = null
 
     renderBoard()
-
+    
     Set_MemoryMovesTEAM(TURN) // setar todos os movimentos pré renderizados
     Set_AnalysisDraw(capturedPiece.captured, local_drag.id[1])
-
+    
     UI_Check()
 
     CHUCK_Turn()
@@ -58,20 +58,20 @@ async function Do_Move_Execute(sq, local_drag, capturedPiece) {
 
 
 function UI_yellowFlag(local_drag, sq) {
-    if (!Is_JesterSecondMove(local_drag.piece[1])) UI.state.yellowSquares.clear()
+    if (!Is_JesterSecondMove(local_drag.piece[1])) yellowSquares.clear()
 
     const key1 = sqKey(sq.r, sq.c)
     const key2 = sqKey(local_drag.fromR, local_drag.fromC)
 
-    UI.state.yellowSquares.add(key1)
-    UI.state.yellowSquares.add(key2)
-
+    yellowSquares.add(key1)
+    yellowSquares.add(key2)
+    
     clearMoveHints()
 }
 
 function Add_LanceValue(local_drag) {
     valueLancesTurn += local_drag.piece[1] == 'J' ? 0.5 : 1
-
+    
 }
 
 function Empty_Memory_moves() {
@@ -113,18 +113,18 @@ function Clear_ElementsCheck() {
 }
 
 function Set_AnalysisCheck() {
-    // if (valueLancesTurn !== 0.5) set_Check(TURN)
-    // else move.play()
+        // if (valueLancesTurn !== 0.5) set_Check(TURN)
+        // else move.play()
 
-    set_Check(TURN)
+        set_Check(TURN)
 }
 
 function CHUCK_ChatCheck() {
     if (PLAYING_WITH_CHUCKMATT && !memory_checkmate) {
         if (CHECKpin[TURN] && TURN !== PLAY_TURN.chuck) sendBotMessage(get_randomMessage(CHECK_CHUCK_CHAT_BOT))
         else if (CHECKpin[TURN] && TURN === PLAY_TURN.chuck && Math.random() < 0.6) {
-            sendBotMessage(get_randomMessage(CHECK_ENEMY_CHAT_BOT))
-        }
+    sendBotMessage(get_randomMessage(CHECK_ENEMY_CHAT_BOT))
+    }
     }
 }
 
@@ -166,7 +166,7 @@ function CHUCK_Turn() {
 
 
 function view_Notation(local_drag, sanNotation, capturedPiece, PROMOTESUCESSOR, TURN) {
-
+    
     LIST_NOTATION.push(sanNotation)
 
     if (valueLancesTurn == 0.5) return
@@ -181,7 +181,7 @@ function view_Notation(local_drag, sanNotation, capturedPiece, PROMOTESUCESSOR, 
     } else if (is_Check(TURN).result) {
         sanNotation += '+'
     }
-
+    
     if (PROMOTESUCESSOR) {
         sanNotation += '&'
     }
@@ -198,36 +198,36 @@ function view_Notation(local_drag, sanNotation, capturedPiece, PROMOTESUCESSOR, 
 
 
 function execute_MovePoiter(local_drag, sq, CAPTURE) {
-    board[local_drag.fromR][local_drag.fromC] = {
-        id: ``,
-        type: '',
-        color: '',
-        visualKey: null,
-    }
+            board[local_drag.fromR][local_drag.fromC] = {
+            id: ``,
+            type: '',
+            color: '',
+            visualKey: null,
+        }
 
-    if (board[sq.r][sq.c].id != '') {
-        CAPTURE.captured = true
-        CAPTURE.type = board[sq.r][sq.c].type
-        CAPTURE.material = MaterialValue[CAPTURE.type]
-        delete_piece_to_team(
-            board[sq.r][sq.c].id,
-            board[sq.r][sq.c].color,
-            sq.r,
-            sq.c,
-        )
-    }
+        if (board[sq.r][sq.c].id != '') {
+            CAPTURE.captured = true
+            CAPTURE.type = board[sq.r][sq.c].type
+            CAPTURE.material = MaterialValue[CAPTURE.type]
+            delete_piece_to_team(
+                board[sq.r][sq.c].id,
+                board[sq.r][sq.c].color,
+                sq.r,
+                sq.c,
+            )
+        }
 
-    // coloca peça na nova casa
-    board[sq.r][sq.c] = {
-        id: local_drag.id,
-        type: local_drag.piece[1],
-        color: local_drag.piece[0],
-        visualKey: local_drag.piece,
-    }
+        // coloca peça na nova casa
+        board[sq.r][sq.c] = {
+            id: local_drag.id,
+            type: local_drag.piece[1],
+            color: local_drag.piece[0],
+            visualKey: local_drag.piece,
+        }
 
-    // lances fora da mesma casa são válidos como um lance jogável
-    if (local_drag.fromR != sq.r || local_drag.fromC != sq.c)
-        Do_Move_Execute(sq, local_drag, CAPTURE)
+        // lances fora da mesma casa são válidos como um lance jogável
+        if (local_drag.fromR != sq.r || local_drag.fromC != sq.c)
+            Do_Move_Execute(sq, local_drag, CAPTURE)
 
-    renderBoard()
+        renderBoard()
 }

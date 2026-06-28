@@ -1,0 +1,131 @@
+function SET_ChuckMatt_Move() {
+    
+    if (CHECKMATE || !PLAYING_WITH_CHUCKMATT) return
+    if (!RUN_CHUCKMATT) set_initialChuckMatt(PLAY_TURN.chuck)
+        
+    // console.clear()
+    // 1. pegue a cor do time
+    const color = CMcolor
+    const enemy = get_Enemy(color)
+
+    let armyMoves = get_Army(color)
+
+    Scores = {
+        /**
+         * 'id|score': {
+         * id: id,
+         * score,
+         * to_r: r,
+         * to_c: c
+         * }
+         */
+    }
+
+    // 5. calcule EEKS
+    // ? Exposed Enemy King Scale
+    calcule_EEKS()
+
+    let eta0 = Calcule_η(color)
+
+    // 6. se o sucessor está morto, aumente o valor do rei
+    if (!Have_Sucessor(color)) growUp_King_ally()
+    if (!Have_Sucessor(enemy)) growUp_King_enemy()
+
+    // 7. Gerar plaza dos atacantes
+    Attackers_plaza = generate_Attackersplaza(EEKS)
+    // 8. calcular pontuação
+    for (const id of Object.keys(armyMoves)) {
+        const PART = pieceIndex[id]
+        const enemy = get_Enemy(color)
+
+        // ? Default Piece Score
+        let {omega0_MAOS, φ} = calcule_InitialEstatistics(PART, color, enemy)
+
+        console.log(`id: ${id} Ω₀: ${omega0_MAOS} φ₀: ${φ}`)
+
+        for (const [r, c] of armyMoves[id]) {
+
+            if (!Is_Jester(id[1])) {
+                    let [score,η, vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS] = Calcule_Score(id, PART, color, enemy, r, c, omega0_MAOS, eta0, φ)
+                    // console.clear()
+
+                    if (id == moved_chuck.id && vEP<0) {
+                        // ? Same Piece Move Penalided
+                        score*= alphaSPMP
+                    }
+
+                    if (JSON.stringify([r,c]) === JSON.stringify(moved_chuck.step)) {
+                        // ? Same Step Move Penalided
+                        score*=theta
+                    }
+
+                    if (id == id_AlreadyPlay) {
+                        const taxAlreadyPlay = (6 + 4 * is_to_attacked) / 10
+                        score *= taxAlreadyPlay
+                    }
+
+                    const content = {
+                        id,
+                        score,
+                        η, vΔΩη, vPlz, vEP, vCE, vPS, vΔφ, AA, OO, ωCM, ωDS,
+                        to_r: r,
+                        to_c: c,
+                    }
+
+                        const id_score = `${id}|${score}`
+
+                    Scores[id_score] = content
+                }
+        }
+    }
+
+    // 9. Exiba resultados
+    console.clear()
+    log_Scores(Scores, eta0, typeof minhaVariavel !== 'undefined'? φ: 0)
+
+    let BestMove = {}
+
+    // 10. Pegar maior pontuação
+    if (plays <= 1) {
+        console.log('====================')
+        console.log('SELECIONADO DO TOP3')
+        console.log('====================')
+        const top3 = Object.values(Scores)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 3)
+
+        const weights = [0.6, 0.3, 0.1]
+        const rnd = Math.random()
+
+        let acc = 0
+        for (let i = 0; i < top3.length; i++) {
+            acc += weights[i]
+            if (rnd < acc) {
+                BestMove = top3[i]
+                break
+            }
+        }
+    } else {
+
+        BestMove = Object.values(Scores).reduce((max, obj) =>
+            obj.score > max.score ? obj : max,
+        )
+    }
+
+    if (BestMove.id === moved_chuck.id && JSON.stringify([BestMove.to_r, BestMove.to_c]) === JSON.stringify(moved_chuck.step)) {
+
+        theta -= 0.3
+    } else {
+        theta = 0.6
+    }
+
+    
+    const BestPiece = pieceIndex[BestMove.id]
+
+    moved_chuck = {
+        id: BestMove.id,
+        step: [BestPiece.r, BestPiece.c]
+    }
+    // 11. Executar
+    set_Moving(BestMove, BestPiece)
+}

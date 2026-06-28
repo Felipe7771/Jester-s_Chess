@@ -2,14 +2,14 @@
    MOVE LOG — painel lateral
    ============================= */
 
-(function () {
+(function() {
 
   /* estado do log */
   let moveHistory = [];   /* [{san, pieceKey, isWhite}, ...] */
-  let activeIndex = -1;
+  let activeIndex  = -1;
 
 
-  window.logMove = function (san, pieceCode, isWhite) {
+  window.logMove = function(san, pieceCode, isWhite) {
     moveHistory.push({ san, pieceCode, isWhite });
     activeIndex = moveHistory.length - 1;
     renderMoveList();
@@ -17,25 +17,25 @@
   };
 
 
-  window.logCapture = function (pieceCode, capturedByWhite, materialDiff) {
+  window.logCapture = function(pieceCode, capturedByWhite, materialDiff) {
     const containerId = capturedByWhite ? 'captured-white' : 'captured-black';
-    const diffId = capturedByWhite ? 'diff-white' : 'diff-black';
+    const diffId      = capturedByWhite ? 'diff-white'     : 'diff-black';
 
-    const mat = capturedByWhite ? 'w' : 'b'
+    const mat = capturedByWhite ? 'w': 'b'
 
     const container = document.getElementById(containerId);
-    const diffEl = document.getElementById(diffId);
+    const diffEl    = document.getElementById(diffId);
     if (!container) return;
 
     const img = new Image();
-    img.src = UI.imgs.p_captured[pieceCode] || '';
+    img.src = PIECES_CAPTURED[pieceCode] || '';
     img.title = pieceCode;
 
     /* fallback: se não tiver imagem, usa símbolo unicode */
-    img.onerror = function () {
+    img.onerror = function() {
       const span = document.createElement('span');
       span.className = 'cap-char';
-      span.textContent = UI.imgs.p_fallback[pieceCode] || '?';
+      span.textContent = PIECE_FALLBACK[pieceCode] || '?';
       container.appendChild(span);
     };
 
@@ -48,25 +48,25 @@
   };
 
 
-  window.setPlayerInfo = function (side, name, avatarUrl) {
-    const nameEl = document.getElementById('name-' + side);
+  window.setPlayerInfo = function(side, name, avatarUrl) {
+    const nameEl   = document.getElementById('name-' + side);
     const avatarEl = document.getElementById('avatar-' + side);
-    if (nameEl) nameEl.textContent = name;
+    if (nameEl)   nameEl.textContent = name;
     if (avatarEl && avatarUrl) {
       avatarEl.innerHTML = `<img src="${avatarUrl}" alt="${name}">`;
     }
   };
 
   /** Limpa o log (nova partida) */
-  window.clearMoveLog = function () {
+  window.clearMoveLog = function() {
     moveHistory = [];
     activeIndex = -1;
     renderMoveList();
-    ['captured-white', 'captured-black'].forEach(id => {
+    ['captured-white','captured-black'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.innerHTML = '';
     });
-    ['diff-white', 'diff-black'].forEach(id => {
+    ['diff-white','diff-black'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.textContent = '';
     });
@@ -117,7 +117,7 @@
     const iconEl = document.createElement('div');
     iconEl.className = 'move-icon';
 
-    const imgSrc = UI.imgs.p_captured[move.pieceCode];
+    const imgSrc = PIECES_CAPTURED[move.pieceCode];
     if (imgSrc) {
       const img = new Image();
       img.src = imgSrc;
@@ -125,7 +125,7 @@
       img.height = 18;
       iconEl.appendChild(img);
     } else {
-      iconEl.textContent = UI.imgs.p_fallback[move.pieceCode] || '?';
+      iconEl.textContent = PIECE_FALLBACK[move.pieceCode] || '?';
       iconEl.style.fontSize = '14px';
     }
 
@@ -158,9 +158,9 @@
       renderMoveList();
     };
     document.getElementById('nav-start')?.addEventListener('click', () => { activeIndex = 0; renderMoveList(); });
-    document.getElementById('nav-prev')?.addEventListener('click', () => go(-1));
-    document.getElementById('nav-next')?.addEventListener('click', () => go(+1));
-    document.getElementById('nav-end')?.addEventListener('click', () => { activeIndex = moveHistory.length - 1; renderMoveList(); });
+    document.getElementById('nav-prev') ?.addEventListener('click', () => go(-1));
+    document.getElementById('nav-next') ?.addEventListener('click', () => go(+1));
+    document.getElementById('nav-end')  ?.addEventListener('click', () => { activeIndex = moveHistory.length - 1; renderMoveList(); });
   });
 
 })();

@@ -62,7 +62,7 @@ function setPromote(old_id, new_id, new_type, enemy, r, c) {
     }
     delete pieceIndex[old_id]
 
-    const indice = team_pieces[enemy].indexOf(old_id[1]);
+    const indice = team_pieces[enemy].indexOf(old_id[1]); 
     team_pieces[enemy].splice(indice, 1);
 
     team_pieces[enemy].push(new_type)
@@ -71,13 +71,13 @@ function setPromote(old_id, new_id, new_type, enemy, r, c) {
     attackers[new_id] = []
 
     set_combat_piece(new_id, enemy, content)
-    UI.audio.sounds.promote.play()
+    promote.play()
 
     console.log(offense[0][4][enemy])
 
     const key = sqKey(r, c)
 
-    UI.state.yellowSquares.add(key)
+    yellowSquares.add(key)
     const team_color = get_Enemy(enemy)
     set_Check(team_color)
 }
@@ -122,56 +122,56 @@ function showPromotionMenu(r, c, color, onSelect) {
 
     if (CHECKMATE) return
 
-    // remove menu antigo se existir
-    document.getElementById('promotion-menu')?.remove();
+  // remove menu antigo se existir
+  document.getElementById('promotion-menu')?.remove();
 
-    const menu = document.createElement('div');
+  const menu = document.createElement('div');
 
-    menu.id = 'promotion-menu';
+  menu.id = 'promotion-menu';
 
-    Object.assign(menu.style, {
-        position: 'absolute',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '4px',
+  Object.assign(menu.style, {
+    position: 'absolute',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
 
-        background: '#ffffff',
-        border: '1px solid #c0c0c0',
-        // borderRadius: '10px',
+    background: '#ffffff',
+    border: '1px solid #c0c0c0',
+    // borderRadius: '10px',
 
-        padding: '4px',
+    padding: '4px',
 
-        zIndex: 9999,
+    zIndex: 9999,
 
-        left: `${c * 72 + 76}px`,
-        top: `${r * 72}px`
+    left: `${c * 72 + 76}px`,
+    top: `${r * 72}px`
+  });
+
+  const promotions = ['Q', 'R', 'B', 'N'];
+
+  for (const piece of promotions) {
+
+    const img = document.createElement('img');
+
+    img.src = PIECES[color + piece];
+
+    Object.assign(img.style, {
+      width: '60px',
+      height: '60px',
+      cursor: 'pointer',
+      borderRadius: '6px'
     });
 
-    const promotions = ['Q', 'R', 'B', 'N'];
+    img.addEventListener('click', () => {
 
-    for (const piece of promotions) {
+      menu.remove();
 
-        const img = document.createElement('img');
+      onSelect(piece);
+    });
 
-        img.src = UI.imgs.pieces[color + piece];
+    menu.appendChild(img);
+  }
 
-        Object.assign(img.style, {
-            width: '60px',
-            height: '60px',
-            cursor: 'pointer',
-            borderRadius: '6px'
-        });
-
-        img.addEventListener('click', () => {
-
-            menu.remove();
-
-            onSelect(piece);
-        });
-
-        menu.appendChild(img);
-    }
-
-    document.getElementById('board-wrapper').appendChild(menu);
+  document.getElementById('board-wrapper').appendChild(menu);
 }
 

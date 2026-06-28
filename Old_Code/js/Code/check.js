@@ -68,11 +68,11 @@ function set_Check(color) {
     } else if (result) set_KingAnimationCheck(get_Id_King(color))
 
     VISUAL_check[color] = result
-    // console.log(UI.audio.enabled.playMoveSound)
+    // console.log(playMoveSound)
 
-    if (result) UI.audio.sounds.check.play()
-    else if (UI.audio.enabled.castleSound) UI.audio.sounds.castle.play()
-    else if (UI.audio.enabled.playMoveSound) UI.audio.sounds.move.play()
+    if (result) check.play()
+    else if (castleSound) castle.play()
+    else if (playMoveSound) move.play()
 
     if (result && !Have_Sucessor(color)) {
 
@@ -188,15 +188,15 @@ function get_SquareMovesKing_Attacked(King, enemy) {
         let c = King.c + dc
 
         // console.log('Olhando: ',r,c)
-
-
+        
+        
         if (Is_OutBoard(r, c)) continue
-
+        
         let square = board[r][c]
-        //    console.log(
-        //     `Mobility na casa [${r}, ${c}]: `,
-        //     offense[r][c][enemy].map((item) => item.id),
-        // )
+            //    console.log(
+            //     `Mobility na casa [${r}, ${c}]: `,
+            //     offense[r][c][enemy].map((item) => item.id),
+            // )
 
         if (Is_anyThere(square)) {
             if (
@@ -230,17 +230,17 @@ function get_Attacker_King(King, enemy) {
 function get_SafeKillersAttackerMoves(King, enemy, Attacker) {
     console.log('!!!!! ===== get_SafeKillersAttackerMoves ===== !!!!!')
     const team = get_Enemy(enemy)
-
+    
     let permited_moves = {}
     let num_permited_moves = 0
-
+    
     const Forward = get_Attackers(offense[Attacker.r][Attacker.c][team])
-
+    
     console.log(
         'Id dos atacantes do atacante: ',
         Forward.map((item) => item.id),
     )
-
+    
     return check_theoretical_move(
         team,
         Forward,
@@ -253,19 +253,19 @@ function get_SafeKillersAttackerMoves(King, enemy, Attacker) {
 function get_SafeBlocksMoves(King, enemy, Attacker, num_king_svSquares) {
     console.log('!!!!! ===== get_SafeBlocksMoves ===== !!!!!')
     const Kr = King.r,
-        Kc = King.c,
-        Ar = Attacker.r,
-        Ac = Attacker.c,
-        PieceAttc = Attacker.piece
+    Kc = King.c,
+    Ar = Attacker.r,
+    Ac = Attacker.c,
+    PieceAttc = Attacker.piece
     const team = get_Enemy(enemy)
     const dist_r = Kr - Ar // ! Acima do Rei: <0, Abaixo do Rei: >0
     const dist_c = Kc - Ac // ! Direita: <0, Esquerda: >0
-
+    
     const closest = new Set([0, 1])
-
+    
     let permited_moves = {}
     let num_permited_moves = 0
-
+    
     console.log('Distância entre o Rei e o Atacante: ', dist_r, dist_c)
 
     if (!num_king_svSquares && closest.has(dist_c) && closest.has(dist_r))
@@ -294,13 +294,13 @@ function get_SafeBlocksMoves(King, enemy, Attacker, num_king_svSquares) {
         const mobili = mobility[r][c][team]
 
         console.log(
-            `Attacker na casa [${r}, ${c}]: `,
-            offend.map((item) => item.id),
-        )
+                `Attacker na casa [${r}, ${c}]: `,
+                offend.map((item) => item.id),
+            )
         console.log(
-            `Mobility na casa [${r}, ${c}]: `,
-            mobili.map((item) => item.id),
-        )
+                `Mobility na casa [${r}, ${c}]: `,
+                mobili.map((item) => item.id),
+            )
 
         if (get_numAttacks(mobili)) {
             const Forwards = get_Attackers(mobili)
@@ -352,7 +352,7 @@ function get_SafeBlocksMoves(King, enemy, Attacker, num_king_svSquares) {
                 const Attr = Blocker.r,
                     Attc = Blocker.c
                 num_permited_moves++
-                    ; (permited_moves[fwd.id] ??= []).push([Attr, Attc])
+                ;(permited_moves[fwd.id] ??= []).push([Attr, Attc])
             }
 
             restoreBackup(backup) // restaurando estado ao jogo
@@ -366,16 +366,16 @@ function get_SafeBlocksMoves(King, enemy, Attacker, num_king_svSquares) {
         // se tiver Jester na lista de movimentos permitidos, calcular o movimento do primeiro movimento e salvar também o segundo movimento
         const id_JESTER = get_Id_Jester(team)
         Check_escape_moves = {}
-
+        
         if (id_JESTER in permited_moves) {
-
+            
             const save_permited_J = structuredClone(permited_moves[id_JESTER])
             const Jr = pieceIndex[id_JESTER].r
             const Jc = pieceIndex[id_JESTER].c
 
             permited_moves[id_JESTER] = []
 
-            console.log('#', save_permited_J)
+            console.log('#',save_permited_J)
 
             // Check_escape_moves[id_JESTER].push(save_permited_J)
 
@@ -389,12 +389,12 @@ function get_SafeBlocksMoves(King, enemy, Attacker, num_king_svSquares) {
                 const c = save_permited_J[i][1]
                 console.log(`${r},${c}`)
                 const first_m = JesterFirstMoveBySecondMove[`${r},${c}`]
-                console.log('-', first_m)
+                console.log('-',first_m)
                 permited_moves[id_JESTER].push(first_m)
             }
         }
 
-        console.log('Check_escape_moves: ', Check_escape_moves)
+        console.log('Check_escape_moves: ',Check_escape_moves)
     }
 
     // Restaurar Principal Backup
@@ -465,7 +465,7 @@ function check_theoretical_move(
             const Attr = Attacker.r,
                 Attc = Attacker.c
             num_permited_moves++
-                ; (permited_moves[fwd.id] ??= []).push([Attr, Attc])
+            ;(permited_moves[fwd.id] ??= []).push([Attr, Attc])
         }
 
         restoreBackup(backup) // restaurando estado ao jogo

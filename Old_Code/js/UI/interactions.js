@@ -3,12 +3,12 @@
    ========================= */
 
 /* bloqueia menu padrão do botão direito */
-UI.dom.boardEl.addEventListener('contextmenu', e => {
+boardEl.addEventListener('contextmenu', e => {
   e.preventDefault();
 });
 
 /* início de ação com botão direito */
-UI.dom.boardEl.addEventListener('mousedown', e => {
+boardEl.addEventListener('mousedown', e => {
   if (e.button === 2) {
     if (valueLancesTurn != 0.5) clearMoveHints();
     renderBoard();
@@ -18,7 +18,7 @@ UI.dom.boardEl.addEventListener('mousedown', e => {
 });
 
 /* final de ação com botão direito */
-UI.dom.boardEl.addEventListener('mouseup', e => {
+boardEl.addEventListener('mouseup', e => {
   if (e.button === 2) {
     const sq = getSquareFromEvent(e);
     if (!sq || !rightDragFrom) {
@@ -34,20 +34,20 @@ UI.dom.boardEl.addEventListener('mouseup', e => {
     // clique na mesma casa -> toggle vermelho
     if (fr === tr && fc === tc && TURN != '') {
       const key = sqKey(fr, fc);
-      if (UI.state.redSquares.has(key)) UI.state.redSquares.delete(key);
-      else UI.state.redSquares.add(key);
+      if (redSquares.has(key)) redSquares.delete(key);
+      else redSquares.add(key);
 
       renderBoard();
       drawArrows();
 
     } else {
       // cria ou remove seta
-      const idx = UI.state.arrows.findIndex(a =>
-        a.fr === fr && a.fc === fc && a.tr === tr && a.tc === tc
+      const idx = arrows.findIndex(a =>
+        a.fr===fr && a.fc===fc && a.tr===tr && a.tc===tc
       );
 
-      if (idx !== -1) UI.state.arrows.splice(idx, 1);
-      else UI.state.arrows.push({ fr, fc, tr, tc });
+      if (idx !== -1) arrows.splice(idx, 1);
+      else arrows.push({ fr, fc, tr, tc });
 
       drawArrows();
     }
@@ -59,9 +59,9 @@ document.addEventListener('mousedown', e => {
   // if (!drag) clearMoveHints();
 
   if (e.button === 0 && TURN != '') {
-    UI.state.redSquares.clear();
+    redSquares.clear();
 
-    UI.state.arrows = [];
+    arrows = [];
     renderBoard();
     drawArrows();
   }

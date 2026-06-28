@@ -6,7 +6,7 @@ function checkCastling(id, team) {
     if (!(CastlePermission[team] && kings_castle.has(id))) return
 
     memory_castling = []
-
+    
     // // console.log(`Adicionando Castling`)
     check_Kingside_Castle(id, team)
     check_Queenside_Castle(id, team)
@@ -69,7 +69,7 @@ function check_Kingside_Castle(id_King, team) {
             to_c: 5,
         }
     } else {
-        removeCoordinate(attackers[id_King], check_r, 6) // attackers[id_King] = attackers[id_King].filter(coo => JSON.stringify(coo) === JSON.stringify([check_r, 6]));
+        removeCoordinate(attackers[id_King],check_r,6) // attackers[id_King] = attackers[id_King].filter(coo => JSON.stringify(coo) === JSON.stringify([check_r, 6]));
     }
 }
 
@@ -101,11 +101,11 @@ function check_Queenside_Castle(id_King, team) {
 
     if (!any_problem) {
         // console.log(`Adicionando VERDADEIRO`)
-
+        
         attackers[id_King].push([check_r, 2])
         memory_castling.push([check_r, 2])
         // // console.log(attackers[id_King])
-
+        
         const id_coo = `${check_r}2${team}`
 
         castle_atives[id_coo] = {
@@ -114,77 +114,77 @@ function check_Queenside_Castle(id_King, team) {
             to_c: 3,
         }
     } else {
-        removeCoordinate(attackers[id_King], check_r, 2)// attackers[id_King] = attackers[id_King].filter(coo => JSON.stringify(coo) === JSON.stringify([check_r, 2]));
+        removeCoordinate(attackers[id_King],check_r,2)// attackers[id_King] = attackers[id_King].filter(coo => JSON.stringify(coo) === JSON.stringify([check_r, 2]));
     }
 }
 
 function Castling_Move(id, r, c, color) {
     // console.log("===== Castling_Move =====")
     // // console.table({'CastlePermission': CastlePermission[color],'kings_castle': kings_castle.has(id)})
-
+    
     if (!(CastlePermission[color] && kings_castle.has(id))) return
-
+    
     const id_coo = `${r}${c}${color}`
-
+    
     const Keys = new Set(Object.keys(castle_atives))
     // console.log(id_coo)
     // console.log(castle_atives)
-
+    
     if (Keys.has(id_coo)) {
         // console.log("EXECUTADO CASTLING")
 
-
-        UI.audio.enabled.castleSound = true;
+        
+        castleSound = true;
         const id_Rook = castle_atives[id_coo].id
-
+        
         const Rr = pieceIndex[id_Rook].r
         const Rc = pieceIndex[id_Rook].c
-
+        
         const tr = castle_atives[id_coo].to_r
         const tc = castle_atives[id_coo].to_c
-
-        animateSlide(Rr, Rc, tr, tc, UI.config.default_velocity, UI.config.default_animation, () => {
-            // Aqui dentro é o seu código real de movimento/captura:
-            // - remover a peça capturada do pieceIndex (se houver)
-            // - mover a peça no estado
-            // - atualizar o DOM (o "teleporte")
-            Do_MoveCastling(Rr, Rc, tr, tc, id_Rook, color)
+        
+        animateSlide(Rr, Rc, tr, tc, default_velocity, default_animation, () => {
+        // Aqui dentro é o seu código real de movimento/captura:
+        // - remover a peça capturada do pieceIndex (se houver)
+        // - mover a peça no estado
+        // - atualizar o DOM (o "teleporte")
+        Do_MoveCastling(Rr, Rc, tr,tc,id_Rook,color)
         });
 
 
     }
 }
 
-function Do_MoveCastling(Rr, Rc, tr, tc, id_Rook, color) {
+function Do_MoveCastling(Rr, Rc, tr,tc,id_Rook,color) {
 
-    board[Rr][Rc] = {
-        id: ``,
-        type: '',
-        color: '',
-        visualKey: null,
-    }
+            board[Rr][Rc] = {
+            id: ``,
+            type: '',
+            color: '',
+            visualKey: null,
+        }
 
-    // coloca peça na nova casa
-    board[tr][tc] = {
-        id: id_Rook,
-        type: 'R',
-        color: color,
-        visualKey: `${color}R`,
-    }
+        // coloca peça na nova casa
+        board[tr][tc] = {
+            id: id_Rook,
+            type: 'R',
+            color: color,
+            visualKey: `${color}R`,
+        }
 
-    breakCastlePermission(color)
+        breakCastlePermission(color)
 
-    set_piece_moved(
-        id_Rook,
-        'R',
-        color,
-        tr,
-        tc,
-        Rr,
-        Rc,
-    )
-    set_piece_moved_team(tr, tc, id_Rook, color)
+        set_piece_moved(
+            id_Rook,
+            'R',
+            color,
+            tr,
+            tc,
+            Rr,
+            Rc,
+        )
+        set_piece_moved_team(tr, tc, id_Rook, color)
 
-    set_combat_turn()
-    renderBoard();
+        set_combat_turn()
+        renderBoard();
 }

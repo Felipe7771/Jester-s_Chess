@@ -2,13 +2,13 @@
    DETECTA CASA A PARTIR DO CLIQUE
    ========================= */
 function getSquareFromEvent(e) {
-    const rect = UI.dom.boardEl.getBoundingClientRect()
+    const rect = boardEl.getBoundingClientRect()
 
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
 
-    const c = Math.floor(x / UI.config.SQ)
-    const r = Math.floor(y / UI.config.SQ)
+    const c = Math.floor(x / SQ)
+    const r = Math.floor(y / SQ)
 
     if (r < 0 || r > 7 || c < 0 || c > 7) return null
 
@@ -20,7 +20,7 @@ function startDrag(e, r, c, piece, ID, img) {
 
     showMoveIndicators(board[r][c].id, board[r][c].color)
 
-    console.log(">>>>>>>> ", ID, "<<<<<<<<")
+    console.log(">>>>>>>> ",ID,"<<<<<<<<")
 
     // impede seleção estranha do navegador
     e.preventDefault()
@@ -28,7 +28,7 @@ function startDrag(e, r, c, piece, ID, img) {
     // cria clone visual da peça
     const ghost = document.createElement('img')
 
-    ghost.src = UI.imgs.pieces[piece]
+    ghost.src = PIECES[piece]
     ghost.className = img.className
 
     // estilo do fantasma
@@ -99,7 +99,7 @@ document.addEventListener('mouseup', (e) => {
         renderBoard()
 
         if (sq && Is_InIllegalMoves(drag.id, [sq.r, sq.c]))
-            illegalMovesTratament(drag.id, drag.piece[1], [sq.r, sq.c], drag.piece[0])
+            illegalMovesTratament(drag.id,drag.piece[1], [sq.r, sq.c], drag.piece[0])
     } else {
         // console.log((drag.fromR, drag.fromC) == (sq.r, sq.c))
 
@@ -107,12 +107,12 @@ document.addEventListener('mouseup', (e) => {
             board[sq.r][sq.c].visualKey != null &&
             board[sq.r][sq.c].visualKey[0] != drag.piece[0]
         ) {
-            UI.audio.sounds.take.play()
+            take.play()
         } else if (
             board[sq.r][sq.c].visualKey == null &&
             (drag.fromR != sq.r || drag.fromC != sq.c)
         ) {
-            UI.audio.enabled.playMoveSound = true
+            playMoveSound = true
         }
         if (board[sq.r][sq.c].id != '') {
             CAPTURE.captured = true
@@ -163,27 +163,27 @@ document.addEventListener('mouseup', (e) => {
     }
 
     if (
-        UI.state.moveCircles.has(sqKey(sq.r, sq.c)) ||
-        UI.state.moveRings.has(sqKey(sq.r, sq.c))
+        moveCircles.has(sqKey(sq.r, sq.c)) ||
+        moveRings.has(sqKey(sq.r, sq.c))
     ) {
         if (
             board[sq.r][sq.c].visualKey != null &&
             board[sq.r][sq.c].visualKey[0] != global_drag.piece[0]
         ) {
-            UI.audio.sounds.take.play()
+            take.play()
         } else if (
             board[sq.r][sq.c].visualKey == null &&
             (global_drag.fromR != sq.r || global_drag.fromC != sq.c)
         ) {
-            UI.audio.enabled.playMoveSound = true
+            playMoveSound = true
         }
 
-        animateSlide(global_drag.fromR, global_drag.fromC, sq.r, sq.c, UI.config.default_velocity, UI.config.default_animation, () => {
-            // Aqui dentro é o seu código real de movimento/captura:
-            // - remover a peça capturada do pieceIndex (se houver)
-            // - mover a peça no estado
-            // - atualizar o DOM (o "teleporte")
-            execute_MovePoiter(global_drag, sq, CAPTURE);
+        animateSlide(global_drag.fromR, global_drag.fromC, sq.r, sq.c, default_velocity, default_animation, () => {
+        // Aqui dentro é o seu código real de movimento/captura:
+        // - remover a peça capturada do pieceIndex (se houver)
+        // - mover a peça no estado
+        // - atualizar o DOM (o "teleporte")
+        execute_MovePoiter(global_drag, sq, CAPTURE);
         });
 
     }

@@ -2,37 +2,37 @@
 /* =========================
    FUNÇÕES UTILITÁRIAS
    ========================= */
-
-/* transforma posição (r,c) em chave única */
+   
+   /* transforma posição (r,c) em chave única */
 function sqKey(r, c) { return r * 8 + c; }
 
 function sqFromKey(key) {
-  const r = Math.floor(key / 8);
-  const c = key % 8;
-  return [r, c];
+    const r = Math.floor(key / 8);
+    const c = key % 8;
+    return [r, c];
 }
 
 /* calcula o centro geométrico da casa */
 function sqCenter(r, c) {
-  return { x: c * UI.config.SQ + UI.config.SQ / 2, y: r * UI.config.SQ + UI.config.SQ / 2 };
+  return { x: c * SQ + SQ / 2, y: r * SQ + SQ / 2 };
 }
 
 function cooSet(r, c) {
   return sqKey(r, c);
 }
 
-function cooFromSet(key) {
+function cooFromSet(key){
   return sqFromKey(key);
 }
 
 function set_RandomTeamsAI() {
-  const team_ai = Math.floor(Math.random() * 2);
+  const team_ai = Math.floor(Math.random() * 2) ;
 
-  PLAY_TURN.player = team_ai == 1 ? 'b' : 'w'
-  const PLAYER = team_ai == 1 ? 'black' : 'white'
+  PLAY_TURN.player = team_ai == 1 ? 'b': 'w'
+  const PLAYER = team_ai == 1 ? 'black': 'white'
 
-  PLAY_TURN.chuck = team_ai == 1 ? 'w' : 'b'
-  const CHUCK = team_ai == 1 ? 'white' : 'black'
+  PLAY_TURN.chuck = team_ai == 1 ? 'w': 'b'
+  const CHUCK = team_ai == 1 ? 'white': 'black'
 
   return [PLAYER, CHUCK]
 }
@@ -42,12 +42,12 @@ function set_RandomTeamsAI() {
 // ==========================
 
 function toChessNotation(r, c) {
-  const files = 'abcdefgh'
+    const files = 'abcdefgh'
 
-  const file = files[c]
-  const rank = 8 - r
+    const file = files[c]
+    const rank = 8 - r
 
-  return file + rank
+    return file + rank
 }
 
 // ==========================
@@ -66,7 +66,7 @@ function chanceTurn() {
   id_turn = (id_turn + 1) % 2
   TURN = turns[id_turn]
   encrement_plays++
-  plays = Math.floor((encrement_plays + 1) / 2)
+  plays = Math.floor((encrement_plays + 1)/2) 
   setTurn(TURN)
 }
 
@@ -172,7 +172,7 @@ function set_piece_moved(id, piece, color, tr, tc, fr, fc) {
     from_c: fc,
     color,
   }
-
+  
 }
 function get_Moves(id) {
   return attackers[id]
@@ -207,12 +207,12 @@ function get_numAttacks(square_offense) {
 
 function Have_King(color) {
   const id_king = get_Id_King(color)
-
+  
   return id_king in pieceIndex
 }
 function Have_Queen(color) {
   const id_queen = get_Id_Queen(color)
-
+  
   return id_queen in pieceIndex
 }
 function Have_Sucessor(color) {
@@ -244,19 +244,19 @@ function get_Id_Jester(color) {
 // ==========================
 
 function subtractIntersection(listA, listB) {
-  if (!listB) return listA
-  if (!listA) return listB
-  const setA = new Set(listA.map(([r, c]) => `${r},${c}`))
-  const result = []
+    if (!listB) return listA
+    if (!listA) return listB
+    const setA = new Set(listA.map(([r, c]) => `${r},${c}`))
+    const result = []
 
-  for (let i = 0; i < listB.length; i++) {
-    const key = `${listB[i][0]},${listB[i][1]}`
-    if (!setA.has(key)) {
-      result.push(listB[i])
+    for (let i = 0; i < listB.length; i++) {
+        const key = `${listB[i][0]},${listB[i][1]}`
+        if (!setA.has(key)) {
+            result.push(listB[i])
+        }
     }
-  }
 
-  return result
+    return result
 }
 
 function getCommonSquares(listA, listB) {
@@ -309,10 +309,10 @@ function add_offense(id, row, column, color, piece, fromR, fromC) {
   });
 
   add_influence(id, row, column, color, piece, fromR, fromC)
-
+  
   if (offenseIndex[id]) offenseIndex[id].push(content)
   else offenseIndex[id] = [content]
-
+  
 }
 
 
@@ -332,14 +332,14 @@ function add_mobility(id, row, column, color, piece, fromR, fromC) {
     r: fromR,
     c: fromC,
   });
-
+  
   add_influence(id, row, column, color, piece, fromR, fromC)
-
+  
 
   if (attackers[id]) attackers[id].push([row, column])
   else attackers[id] = [[row, column]]
-
-
+  
+  
   if (mobilityIndex[id]) mobilityIndex[id].push(content)
   else mobilityIndex[id] = [content]
 }
@@ -353,15 +353,15 @@ function add_pawnMemory(id, row, column) {
     c: column,
   }
 
-
+  
   if (!pawnMemory[row][column].has(id)) {
     if (pawnMemoIndex[id]) pawnMemoIndex[id].push(content)
-    else pawnMemoIndex[id] = [content]
+      else pawnMemoIndex[id] = [content]
   }
-
+  
   pawnMemory[row][column].add(id);
   // console.log(pawnMemory[row][column])
-
+  
 }
 
 
@@ -381,25 +381,25 @@ function delete_piece_to_team(id, color, r, c) {
   if (id[1] === 'P') PawnMovedDeleteMemory(id)
   delete pieceIndex[id]
 
-  const indice = team_pieces[color].indexOf(id[1]);
+  const indice = team_pieces[color].indexOf(id[1]); 
   team_pieces[color].splice(indice, 1);
 }
 
 function removeCoordinate(list, r, c) {
-  if (!list) return;
+    if (!list) return;
 
-  let i = 0;
+    let i = 0;
 
-  while (i < list.length) {
-    const [rr, cc] = list[i];
+    while (i < list.length) {
+        const [rr, cc] = list[i];
 
-    if (rr === r && cc === c) {
-      list[i] = list[list.length - 1];
-      list.pop();
-    } else {
-      i++;
+        if (rr === r && cc === c) {
+            list[i] = list[list.length - 1];
+            list.pop();
+        } else {
+            i++;
+        }
     }
-  }
 }
 
 function PawnMovedDeleteMemory(id) {
@@ -425,37 +425,37 @@ function deleteOffenseMobility(id) {
       const { r, c, color } = entry
 
       // console.log('deleting offense |',r,c, id)
-
+      
       const arr = offense[r][c][color]
-
+      
       const idx = arr.findIndex(
         x => x.id === id
       )
-
-
+      
+      
       if (idx !== -1) {
         arr[idx] = arr[arr.length - 1]
         arr.pop()
       }
     }
-
+    
     delete offenseIndex[id]
   }
   // console.log('---')
   if (mobilityIndex[id]) {
-
+    
     for (const entry of mobilityIndex[id]) {
-
+      
       const { r, c, color } = entry
-
+      
       // console.log('deleting mobily  |',r,c, id)
 
       const arr = mobility[r][c][color]
-
+      
       const idx = arr.findIndex(
         x => x.id === id
       )
-
+      
       // console.log('(',id,r,c,') antes ',arr.length)
       if (idx !== -1) {
         arr[idx] = arr[arr.length - 1]
@@ -482,11 +482,11 @@ function add_piece_team(row, column, color, piece, id) {
     r: row,
     c: column
   }
-
+  
   team[color].push(PART)
   team_pieces[color].push(piece)
   pieceIndex[id] = PART
-
+  
 }
 
 
@@ -494,7 +494,7 @@ function set_piece_moved_team(to_r, to_c, id, color) {
   // console.log('===== set_piece_moved_team =====')
 
   const indx = team[color].findIndex(piece => piece.id === id);
-
+  
   team[color][indx]['r'] = to_r
   team[color][indx]['c'] = to_c
 
@@ -503,15 +503,15 @@ function set_piece_moved_team(to_r, to_c, id, color) {
 }
 
 function getTeam(color) {
-  const result = {};
+    const result = {};
 
-  for (const id in pieceIndex) {
-    if (id[0] === color) {
-      result[id] = pieceIndex[id];
+    for (const id in pieceIndex) {
+        if (id[0] === color) {
+            result[id] = pieceIndex[id];
+        }
     }
-  }
 
-  return result;
+    return result;
 }
 
 // ==========================
@@ -526,11 +526,11 @@ function Set_MemoryMovesTEAM(color) {
 }
 
 function Get_Moves_MemoryMoves(memory) {
-  const unique = new Set();
+    const unique = new Set();
 
-  for (const [r, c] of memory) unique.add(`${r},${c}`);
+    for (const [r, c] of memory) unique.add(`${r},${c}`);
 
-  return unique.size;
+    return unique.size;
 }
 
 // ==========================
@@ -540,13 +540,13 @@ function Get_Moves_MemoryMoves(memory) {
 function set_initial_team() {
   for (let r = 0; r < 8; r++) {
     for (let c = 0; c < 8; c++) {
-
+      
       let content = board[r][c]
-
+      
       console.log(content)
-
+      
       if (content.id != '') {
-
+        
         add_piece_team(r, c, content.color, content.type, content.id)
       }
     }

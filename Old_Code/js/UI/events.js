@@ -3,7 +3,7 @@
  * winner: 'w' ou 'b' — o time que GANHOU
  */
 function showCheckmate(winner) {
-    UI.audio.sounds.checkmate.play()
+    checkmate.play()
 
     TURN = ''
     const loser = winner === 'w' ? 'b' : 'w'
@@ -21,7 +21,7 @@ function showCheckmate(winner) {
     }
 
     function getSqEl(r, c) {
-        return UI.state.squares[r * 8 + c]
+        return squares[r * 8 + c]
     }
 
     if (lKPos) {
@@ -36,21 +36,21 @@ function showCheckmate(winner) {
             piece.classList.remove('shake-soft') // limpa estado antigo
         }
 
-
-
+        
+        
         piece.classList.add('king-defeat')
         piece.addEventListener('animationend', () => {
             piece.classList.add('king-dead-twitch');
         }, { once: true });
 
         piece.addEventListener('mouseenter', () => {
-            UI.audio.sounds.died.volume = 0.3;
-            UI.audio.sounds.died.play()
+            died.volume = 0.3;
+            died.play()
         })
 
         piece.addEventListener('mouseleave', () => {
-            UI.audio.sounds.died.pause()
-            UI.audio.sounds.died.currentTime = 0
+            died.pause()
+            died.currentTime = 0
         })
 
         const badge = document.createElement('div')
@@ -107,7 +107,7 @@ function showCheckmate(winner) {
  * winner: 'w' ou 'b' — o time que GANHOU
  */
 function showTry() {
-    UI.audio.sounds.checkmate.play()
+    checkmate.play()
 
     TURN = ''
 
@@ -124,7 +124,7 @@ function showTry() {
     }
 
     function getSqEl(r, c) {
-        return UI.state.squares[r * 8 + c]
+        return squares[r * 8 + c]
     }
 
     if (K1Pos) {
@@ -138,20 +138,20 @@ function showTry() {
         if (effect?.shake) {
             piece.classList.remove('shake-soft') // limpa estado antigo
         }
-
+        
         piece.classList.add('king-defeat')
         piece.addEventListener('animationend', () => {
             piece.classList.add('king-dead-twitch');
         }, { once: true });
 
         piece.addEventListener('mouseenter', () => {
-            UI.audio.sounds.died.volume = 0.3;
-            UI.audio.sounds.died.play()
+            died.volume = 0.3;
+            died.play()
         })
 
         piece.addEventListener('mouseleave', () => {
-            UI.audio.sounds.died.pause()
-            UI.audio.sounds.died.currentTime = 0
+            died.pause()
+            died.currentTime = 0
         })
 
 
@@ -182,22 +182,22 @@ function showTry() {
         if (effect?.shake) {
             piece.classList.remove('shake-soft') // limpa estado antigo
         }
-
+        
         piece.classList.add('king-defeat')
         piece.addEventListener('animationend', () => {
             piece.classList.add('king-dead-twitch');
         }, { once: true });
 
         piece.addEventListener('mouseenter', () => {
-            UI.audio.sounds.died.volume = 0.3;
-            UI.audio.sounds.died.play()
+            died.volume = 0.3;
+            died.play()
         })
 
         piece.addEventListener('mouseleave', () => {
-            UI.audio.sounds.died.pause()
-            UI.audio.sounds.died.currentTime = 0
+            died.pause()
+            died.currentTime = 0
         })
-
+        
 
         const badge = document.createElement('div')
         badge.className = 'king-badge badge-try'
@@ -220,7 +220,7 @@ function showTry() {
 
 function Laugth_Jester() {
     function getSqEl(r, c) {
-        return UI.state.squares[r * 8 + c]
+        return squares[r * 8 + c]
     }
 
     for (const color of ['w', 'b']) {
@@ -245,13 +245,13 @@ function Laugth_Jester() {
         piece.classList.add('jester-endgame')
 
         piece.addEventListener('mouseenter', () => {
-            UI.audio.sounds.hahah.volume = 0.1;
-            UI.audio.sounds.hahah.play()
+            hahah.volume = 0.1;
+            hahah.play()
         })
 
         piece.addEventListener('mouseleave', () => {
-            UI.audio.sounds.hahah.pause()
-            UI.audio.sounds.hahah.currentTime = 0
+            hahah.pause()
+            hahah.currentTime = 0
         })
     }
 }

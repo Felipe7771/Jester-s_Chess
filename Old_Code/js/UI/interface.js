@@ -40,10 +40,10 @@ function renderBoard() {
         }, 500)
 
         return
-    }
+    } 
 
-    UI.dom.boardEl.innerHTML = ''
-    UI.state.squares = []
+    boardEl.innerHTML = ''
+    squares = []
 
     for (let r = 0; r < 8; r++) {
         for (let c = 0; c < 8; c++) {
@@ -56,19 +56,19 @@ function renderBoard() {
             sq.dataset.c = c
 
             // aplica destaque vermelho se existir
-            if (UI.state.redSquares.has(sqKey(r, c))) {
+            if (redSquares.has(sqKey(r, c))) {
                 sq.classList.add('highlight-red')
             }
 
-            if (UI.state.yellowSquares.has(sqKey(r, c))) {
+            if (yellowSquares.has(sqKey(r, c))) {
                 sq.classList.add('highlight-yellow')
             }
 
-            if (UI.state.moveCircles.has(sqKey(r, c))) {
+            if (moveCircles.has(sqKey(r, c))) {
                 sq.classList.add('move-circle')
             }
 
-            if (UI.state.moveRings.has(sqKey(r, c))) {
+            if (moveRings.has(sqKey(r, c))) {
                 sq.classList.add('move-ring')
             }
 
@@ -98,7 +98,7 @@ function renderBoard() {
             if (board[r][c].visualKey) {
                 const img = document.createElement('img')
                 img.className = 'piece'
-                img.src = UI.imgs.pieces[board[r][c].visualKey]
+                img.src = PIECES[board[r][c].visualKey]
 
                 img.draggable = false
 
@@ -133,8 +133,8 @@ function renderBoard() {
                 sq.appendChild(img)
             }
 
-            UI.state.squares.push(sq)
-            UI.dom.boardEl.appendChild(sq)
+            squares.push(sq)
+            boardEl.appendChild(sq)
         }
     }
 }
@@ -156,9 +156,9 @@ function showMoveHints(moves, color) {
         const square = board[move[0]][move[1]]
 
         if (Is_anyThere(square) && !Is_AllyThere(square, color)) {
-            UI.state.moveRings.add(key)
+            moveRings.add(key)
         } else if (!Is_anyThere(square)) {
-            UI.state.moveCircles.add(key)
+            moveCircles.add(key)
         }
     }
 
